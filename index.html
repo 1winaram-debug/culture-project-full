@@ -304,66 +304,63 @@
     </div>
 
     <script type="module">
-      // Импортируем Firebase из сети
-      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-      import { 
-        getAuth, 
-        createUserWithEmailAndPassword, 
-        GoogleAuthProvider, 
-        signInWithPopup,
-        onAuthStateChanged
-      } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    
-      // Твоя конфигурация
-      const firebaseConfig = {
-        apiKey: "AIzaSyAZ_VD_agVVfQcr8vm39KVPanLn2v2gbc4",
-        authDomain: "shkola-priznavashki.firebaseapp.com",
-        projectId: "shkola-priznavashki",
-        storageBucket: "shkola-priznavashki.appspot.com",
-        messagingSenderId: "593176273697",
-        appId: "1:593176273697:web:4f63b5ef568ea3c7901460"
-      };
-    
-      // Инициализация
-      const app = initializeApp(firebaseConfig);
-      const auth = getAuth(app);
-      const provider = new GoogleAuthProvider();
-      
-      console.log("Firebase успешно подключен!");
-    
-      // 1. Логика регистрации через Email и пароль
-      document.getElementById('submit').addEventListener('click', () => {
-        const email = document.getElementById('email').value;
-        const password = document.getElementById('password').value;
-    
-        createUserWithEmailAndPassword(auth, email, password)
-          .then((userCredential) => {
-            // После успешной регистрации переходим на главную страницу
-            window.location.href = "home.html";
-          })
-          .catch((error) => {
-            alert("Ошибка: " + error.message);
-          });
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+  import { 
+    getAuth, 
+    createUserWithEmailAndPassword, 
+    GoogleAuthProvider, 
+    signInWithPopup,
+    onAuthStateChanged
+  } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAZ_VD_agVVfQcr8vm39KVPanLn2v2gbc4",
+    authDomain: "shkola-priznavashki.firebaseapp.com",
+    projectId: "shkola-priznavashki",
+    storageBucket: "shkola-priznavashki.appspot.com",
+    messagingSenderId: "593176273697",
+    appId: "1:593176273697:web:4f63b5ef568ea3c7901460"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const provider = new GoogleAuthProvider();
+
+  let isRedirecting = false;
+
+  document.getElementById('submit').addEventListener('click', () => {
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+
+    createUserWithEmailAndPassword(auth, email, password)
+      .then(() => {
+        isRedirecting = true;
+        window.location.href = "home";
+      })
+      .catch((error) => {
+        alert("Ошибка: " + error.message);
       });
-    
-      // 2. Логика входа через Google
-      document.getElementById('google-btn').addEventListener('click', () => {
-        signInWithPopup(auth, provider)
-          .then((result) => {
-            // После успешного входа через Google переходим на главную страницу
-            window.location.href = "home.html";
-          })
-          .catch((error) => {
-            alert("Ошибка Google: " + error.message);
-          });
-      }); 
-    
-      // Авто-вход при перезагрузке: если пользователь уже залогинен, сразу перенаправляем
-      onAuthStateChanged(auth, (user) => {
-        if (user) {
-          window.location.href = "home.html";
-        }
+  });
+
+  document.getElementById('google-btn').addEventListener('click', () => {
+    signInWithPopup(auth, provider)
+      .then(() => {
+        isRedirecting = true;
+        window.location.href = "home";
+      })
+      .catch((error) => {
+        alert("Ошибка Google: " + error.message);
       });
-    </script>
+  });
+
+  onAuthStateChanged(auth, (user) => {
+    if (user && !isRedirecting) {
+      isRedirecting = true;
+      window.location.href = "home";
+    }
+  });
+</script>
+    
+   
 </body>
 </html>
