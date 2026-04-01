@@ -1,0 +1,27 @@
+2026-03-29 15:12:01,609 [INFO] 🚀 Сервер: http://127.0.0.1:5000
+2026-03-29 15:12:01,616 [INFO] [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on http://127.0.0.1:5000
+2026-03-29 15:12:01,616 [INFO] [33mPress CTRL+C to quit[0m
+2026-03-29 15:12:46,579 [INFO] 127.0.0.1 - - [29/Mar/2026 15:12:46] "GET / HTTP/1.1" 200 -
+2026-03-29 15:12:47,183 [INFO] 127.0.0.1 - - [29/Mar/2026 15:12:47] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-29 15:13:00,528 [INFO] 📩 [127.0.0.1] persona=default | 4444+5555
+2026-03-29 15:13:02,626 [INFO] 📗 Wikipedia en: Vehicle registration plates of Hong Kong
+2026-03-29 15:13:03,323 [INFO] 📗 Wikipedia en: Vehicle registration plates of Bangladesh
+2026-03-29 15:13:04,755 [INFO] 💬 [127.0.0.1] persona=default | 125 симв. | finish=stop
+2026-03-29 15:13:04,755 [INFO] 127.0.0.1 - - [29/Mar/2026 15:13:04] "POST /api/ai HTTP/1.1" 200 -
+2026-03-29 15:13:40,463 [INFO] 📩 [127.0.0.1] persona=default | Бро, кто такой Тигран Виликий
+2026-03-29 15:13:44,831 [INFO] 💬 [127.0.0.1] persona=default | 1511 симв. | finish=stop
+2026-03-29 15:13:44,831 [INFO] 127.0.0.1 - - [29/Mar/2026 15:13:44] "POST /api/ai HTTP/1.1" 200 -
+2026-03-29 15:14:28,700 [INFO] 📩 [127.0.0.1] persona=default | Ով է Մովսես Խորենացին
+2026-03-29 15:14:29,647 [INFO] 📗 Wikipedia en: Surb Karapet Monastery
+2026-03-29 15:14:29,822 [INFO] 📗 Wikipedia en: Saint Hripsime Church
+2026-03-29 15:14:36,284 [INFO] 💬 [127.0.0.1] persona=default | 893 симв. | finish=stop
+2026-03-29 15:14:36,296 [INFO] 127.0.0.1 - - [29/Mar/2026 15:14:36] "POST /api/ai HTTP/1.1" 200 -
+2026-03-29 15:15:19,367 [INFO] 📩 [127.0.0.1] persona=khorenatsi | Как стать богатым
+2026-03-29 15:15:21,446 [INFO] 📗 Wikipedia en: Boris Zimin
+2026-03-29 15:15:23,239 [INFO] 💬 [127.0.0.1] persona=khorenatsi | 1777 симв. | finish=stop
+2026-03-29 15:15:23,243 [INFO] 127.0.0.1 - - [29/Mar/2026 15:15:23] "POST /api/ai HTTP/1.1" 200 -
+2026-04-01 02:49:41,641 [INFO] 127.0.0.1 - - [01/Apr/2026 02:49:41] "OPTIONS /api/ai HTTP/1.1" 200 -
+2026-04-01 02:49:41,660 [INFO] 📩 [127.0.0.1] persona=default | Ինչ է Հայոց ցեղասպանությունը
+2026-04-01 02:49:56,965 [INFO] 💬 [127.0.0.1] persona=default | 1460 симв. | finish=stop
+2026-04-01 02:49:56,965 [INFO] 127.0.0.1 - - [01/Apr/2026 02:49:56] "POST /api/ai HTTP/1.1" 200 -
