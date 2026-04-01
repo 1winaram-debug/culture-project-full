@@ -1142,7 +1142,7 @@
     };
 
     // ══════════════════════════════════
-    //  TTS SPEAK
+    //  TTS SPEAK — ✅ ИСПРАВЛЕНО: относительный путь
     // ══════════════════════════════════
     async function speakText(text, bubble, avatar, speakBtn, wavesEl) {
         stopSpeaking();
@@ -1153,7 +1153,7 @@
         setStatus('speaking');
 
         try {
-            const response = await fetch('http://127.0.0.1:5000/api/tts', {
+            const response = await fetch('/api/tts', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ text: text.slice(0, 1000) })
@@ -1349,10 +1349,10 @@
     }
 
     // ══════════════════════════════════
-    //  CALL AI
+    //  CALL AI — ✅ ИСПРАВЛЕНО: относительный путь
     // ══════════════════════════════════
     async function callAI(userText) {
-        const response = await fetch("http://127.0.0.1:5000/api/ai", {
+        const response = await fetch("/api/ai", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             // ← ПЕРЕДАЁМ ПЕРСОНАЖА на сервер
@@ -1373,7 +1373,9 @@
     }
 
     // ══════════════════════════════════
-    //  VOICE RECORDING
+    //  VOICE RECORDING — ✅ ИСПРАВЛЕНО: 
+    //  1. Относительный путь в processVoice
+    //  2. Проверка поддержки MIME-типов для мобильных браузеров
     // ══════════════════════════════════
     window.toggleRecording = async function() {
         if (busy) return;
@@ -1382,7 +1384,21 @@
             try {
                 const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
                 audioChunks = [];
-                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+
+                // ✅ ИСПРАВЛЕНИЕ: Проверяем поддержку MIME-типов для iOS/Safari
+                let mimeType = 'audio/webm';
+                if (!MediaRecorder.isTypeSupported('audio/webm')) {
+                    if (MediaRecorder.isTypeSupported('audio/mp4')) {
+                        mimeType = 'audio/mp4';
+                    } else if (MediaRecorder.isTypeSupported('audio/wav')) {
+                        mimeType = 'audio/wav';
+                    } else {
+                        // Используем стандартный MIME-тип, браузер выберет сам
+                        mimeType = undefined;
+                    }
+                }
+
+                mediaRecorder = new MediaRecorder(stream, mimeType ? { mimeType } : {});
                 mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
                 mediaRecorder.onstop = async () => { stream.getTracks().forEach(t => t.stop()); await processVoice(); };
                 mediaRecorder.start();
@@ -1415,13 +1431,14 @@
         }
     };
 
+    // ✅ ИСПРАВЛЕНО: относительный путь к API
     async function processVoice() {
         try {
             const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
             const formData = new FormData();
             formData.append('audio', audioBlob, 'voice.webm');
 
-            const res = await fetch('http://127.0.0.1:5000/api/voice', { method: 'POST', body: formData });
+            const res = await fetch('/api/voice', { method: 'POST', body: formData });
             const data = await res.json();
             if (!res.ok) throw new Error(data.error || 'Ձայնի ճանաչման սխալ');
 
