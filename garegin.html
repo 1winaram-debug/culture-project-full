@@ -1,0 +1,1700 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Գարեգին Նժդեհ — Հայկական թվային թանգարան</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700;900&family=Crimson+Pro:wght@300;400;600&family=Montserrat:wght@300;400;700&display=swap" rel="stylesheet">
+
+<style>
+/* =========================
+   RESET & BASE
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+:root {
+    --bg-deep: #0d0905;
+    --gold: #c8962a;
+    --gold-light: #e8b84b;
+    --cream: #e5d5b3;
+    --border: rgba(200, 150, 42, 0.2);
+}
+
+body {
+    background-color: var(--bg-deep);
+    color: var(--cream);
+    font-family: 'Crimson Pro', serif;
+    font-size: 18px;
+    line-height: 1.8;
+    overflow-x: hidden;
+    position: relative;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: repeating-linear-gradient(
+        135deg,
+        rgba(0, 0, 0, 0.4) 0px,
+        rgba(0, 0, 0, 0.4) 1px,
+        transparent 1px,
+        transparent 4px
+    );
+    z-index: -4;
+    pointer-events: none;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    background: radial-gradient(circle at 50% 50%, rgba(200, 150, 42, 0.08), transparent 70%);
+    z-index: -4;
+    pointer-events: none;
+}
+
+.cross {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 80vh;
+    color: rgba(200, 150, 42, 0.03);
+    filter: blur(8px);
+    pointer-events: none;
+    z-index: -3;
+    font-family: serif;
+    user-select: none;
+}
+
+.light {
+    position: fixed;
+    width: 600px;
+    height: 600px;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle, rgba(200, 150, 42, 0.08), transparent 70%);
+    mix-blend-mode: screen;
+    z-index: -2;
+    transform: translate(-50%, -50%);
+    transition: width 0.2s, height 0.2s;
+}
+
+/* =========================
+   НАВИГАЦИЯ (NAVBAR)
+========================= */
+nav {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    padding: 20px 8%;
+    background: rgba(13, 9, 5, 0.85);
+    backdrop-filter: blur(15px);
+    border-bottom: 1px solid var(--border);
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav-brand {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gold);
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+nav ul {
+    display: flex;
+    gap: 30px;
+    list-style: none;
+    flex-wrap: wrap;
+}
+
+nav a {
+    color: var(--cream);
+    text-decoration: none;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+nav a:hover {
+    color: var(--gold-light);
+    text-shadow: 0 0 10px rgba(200, 150, 42, 0.5);
+}
+
+/* =========================
+   HERO СЕКЦИЯ
+========================= */
+.hero {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    padding: 0 20px;
+    position: relative;
+    margin-top: 40px;
+}
+
+.hero img {
+    width: 320px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--gold);
+    filter: grayscale(100%) contrast(120%) sepia(20%);
+    transition: 1s ease;
+    box-shadow: 0 0 50px rgba(200, 150, 42, 0.2);
+    margin-bottom: 40px;
+}
+
+.hero img:hover {
+    filter: grayscale(0%) contrast(110%);
+    transform: scale(1.03);
+    box-shadow: 0 0 80px rgba(200, 150, 42, 0.4);
+}
+
+.hero h1 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(30px, 5vw, 60px);
+    font-weight: 900;
+    color: var(--gold);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 0 0 20px rgba(200, 150, 42, 0.4);
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-family: 'Montserrat', sans-serif;
+    font-size: clamp(14px, 2vw, 20px);
+    letter-spacing: 6px;
+    text-transform: uppercase;
+    color: var(--cream);
+    opacity: 0.8;
+}
+
+/* =========================
+   ОБЩИЕ СТИЛИ СЕКЦИЙ
+========================= */
+section {
+    padding: 120px 10%;
+    position: relative;
+}
+
+h2 {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(28px, 4vw, 42px);
+    color: var(--gold);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+.divider {
+    width: 80px;
+    height: 3px;
+    background: var(--gold);
+    margin-bottom: 50px;
+    box-shadow: 0 0 15px var(--gold);
+}
+
+.text-block {
+    max-width: 900px;
+    font-size: 20px;
+    margin-bottom: 40px;
+    text-align: justify;
+}
+
+/* =========================
+   ЦЕХАКРОН (КАРТОЧКИ)
+========================= */
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+}
+
+.card {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    padding: 40px 30px;
+    border-radius: 8px;
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at top right, rgba(200, 150, 42, 0.15), transparent);
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.card:hover::before { opacity: 1; }
+
+.card:hover {
+    transform: translateY(-10px);
+    border-color: rgba(200, 150, 42, 0.6);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.card h3 {
+    font-family: 'Unbounded', sans-serif;
+    color: var(--gold-light);
+    font-size: 20px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.card p {
+    font-size: 16px;
+    opacity: 0.9;
+    position: relative;
+}
+
+/* =========================
+   ЦИТАТЫ
+========================= */
+.quote-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+}
+
+@media(max-width: 768px) {
+    .quote-grid { grid-template-columns: 1fr; }
+}
+
+.quote {
+    font-size: 24px;
+    font-style: italic;
+    position: relative;
+    padding: 30px 40px;
+    background: linear-gradient(90deg, rgba(200,150,42,0.05), transparent);
+    border-left: 4px solid var(--gold);
+    line-height: 1.6;
+}
+
+.quote::before {
+    content: "\201C";
+    position: absolute;
+    left: 10px;
+    top: -10px;
+    font-family: serif;
+    font-size: 80px;
+    color: rgba(200, 150, 42, 0.2);
+    line-height: 1;
+}
+
+/* =========================
+   TIMELINE (ХРОНИКА)
+========================= */
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.timeline::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: var(--border);
+    transform: translateX(-50%);
+}
+
+.event {
+    position: relative;
+    width: 50%;
+    padding: 20px 40px;
+    box-sizing: border-box;
+}
+
+.event:nth-child(odd) {
+    left: 0;
+    text-align: right;
+}
+
+.event:nth-child(even) {
+    left: 50%;
+    text-align: left;
+}
+
+.event::after {
+    content: '';
+    position: absolute;
+    top: 30px;
+    width: 16px;
+    height: 16px;
+    background: var(--bg-deep);
+    border: 3px solid var(--gold);
+    border-radius: 50%;
+    z-index: 1;
+}
+
+.event:nth-child(odd)::after { right: -9px; }
+.event:nth-child(even)::after { left: -9px; }
+
+.event .date {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 28px;
+    color: var(--gold);
+    margin-bottom: 10px;
+}
+
+.event p {
+    background: rgba(15, 23, 42, 0.4);
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
+@media(max-width: 768px) {
+    .timeline::before { left: 20px; }
+    .event { width: 100%; left: 0 !important; text-align: left !important; padding-left: 60px; }
+    .event::after { left: 12px !important; }
+}
+
+/* =========================
+   ГАЛЕРЕЯ
+========================= */
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.gallery img {
+    width: 100%;
+    height: 350px;
+    object-fit: cover;
+    filter: sepia(60%) grayscale(80%) contrast(120%);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: 0.6s ease;
+}
+
+.gallery img:hover {
+    filter: sepia(0%) grayscale(0%) contrast(110%);
+    transform: scale(1.05);
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    z-index: 2;
+    position: relative;
+}
+
+/* =========================
+   ПАРАЛЛАКС ВСТАВКА
+========================= */
+.parallax-banner {
+    height: 400px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/6/6c/Garegin_Nzhdeh.jpg');
+    background-attachment: fixed;
+    background-position: center top;
+    background-size: cover;
+    filter: grayscale(100%) sepia(30%) brightness(0.3);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-banner h2 {
+    color: var(--gold);
+    text-shadow: 0 0 30px #000;
+    font-size: clamp(24px, 4vw, 40px);
+    background: rgba(0,0,0,0.5);
+    padding: 20px 40px;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--gold);
+}
+
+/* =========================
+   ФУТЕР
+========================= */
+footer {
+    text-align: center;
+    padding: 60px 20px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 14px;
+    letter-spacing: 2px;
+    border-top: 1px solid var(--border);
+    background: rgba(0,0,0,0.5);
+}
+
+/* =========================
+   АНИМАЦИИ ПОЯВЛЕНИЯ
+========================= */
+.fade {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.fade.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* =========================
+   НОВЫЕ СТИЛИ (без изменения существующих)
+========================= */
+
+/* Инлайн-фото с подписью */
+.photo-block {
+    display: flex;
+    gap: 50px;
+    align-items: flex-start;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+}
+
+.photo-block.reverse {
+    flex-direction: row-reverse;
+}
+
+.photo-block .text-side {
+    flex: 1;
+    min-width: 280px;
+}
+
+.photo-block .img-side {
+    flex: 0 0 340px;
+}
+
+.photo-block .img-side img {
+    width: 100%;
+    height: 420px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--gold);
+    filter: grayscale(100%) contrast(120%) sepia(20%);
+    box-shadow: 0 0 40px rgba(200, 150, 42, 0.2), 0 0 0 4px rgba(200,150,42,0.08);
+    transition: 0.8s ease;
+    display: block;
+}
+
+.photo-block .img-side img:hover {
+    filter: grayscale(0%) contrast(110%);
+    box-shadow: 0 0 70px rgba(200, 150, 42, 0.45), 0 0 0 4px rgba(200,150,42,0.2);
+    transform: scale(1.02);
+}
+
+.photo-caption {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    letter-spacing: 1px;
+    color: rgba(229, 213, 179, 0.55);
+    text-align: center;
+    margin-top: 12px;
+    text-transform: uppercase;
+}
+
+/* Широкая горизонтальная карточка */
+.card-wide {
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    padding: 40px 40px;
+    border-radius: 8px;
+    transition: 0.5s;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 30px;
+}
+
+.card-wide::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: radial-gradient(circle at top right, rgba(200, 150, 42, 0.12), transparent);
+    opacity: 0;
+    transition: 0.5s;
+}
+
+.card-wide:hover::before { opacity: 1; }
+
+.card-wide:hover {
+    border-color: rgba(200, 150, 42, 0.5);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+}
+
+.card-wide h3 {
+    font-family: 'Unbounded', sans-serif;
+    color: var(--gold-light);
+    font-size: 20px;
+    margin-bottom: 15px;
+    position: relative;
+}
+
+.card-wide p {
+    font-size: 19px;
+    opacity: 0.9;
+    position: relative;
+    text-align: justify;
+}
+
+/* Stat-bar (числа / факты) */
+.stat-row {
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-bottom: 60px;
+}
+
+.stat-item {
+    flex: 1;
+    min-width: 180px;
+    background: rgba(15, 23, 42, 0.4);
+    backdrop-filter: blur(12px);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 30px 20px;
+    text-align: center;
+    transition: 0.4s;
+}
+
+.stat-item:hover {
+    border-color: rgba(200, 150, 42, 0.6);
+    transform: translateY(-6px);
+}
+
+.stat-item .stat-num {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 38px;
+    color: var(--gold);
+    display: block;
+    margin-bottom: 8px;
+}
+
+.stat-item .stat-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.7;
+}
+
+/* Параллакс второй */
+.parallax-banner-2 {
+    height: 350px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/b/bc/Nakhchivan_region_1910.jpg/1024px-Nakhchivan_region_1910.jpg');
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    filter: grayscale(100%) sepia(40%) brightness(0.28);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-banner-2 h2 {
+    color: var(--gold);
+    text-shadow: 0 0 30px #000;
+    font-size: clamp(22px, 3.5vw, 36px);
+    background: rgba(0,0,0,0.5);
+    padding: 20px 40px;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--gold);
+}
+
+/* Параллакс третий — Наследие */
+.parallax-banner-3 {
+    height: 350px;
+    background-image: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Garegin_Nzhdeh_statue_Yerevan.jpg/1024px-Garegin_Nzhdeh_statue_Yerevan.jpg');
+    background-attachment: fixed;
+    background-position: center center;
+    background-size: cover;
+    filter: grayscale(100%) sepia(40%) brightness(0.28);
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.parallax-banner-3 h2 {
+    color: var(--gold);
+    text-shadow: 0 0 30px #000;
+    font-size: clamp(22px, 3.5vw, 36px);
+    background: rgba(0,0,0,0.5);
+    padding: 20px 40px;
+    backdrop-filter: blur(5px);
+    border: 1px solid var(--gold);
+}
+
+/* Горизонтальная галерея с подписями */
+.gallery-captioned {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    margin-bottom: 20px;
+}
+
+.gallery-captioned .gcap-item img {
+    width: 100%;
+    height: 320px;
+    object-fit: cover;
+    filter: sepia(60%) grayscale(80%) contrast(120%);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    transition: 0.6s ease;
+    display: block;
+}
+
+.gallery-captioned .gcap-item img:hover {
+    filter: sepia(0%) grayscale(0%) contrast(110%);
+    transform: scale(1.04);
+    border-color: var(--gold);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+}
+
+.gcap-label {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 12px;
+    letter-spacing: 1px;
+    color: rgba(229, 213, 179, 0.5);
+    text-align: center;
+    margin-top: 10px;
+    text-transform: uppercase;
+}
+
+/* Полноширинное фото-баннер (не parallax) */
+.section-photo-banner {
+    width: 100%;
+    height: 500px;
+    object-fit: cover;
+    border-top: 1px solid var(--border);
+    border-bottom: 1px solid var(--border);
+    filter: grayscale(100%) sepia(25%) brightness(0.45) contrast(115%);
+    transition: 0.8s;
+    display: block;
+}
+
+.section-photo-banner:hover {
+    filter: grayscale(60%) sepia(15%) brightness(0.6) contrast(110%);
+}
+
+/* Highlight pull-quote (крупная цитата по центру) */
+.pull-quote {
+    max-width: 800px;
+    margin: 60px auto;
+    font-size: clamp(22px, 3vw, 32px);
+    font-style: italic;
+    text-align: center;
+    color: var(--gold-light);
+    line-height: 1.5;
+    position: relative;
+    padding: 0 40px;
+}
+
+.pull-quote::before {
+    content: "\201C";
+    font-family: serif;
+    font-size: 100px;
+    color: rgba(200,150,42,0.15);
+    position: absolute;
+    top: -30px;
+    left: 0;
+    line-height: 1;
+}
+
+.pull-quote::after {
+    content: "\201D";
+    font-family: serif;
+    font-size: 100px;
+    color: rgba(200,150,42,0.15);
+    position: absolute;
+    bottom: -60px;
+    right: 0;
+    line-height: 1;
+}
+
+/* Тег-метки под карточками */
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 14px;
+}
+
+.tag {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding: 4px 14px;
+    border: 1px solid rgba(200,150,42,0.35);
+    border-radius: 20px;
+    color: var(--gold-light);
+    opacity: 0.8;
+}
+
+/* Сетка 2 колонки для текста */
+.two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 40px;
+    max-width: 1100px;
+    margin-bottom: 40px;
+}
+
+@media(max-width: 768px) {
+    .two-col { grid-template-columns: 1fr; }
+    .photo-block, .photo-block.reverse { flex-direction: column; }
+    .photo-block .img-side { flex: 0 0 auto; width: 100%; }
+    nav ul { display: none; }
+}
+
+/* Трёхколоночная мини-галерея внутри секции */
+.inline-gallery-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin: 50px 0;
+}
+
+@media(max-width: 768px) {
+    .inline-gallery-3 { grid-template-columns: 1fr; }
+}
+
+.inline-gallery-3 img {
+    width: 100%;
+    height: 260px;
+    object-fit: cover;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    filter: grayscale(90%) sepia(30%) contrast(115%);
+    transition: 0.6s;
+}
+
+.inline-gallery-3 img:hover {
+    filter: grayscale(0%) contrast(110%);
+    border-color: var(--gold);
+    box-shadow: 0 0 30px rgba(200,150,42,0.35);
+    transform: scale(1.03);
+}
+
+/* =========================
+   ИНТЕРАКТИВНЫЙ ТАЙМЛАЙН
+========================= */
+.timeline-section {
+    position: relative;
+    background: #080808;
+    overflow: hidden;
+    transition: background 0.4s ease;
+}
+
+.container-timeline {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 60px 24px;
+}
+
+.timeline-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: clamp(28px, 5vw, 44px);
+    color: #D4AF37;
+    text-align: center;
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.timeline-wrapper {
+    position: relative;
+    max-width: 1000px;
+    margin: 60px auto 0;
+    padding: 20px 0;
+}
+
+/* Центральная линия */
+.timeline-center-line {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 3px;
+    height: 100%;
+    background: rgba(212, 175, 55, 0.3);
+    border-radius: 3px;
+    z-index: 1;
+}
+
+.timeline-line-fill {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 0%;
+    background: linear-gradient(180deg, #D4AF37, #F5E2A4);
+    box-shadow: 0 0 12px rgba(212, 175, 55, 0.8);
+    border-radius: 3px;
+    transition: height 0.08s linear;
+    z-index: 2;
+}
+
+/* Сетка карточек */
+.timeline-grid {
+    position: relative;
+    z-index: 3;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+}
+
+/* Карточка (общая) */
+.timeline-card {
+    position: relative;
+    width: 45%;
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.6s ease;
+}
+
+.timeline-card.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Чередование: левая и правая */
+.timeline-card.left {
+    margin-right: auto;
+}
+
+.timeline-card.right {
+    margin-left: auto;
+}
+
+/* Карточка с эффектом стекла */
+.card-inner {
+    background: rgba(20, 20, 30, 0.45);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(212, 175, 55, 0.35);
+    border-radius: 28px;
+    padding: 28px 32px;
+    transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+    cursor: default;
+}
+
+.card-inner:hover {
+    border-color: #D4AF37;
+    box-shadow: 0 15px 35px -5px rgba(212, 175, 55, 0.3), 0 0 15px rgba(212, 175, 55, 0.2);
+    transform: translateY(-6px);
+    background: rgba(30, 30, 45, 0.6);
+}
+
+.card-year {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #D4AF37;
+    margin-bottom: 12px;
+    letter-spacing: 2px;
+}
+
+.card-title {
+    font-family: 'Unbounded', sans-serif;
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: #F5E2A4;
+    margin-bottom: 12px;
+}
+
+.card-text {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: #e5d5b3;
+    opacity: 0.9;
+}
+
+/* Декоративные кружки на линии */
+.timeline-card::before {
+    content: "";
+    position: absolute;
+    top: 30px;
+    width: 16px;
+    height: 16px;
+    background: #D4AF37;
+    border: 2px solid #080808;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #D4AF37;
+    z-index: 5;
+    transition: all 0.3s;
+}
+
+.timeline-card.left::before {
+    right: -58px;
+    transform: translateX(50%);
+}
+
+.timeline-card.right::before {
+    left: -58px;
+    transform: translateX(-50%);
+}
+
+/* Адаптация для мобильных */
+@media (max-width: 768px) {
+    .timeline-center-line {
+        left: 24px;
+        transform: none;
+    }
+
+    .timeline-card {
+        width: calc(100% - 60px);
+        margin-left: 60px !important;
+        margin-right: 0 !important;
+    }
+
+    .timeline-card.left::before,
+    .timeline-card.right::before {
+        left: -38px;
+        right: auto;
+        transform: translateX(0);
+    }
+
+    .timeline-card.left::before {
+        left: -38px;
+    }
+    
+    .timeline-card.right::before {
+        left: -38px;
+    }
+    
+    .timeline-card {
+        opacity: 0;
+        transform: translateX(20px);
+    }
+    
+    .timeline-card.visible {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Анимация появления с задержкой */
+.timeline-card:nth-child(1).visible { transition-delay: 0.05s; }
+.timeline-card:nth-child(2).visible { transition-delay: 0.2s; }
+.timeline-card:nth-child(3).visible { transition-delay: 0.35s; }
+.timeline-card:nth-child(4).visible { transition-delay: 0.5s; }
+.timeline-card:nth-child(5).visible { transition-delay: 0.65s; }
+
+/* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="cross">☦</div>
+<div class="light" id="light"></div>
+
+<!-- ==============================
+     HERO
+=============================== -->
+<div class="hero">
+    <img src="https://tse3.mm.bing.net/th/id/OIP.0hqRV0jQ712kpZaQqoOpgAHaHO?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Գարեգին Նժդեհ">
+    <h1>Գարեգին Նժդեհ</h1>
+    <p>ՈԳԻ • ԱԶԳ • ՀԱՂԹԱՆԱԿ</p>
+</div>
+
+<!-- ==============================
+     SECTION 1 — ԿԵՆՍԱԳՐՈՒԹՅՈՒՆ
+=============================== -->
+<section id="bio">
+    <h2 class="fade">ԺՈՂՈՎՐԴԻ ԾԱՌԱՆ</h2>
+    <div class="divider fade"></div>
+
+    <!-- Stat row -->
+    <div class="stat-row">
+        <div class="stat-item fade">
+            <span class="stat-num">1886</span>
+            <span class="stat-label">Ծնվել է</span>
+        </div>
+        <div class="stat-item fade">
+            <span class="stat-num">1955</span>
+            <span class="stat-label">Վախճանվել է</span>
+        </div>
+        <div class="stat-item fade">
+            <span class="stat-num">69</span>
+            <span class="stat-label">Տարիք</span>
+        </div>
+        <div class="stat-item fade">
+            <span class="stat-num">3</span>
+            <span class="stat-label">Պատերազմ</span>
+        </div>
+        <div class="stat-item fade">
+            <span class="stat-num">∞</span>
+            <span class="stat-label">Ժառանգություն</span>
+        </div>
+    </div>
+
+    <div class="photo-block">
+        <div class="text-side">
+            <p class="text-block fade">
+                Գարեգին Տեր-Հարությունյանը, ծածկանունով Նժդեհ (հայերեն՝ «պանդուխտ», «անտուն»), ծնվել է 1886 թվականի հունվարի 1-ին, Նախիջևանի Կայծակ գյուղում: Հայ ռազմական հրամանատար, պետական գործիչ, փիլիսոփա և ազգային-հայրենասիրական «Ցեղակրոն» ուսմունքի հիմնադիր՝ նա դարձել է 20-րդ դարի հայ պատմության ամենանշանակալի դեմքերից մեկը:
+            </p>
+            <p class="text-block fade">
+                Նժդեհի ողջ կյանքը եղել է անդադրում պայքար հայ ժողովրդի գոյատևման, արժանապատվության ու ազատության համար: Բալկանյան պատերազմների դաշտերից մինչև Սյունիքի անառիկ լեռները, ապա՝ Եվրոպայի ու Ամերիկայի հայկական սփյուռքի կենտրոնները, նրա ուղին արտացոլել է ժողովրդի կամքը՝ ոտքի կանգնելու ու երբեք ծնկի չիջնելու:
+            </p>
+        </div>
+        <div class="img-side fade">
+            <img src="https://aparaj.am/wp-content/uploads/2021/06/e0e26f739e5dc21093701f35ac2b4f90.jpg" alt="Գարեգին Նժդեհ">
+            <p class="photo-caption">Գարեգին Նժդեհ • Ռազմական համազգեստ</p>
+        </div>
+    </div>
+
+    <p class="text-block fade">
+        «Նժդեհ» ծածկանունը, որ ինքն է ընտրել, կարծես ճակատագրի արձագանք լիներ. ողջ կյանքում նա մնաց պանդուխտ, հայրենիքից հեռու, բայց հոգով միշտ մոտ նրան: Նրա անունն ավելի քան հայկական ռազմիկի կերպար է. դա ամենախոր ճշմարտությունն է այն մասին, թե ինչ է նշանակում սիրել ու ծառայել:
+    </p>
+</section>
+
+<!-- ==============================
+     PARALLAX 1
+=============================== -->
+<div class="parallax-banner-2">
+    <h2>ԾՆՆԴԱՎԱՅՐ • ԿԱՅԾԱԿ • ՆԱԽԻՋԵՎԱՆ</h2>
+</div>
+
+<!-- ==============================
+     SECTION 2 — ՄԱՆԿՈՒԹՅՈՒՆ ԵՎ ԿՐԹՈՒԹՅՈՒՆ
+=============================== -->
+<section id="childhood">
+    <h2 class="fade">ՄԱՆԿՈՒԹՅՈՒՆ ԵՎ ԿՐԹՈՒԹՅՈՒՆ</h2>
+    <div class="divider fade"></div>
+
+    <!-- Inline 3-col gallery -->
+    <div class="inline-gallery-3">
+        <img src="https://tse4.mm.bing.net/th/id/OIP.F9TeXRJozuuMVnTLdJAh8AHaFj?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Կայծակ գյուղ" class="fade">
+        <img src="https://th.bing.com/th/id/R.bcfabc72a7819f5792d7f1a7d75db6d8?rik=BWJrs3IGWCSwnw&pid=ImgRaw&r=0" alt="Թիֆլիսի ռազմական դպրոց" class="fade">
+        <img src="https://hayrazmik.com/wp-content/uploads/2023/01/Garegin_Nzhdeh_1916.png" alt="Երիտասարդ Նժդեհ" class="fade">
+    </div>
+
+    <div class="photo-block reverse">
+        <div class="text-side">
+            <p class="text-block fade">
+                Գարեգինը ծնվել է կուլտուրական ու կրոնական ժառանգությամբ հագեցած ընտանիքում: Նրա հայրը՝ Երեց Տեր-Հարությունը, գյուղական քահանա էր, ով ջանասիրաբար բարոյական և հոգևոր արժեքներ սերմանեց որդու մեջ: Մայրը՝ Մարիամը, հայտնի էր հայ ժողովրդական երգն ու բանահյուսությունը սիրելու համար:
+            </p>
+            <p class="text-block fade">
+                Վաղ մանկությունում Գարեգինը ականատես եղավ Նախիջևանի հայության նկատմամբ ցարական և թուրքական հալածանքներին, ինչը խոր հետք թողեց նրա աշխարհայացքում: Հայ մտավորականության, բանաստեղծների և ազատամարտիկների հետ շփումը կոփեց նրա բնավորությունը:
+            </p>
+            <p class="text-block fade">
+                Նախնական կրթությունը ստացել է Կայծակում, ապա Թիֆլիսի հայկական դպրոցում: Տաղանդը, ուժը, դիվանագիտական հմտությունները և կազմակերպչական ձիրքերը վաղ ի հայտ եկան:
+            </p>
+        </div>
+        <div class="img-side fade">
+            <img src="https://tse2.mm.bing.net/th/id/OIP.SW-vvURUHJMuWY3cJe7Y-gHaK7?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Երիտասարդ Նժդեհ">
+            <p class="photo-caption">1900-ական թթ. • Մանկությունը Կայծակում</p>
+        </div>
+    </div>
+
+    <div class="card-wide fade">
+        <h3>⚔ Ռազմական կրթություն</h3>
+        <p>
+            Նժդեհը իր ազգային ուժը մեծապես ստացել է Սանկտ Պետերբուրգի ռազմական ակադեմիայում և Պետերբուրգի համալսարանում։ Ապա Բալկանյան պատերազմներում 1912–1913 թթ. նրա հերոսությունը և վարժելությունը իր հարակիցներին դարձրեց մեզ համար պատմության կենդանի վկա:
+        </p>
+        <div class="tags">
+            <span class="tag">Ռազմական կյանք</span>
+            <span class="tag">Բալկաններ</span>
+            <span class="tag">Կովկաս</span>
+            <span class="tag">Ազատամարտի ավանդույթ</span>
+        </div>
+    </div>
+
+    <div class="card-wide fade">
+        <h3>📚 Կրթություն և գաղափարական կայացում</h3>
+        <p>
+            Գարեգին Տեր-Հարությունյանը կրթություն է ստացել Թիֆլիսում, ապա մեկնել է Ռուսաստան, ավելի ուշ՝ Բալկանյան երկրներում: Նրա կրթության մեջ նշանակալի տեղ են գրավել հայրենասիրական տեսությունները և ազգային ինքնապաշտպանության կազմակերպման ուժի մասին պատկերացումները: Նրա մատենագիտական և փիլիսոփայական ազդեցությունը դարձավ անկախության, ազատության և միասնության հիմք:
+        </p>
+        <div class="tags">
+            <span class="tag">Փիլիսոփայություն</span>
+            <span class="tag">Նիետշե</span>
+            <span class="tag">Հայրենասիրություն</span>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     SECTION 3 — ԲԱԼԿԱՆՅԱՆ ՊԱՏԵՐԱԶՄՆԵՐ
+=============================== -->
+<section id="balkans" style="padding-top:0;">
+    <h2 class="fade">ԲԱԼԿԱՆՅԱՆ ՊԱՏԵՐԱԶՄՆԵՐ</h2>
+    <div class="divider fade"></div>
+
+    <div class="two-col">
+        <div>
+            <p class="text-block fade">
+                1912 թվականին, երբ սպարապետության կանչը հնչեց Բալկաններում, Նժդեհն ազատամարտի դեմ կռվել է Մակեդոնիայում, Սերբիայում և Բուլղարիայում: Նրա հերոսության պատմությունը բացառիկ է և վկայում է նրա անունը հայ պատմության մեջ:
+            </p>
+        </div>
+        <div>
+            <p class="text-block fade">
+                Բալկաններում ստացած մարտավարական պատրաստության շնորհիվ Նժդեհը դարձավ առաջին բազմահազարության կետակում կատաղի անգամ — ռազմաճակատային մարտերում, անբառ լեռնական ներգարձում: Նրա կուզակական հերոսությունն ու մարտական պատմությունը ապացուցեցին, որ հայ մարդը անաբասանակա՛ն է արդարության համար մարտնել և աշխատել զենքով:
+            </p>
+        </div>
+    </div>
+
+    <div class="gallery-captioned fade">
+        <div class="gcap-item">
+            <img src="https://armenianart.am/wp-content/uploads/2023/12/garegin-nzhdeh-oil-painting-by-narek-avanesyan-1t.webp" alt="Բալկանյան մարտեր">
+            <p class="gcap-label">Բալկանյան մարտ • 1912</p>
+        </div>
+        <div class="gcap-item">
+            <img src="https://i.ytimg.com/vi/qdmleRYH0vU/maxresdefault.jpg" alt="Նժդեհ Բալկաններում">
+            <p class="gcap-label">Նժդեհ Բալկաններում • 1913</p>
+        </div>
+        <div class="gcap-item">
+            <img src="https://www.aravot.am/wp-content/uploads/2022/01/Garegin-Nzhdeh.jpg" alt="Կամավորական բանակ">
+            <p class="gcap-label">Կամավորական ջոկատ</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     SECTION 4 — ՑԵՂԱԿՐՈՆ
+=============================== -->
+<section id="tseghakron">
+    <h2 class="fade">ՑԵՂԱԿՐՈՆ ՈՒՍՄՈՒՆՔԸ</h2>
+    <div class="divider fade"></div>
+
+    <p class="text-block fade">
+        «Ցեղակրոնը» — հայերեն բառացի «ազգակրոն», այսինքն ազգապաշտություն և ազգային կրոն — Նժդեհի հորինած ազգային-կրոնական ուսմունքն է, որն անկան մեկնաբանում է հայ ազգի հոգի պահպանումը: Նրա մատենագիտական համակարգի կենտրոնում ազատությունն ու հոգու ուժն է, որ ազգը դրանից կյանք է հանում և առաջադիմում:
+    </p>
+
+    <div class="pull-quote fade">
+        Ցեղակրոնը լուսավորում է հայ մարդու նյութի հատկությունից, դարձնում է տեսլական և ուժ — հաղթահարման և պայքարի հենք:
+    </div>
+
+    <div class="cards">
+        <div class="card fade">
+            <h3>Հայրենապաշտություն</h3>
+            <p>Բացառիկ նվիրում նախնիների հոգուն: Հայրենիքը պարարտակերտ չէ, այն սրբազան վայր է, որտեղ կազմավորվում է ազգի հոգին: Նրա հետևանքով նրան կալիք հերոս-հերակ ազգային նյութը մեզ հետ է ապրում:</p>
+            <div class="tags"><span class="tag">Ազգայնականություն</span><span class="tag">Նախնիներ</span></div>
+        </div>
+        <div class="card fade">
+            <h3>Արտան Պաշտամունք</h3>
+            <p>Սեփական ցեղի մաքրության և ուժի գիտակցում: Սա կողմն է — պահպանել ազգային ինքնությունը ամենակերտ սովորությունների պայմաններում: Նրա համապատասխանությունը կերտում է մեզի և ոգու հետևանքները:</p>
+            <div class="tags"><span class="tag">Ինքնություն</span><span class="tag">Պատմություն</span></div>
+        </div>
+        <div class="card fade">
+            <h3>Ուժի պաշտամունք</h3>
+            <p>Թուլությունը հրեհալ է ագրեսիա: Ազգը գոյություն ունենալու իրավունք ունի միայն այն ժամանակ, երբ կարող է պահպանել ինքն իրեն զենքի և հոգու ուժով: Համաձայնությունը և մարտավարական պատրաստվածությունն ունեն այդ տեսանկյան կենտրոնում:</p>
+            <div class="tags"><span class="tag">Ռազմականություն</span><span class="tag">Կամք</span></div>
+        </div>
+        <div class="card fade">
+            <h3>Զոհաբերության պաշտամունք</h3>
+            <p>Հանուն հավերժ իդեալների կյանքը դալով պատրաստականություն: Իսկական հերոսն այն է, ով ազգի շահերը վեր է դասում անհատական հարմարությունից և գոյատևումից: Նրա գոյացությունը համբավարանության մեջ է ստեղծում — դառնալ ու աշխատել հայրենիքի անունով:</p>
+            <div class="tags"><span class="tag">Հերոսություն</span><span class="tag">Իդեալներ</span></div>
+        </div>
+    </div>
+
+    <div class="photo-block" style="margin-top:60px;">
+        <div class="text-side">
+            <p class="text-block fade">
+                Ցեղակրոն ուսմունքը չի զուտ քաղաքական գաղափարախոսություն: Նժդեհի համար այն կենտրոնացված է նյութի և մեզի վրա: Նրա աշխարհայացքը կերտել են Հովհաննես Թումանյանը, Ավետիք Իսահակյանը և Վահան Տերյանը — հայությունը նրանց խոհով է ապրում:
+            </p>
+            <p class="text-block fade">
+                Նժդեհն ինքը թողել է մնահեդակ աշխատություններ — «Մեծ Հայք», «Ցեղակրոն», «Եղեռնապաշտության արջանհարվարդ», որոնցում հայտնել ու մատենագիտական կերպով կարացել է նրա հաշվարկները: Այդ գրություններում ներքաշվում են մեզի և խոհանկի գաղափարներն ու հայության մնահետ շարժերը:
+            </p>
+        </div>
+        <div class="img-side fade">
+            <img src="https://www.usanogh.am/wp-content/uploads/2025/01/Garegin-Nzhdeh.jpg" alt="Նժդեհի գրությունները">
+            <p class="photo-caption">Նժդեհի մատենագիտական աշխատանքների մնահեդակները</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     PARALLAX 2 — ԶԱՆԳԵԶՈՒՐ
+=============================== -->
+<div class="parallax-banner">
+    <h2>ԱՆՊԱՐՏԵԼԻ ԶԱՆԳԵԶՈՒՐ</h2>
+</div>
+
+<!-- ==============================
+     SECTION 5 — ՍՅՈՒՆԻՔ
+=============================== -->
+<section id="syunik">
+    <h2 class="fade">ՍՅՈՒՆԻՔԻ ԻՆՔՆԱՊԱՇՏՊԱՆՈՒԹՅՈՒՆԸ</h2>
+    <div class="divider fade"></div>
+
+    <p class="text-block fade">
+        1919 թվականին, երբ հայ ժողովուրդը կանգնած էր բնաջնջման վտանգի առաջ Անատոլիայում և Արևելյան Հայաստանում, Նժդեհը մեկնեց Զանգեզուր: Նրա միսիան անհավակն էր — պահպանել Սյունիքի հայությունը ոչ միայն թուրքական և բնաջնջումից, այլև համախմբել ուժեր և կազմակերպել ինքնապաշտպան կենտրոն:
+    </p>
+
+    <div class="timeline">
+        <div class="event fade">
+            <div class="date">1919</div>
+            <p><strong>Ժամանում Զանգեզուր:</strong> Նժդեհը ստանձնում է Կապանի զինվորական հրամանատարությունը — հայ բնակչության օգնության և պաշտպանության համար: Նրա առաքելությունն ու մարտավարական հաշվարկները կբնակեցնեն նրա կուզակներին:</p>
+        </div>
+        <div class="event fade">
+            <div class="date">1920</div>
+            <p><strong>Պատկառ հանուն գոյատևման:</strong> Ծանր մարտեր թշնամու գերակշիռ ուժերի դեմ: Նժդեհը դրսևորում է մարտավարական հանճար լեռնային պատերազմի պայմաններում: Նրա ուժերը և հաշվարկները կգերազանցեն զորեղին: Ինքնապաշտպան բնակչությունը, մինչ արյուն թշնամական հորդաները, կարողացավ վաստակել ազատության հաղթանակը:</p>
+            </p>
+        </div>
+        <div class="event fade">
+            <div class="date">1921</div>
+            <p><strong>Լեռնահայաստանի Հանրապետություն:</strong> Անկախ պետության հռչակում Սյունիքում: Այդ դառնալը կանխեց բոլշևիկների կողմից տարածաշրջանի հանդեպ Ադրբեջանի հավակնությունները: Նրա անձնահոլովությունը պահպանեց Սյունիքի հայկական ինքնապաշտպանությունը:</p>
+        </div>
+        <div class="event fade">
+            <div class="date">Արդյունք</div>
+            <p><strong>Տարածաշրջանի պոկռտություն:</strong> Նժդեհի անդրդվելիության շնորհիվ Սյունիքը հավերժ մնաց Հայաստանի անբաժանելի մասն — փրկվեց երկրի տարածական ամբողջականությունը:</p>
+        </div>
+    </div>
+
+    <!-- 3 photos from Syunik campaign -->
+    <div class="inline-gallery-3" style="margin-top: 60px;">
+        <img src="https://cool-like.ru/wp-content/uploads/2021/05/%D5%8D%D5%B5%D5%B8%D6%82%D5%B6%D5%AB%D6%84-2.jpg" alt="Սյունիքի լեռներ" class="fade">
+        <img src="https://tse1.mm.bing.net/th/id/OIP.bb_GteTweK37oW8-NRp9_AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Նժդեհ Սյունիքում" class="fade">
+        <img src="https://i.ytimg.com/vi/EKSiCHCQXNo/oar2.jpg?sqp=-oaymwEYCIAEENAFSFqQAgHyq4qpAwcIARUAAIhC&rs=AOn4CLDknmCQ9GUlLyRBWBkJ2YOkWzfmwg" alt="Զանգեզուրի մարտիկներ" class="fade">
+    </div>
+
+    <div class="card-wide fade" style="margin-top:40px;">
+        <h3>🏔 Լեռնահայաստանի Հանրապետություն</h3>
+        <p>
+            1921 թվականին, բոլշևիկների կողմից Հայաստանի անեքսիայից հետո, Նժդեհը հռչակեց Լեռնահայաստանի Հանրապետությունը Զանգեզուրում: Այդ միակ ուժը, որը կարող էր դիմակայել, կենսավորել է հայ ժողովրդի արժանապատվությունը այն երկրների համար: Նրա պայքարը մնաց որպես հայ ազգային ինքնապաշտպանության ամենավառ օրինակ:
+        </p>
+        <div class="tags">
+            <span class="tag">Անկախություն</span>
+            <span class="tag">Զանգեզուր</span>
+            <span class="tag">Քաղաքականություն</span>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     SECTION 6 — ԱՐՏԱՔՍՈՒՄ / ՍՓՅՈՒՌՔ
+=============================== -->
+<section id="exile">
+    <h2 class="fade">ԱՐՏԱՔՍՈՒՄ ԵՎ ՍՓՅՈՒՌՔ</h2>
+    <div class="divider fade"></div>
+
+    <div class="photo-block reverse">
+        <div class="text-side">
+            <p class="text-block fade">
+                1921 թվականին, բոլշևիկների ճնշման տակ Նժդեհը ստիպված էր լքել Լեռնահայաստանը և մեկնել: Նժդեհն անցել է Պարսկաստան, Բուլղարիա և վերջապես հասել ԱՄՆ, որտեղ կշարունակի իր գործունեությունը Նյու Յորքում և Բոստոնում: Այդ ամենակարևոր տարիներում նրա ազդեցությունը հայել է այն տեսանկյունը, որ ազգը գոյատևելու համար պետք է միասնականություն ցուցաբերի:
+            </p>
+            <p class="text-block fade">
+                ԱՄՆ-ում նա կորտել է սփյուռքահայ համայնքների հետ կապեր, հանդիպել գործիչների, կազմակերպել ազգային ժողովներ, շարունակել իր մտքերի և հայ ժողովրդի պատմության մեկնաբանությունը: Հայ Ռազմիկների միությունը և Դաշնակցությունը Նժդեհի կողմից հարգանքով նշանակել են նրա հաշվարկը:
+            </p>
+        </div>
+        <div class="img-side fade">
+            <img src="https://th.bing.com/th/id/R.33ceaacea80c312558d0346ae5273e0a?rik=tXGaikInyP8SGg&riu=http%3a%2f%2fgir.am%2fmedia%2fuploads%2fhr4mjiyatcep1nus.jpg&ehk=%2bQ6%2fr4hq1tMBeATURJgU8gwuW0fz42bSAa1sX7s1M5E%3d&risl=&pid=ImgRaw&r=0" alt="Նժդեհ Բուլղարիայում">
+            <p class="photo-caption">Նժդեհ Բուլղարիայում • 1930-ական թթ.</p>
+        </div>
+    </div>
+
+    <div class="two-col">
+        <div class="card fade">
+            <h3>🌍 Եվրոպական Բուլղարիա</h3>
+            <p>Բուլղարիայում Նժդեհը շփվել է հայ ուսանողների և մտավորականների հետ և կազմել է «Վորոտան» և այլ հայ կամավորական կազմակերպություններ: Բուլղարական մտավորականությունը և անկախությունը հարգանքով են վերաբերվել նրան: Նրա նախաձեռնությամբ օտարացան և ամրապնդվեցին կապերը հայ համայնքի հետ:</p>
+        </div>
+        <div class="card fade">
+            <h3>🗽 Ամերիկյան սփյուռք</h3>
+            <p>ԱՄՆ-ում Նժդեհը կորտել է հայ ժողովրդի շահերը, շարունակել է իր գործունեությունը հայ ազգային միասնության ամրապնդման գործում: «Մեծ Հայք» աշխատությունը դարձավ հայ ազգային և մշակութային պատմության կարևորագույն մեկնաբանություն:</p>
+        </div>
+    </div>
+
+    <!-- Wide card for WWII period -->
+    <div class="card-wide fade">
+        <h3>⚠ Երկրորդ Համաշխարհային Պատերազմ</h3>
+        <p>
+            Երկրորդ համաշխարհի տարիներին Նժդեհը կապել է Նացիոնալ Գերմանիայի հետ որոշակի հարաբերություններ, սակայն նրա նպատակն էր ազատագրել Հայաստանը խորհրդային լծից: Հայ պատմաբանների գնահատմամբ նա փորձել է ազգային շահերը հասցնել առաջնային: Նրա կոչումը մնաց ազգի անկախության և արժանապատվության վերականգնման ձգտումը:
+        </p>
+        <div class="tags">
+            <span class="tag">Պատերազմ</span>
+            <span class="tag">Դիվանագիտություն</span>
+            <span class="tag">Բարդություն</span>
+        </div>
+    </div>
+
+    <div class="gallery-captioned fade">
+        <div class="gcap-item">
+            <img src="https://tse1.mm.bing.net/th/id/OIP.WC9bKweoOeK2o4oJ4Dw17AHaD5?rs=1&pid=ImgDetMain&o=7&rm=3" alt="ԱՄՆ">
+            <p class="gcap-label">ԱՄՆ • Նյու Յորք • 1946</p>
+        </div>
+        <div class="gcap-item">
+            <img src="https://www.arfd.am/wp-content/uploads/2018/11/%D5%86%D5%AA%D5%A4%D5%A5%D5%B0-%D4%B6%D5%A1%D6%82%D5%A1%D6%80%D5%A5%D5%A1%D5%B6.jpg" alt="Նժդեհ խոսք">
+            <p class="gcap-label">Ճառ սփյուռքահայության հետ</p>
+        </div>
+        <div class="gcap-item">
+            <img src="https://images-na.ssl-images-amazon.com/images/S/compressed.photo.goodreads.com/books/1684497652i/111502222.jpg" alt="Նժդեհ Սոֆիայում">
+            <p class="gcap-label">Սոֆիա • Բուլղարիա • 1935</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     PARALLAX 3 — ՆԱԺԱՌԱՆԳՈՒԹՅՈՒՆ
+=============================== -->
+<div class="parallax-banner-3">
+    <h2>ԺԱՌԱՆԳՈՒԹՅՈՒՆ ԵՎ ՆՇԱՆԱԿՈՒԹՅՈՒՆ</h2>
+</div>
+
+<!-- ==============================
+     SECTION 7 — ԺԱՌԱՆԳՈՒԹՅՈՒՆ
+=============================== -->
+<section id="legacy">
+    <h2 class="fade">ԺԱՌԱՆԳՈՒԹՅՈՒՆ ԵՎ ԱԶԴԵՑՈՒԹՅՈՒՆ</h2>
+    <div class="divider fade"></div>
+
+    <p class="text-block fade">
+        1948 թվականին, Նժդեհը բանտարկվեց ՆԿՎԴ-ի կողմից և տարագրվեց Վլադիմիրի բանտ: Նրա ժողովրդի կատարած աշխատանքը, հակաազգային դիրքորոշումը և մատենագիտական ժառանգությունը հատուկ կերպով ներկայացվել են հետագայում:
+    </p>
+
+    <div class="photo-block">
+        <div class="text-side">
+            <p class="text-block fade">
+                1955 թվականին, Նժդեհը վախճանվեց Վլադիմիրի բանտում — անսլաց, օտարացած, բայց որպես կենդանի և մնայուն հայ ժողովրդի հոգում: Նրա աճյունը տեղափոխվեց Հայաստան 1983 թվականին — հետո այդ որոշումը շարունակեց Հայաստանի և Արցախի ազատագրական պայքարը:
+            </p>
+            <p class="text-block fade">
+                Նժդեհի ժառանգությունը մեծ է և չի պակասում — նրա հաշվարկը ազգային-պետական շահերի և հայ ժողովրդի ազատամարտի ավանդույթների մեջ ամրագրված է: Նրա գաղափարները ազդեցություն են ունեցել հետագա սերունդների վրա:
+            </p>
+        </div>
+        <div class="img-side fade">
+            <img src="https://tse2.mm.bing.net/th/id/OIP.SBO4tLNmSaVPwQZz4OjdDgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Նժդեհի հուշարձան Երևանում">
+            <p class="photo-caption">Նժդեհի հուշարձան Երևանում</p>
+        </div>
+    </div>
+
+    <div class="stat-row">
+        <div class="stat-item fade">
+            <span class="stat-num">1983</span>
+            <span class="stat-label">Մարմինը վերադարձվեց Հայաստան</span>
+        </div>
+        <div class="stat-item fade">
+            <span class="stat-num">2016</span>
+            <span class="stat-label">Ռեաբիլիտացիա</span>
+        </div>
+        <div class="stat-item fade">
+            <span class="stat-num">1000+</span>
+            <span class="stat-label">Հուշարձաններ և անվանումներ</span>
+        </div>
+    </div>
+
+    <div class="cards">
+        <div class="card fade">
+            <h3>🏛 Երևանի հուշարձաններ</h3>
+            <p>Հայաստանի մայրաքաղաքում անունով կոչված են փողոցներ և հուշակոթողներ: Նրա գլխավոր հուշարձանը Երևանում կանգնեցվել է 1987 թվականին:</p>
+        </div>
+        <div class="card fade">
+            <h3>📖 Մատենագիտական ազդեցություն</h3>
+            <p>Նրա գրություններն այսօր էլ վերընթերցվում և ուսումնասիրվում են: «Մեծ Հայք», «Ցեղակրոն», «Պատվիրանք կյանքի» — խորհուրդ ուսուցումներ, որոնք ազգային մտավորականության համար կարևոր նշանակություն ունեն:</p>
+        </div>
+        <div class="card fade">
+            <h3>🎖 Հասարակական ճանաչում</h3>
+            <p>2016 թվականին Հայաստանի իշխանությունները վերջնականապես ճանաչեցին Նժդեհի կոչումը Սյունիքի և Լեռնահայաստանի գոյատևման գործում: Նրա պատվահանման և արդարացման գործընթացը դարձել է ազգային միասնության կարևոր փուլ:</p>
+        </div>
+    </div>
+
+    <!-- Full-width image of monument -->
+    <img src="https://cf.ppt-online.org/files/slide/2/2Zn0a4Nxv6bsqISkcit5duAECWPjOD3X1fYQLl/slide-4.jpg"Նժդեհի հուշարձան" class="section-photo-banner fade" style="margin-top: 60px; border-radius: 4px;">
+    <p class="photo-caption fade" style="margin-top: 14px;">Նժդեհի հուշարձանը Երևանում — հայ ազգային արժանապատվության խորհրդանիշ</p>
+</section>
+
+<!-- ==============================
+     SECTION 8 — ՄՏՔԵՐ / ՔԱՂԱՔԱՑԻԱԿԱՆ ԺԱՌԱՆԳՈՒԹՅՈՒՆ
+=============================== -->
+<section id="quotes">
+    <h2 class="fade">ՀԱՎԵՐԺ ԱՆ ՄՏՔԵՐ</h2>
+    <div class="divider fade"></div>
+
+    <div class="pull-quote fade">
+        Հայ ազգը կենա, երբ կենան նրա երիտասարդները:
+    </div>
+
+    <div class="quote-grid">
+        <div class="quote fade">
+            Ժողովուրդը, որ չի ուզում իր Հայրենիքը պահպանել զենքն առած, դատապարտված է կորստյան: Ապրելու իրավունք ունի միայն նա, ով պատրաստ է պայքարել դրա համար:
+        </div>
+        <div class="quote fade">
+            Մի սպասիր պոռթկումի դրսից: Արտաքին ուժերը միշտ հետապնդում են միայն սեփական շահերը: Հայաստանի պոռթկումը հայերի ձեռքում է:
+        </div>
+        <div class="quote fade">
+            Եթե ուզում ես կանգնեցնել ժողովրդի ապագան, նայի նրա երիտասարդությանը: Ինչպիսին է երիտասարդությունը, այնպիսին է ազգի վաղվա օրը:
+        </div>
+        <div class="quote fade">
+            Մի ներիր թշնամուն, եթե նա պատիժ չի կրել իր արարքի համար: Ներողամտությունը արդարություն չի, այլ ազդ է ակնկալել նոր հանցագործություններ:
+        </div>
+        <div class="quote fade">
+            Ժողովուրդը, որը կորցնում է իր նախնիները, մեռնում է իր ապագայի համար: Պահպանիր քո ուրվագիծը — քո ազգությունը և քո հավատը:
+        </div>
+        <div class="quote fade">
+            Կյանքը — դաշտ արդարության համար: Պայքարը — պատվի և արժանապատվության համար: Ով պատրաստ է մեռնել իր ազգի անունով — նա չի մեռնում, նա հավերժ ապրում է իր ժողովրդի սրտում:
+        </div>
+    </div>
+</section>
+
+<!-- ==============================
+     SECTION 9 — ԳԱԼԵՐԵԱ
+=============================== -->
+<!-- ==============================
+     ИНТЕРАКТИВНЫЙ ТАЙМЛАЙН ЖИЗНИ НЖДЕ
+=============================== -->
+<section id="timeline" class="timeline-section">
+    <div class="container-timeline">
+        <h2 class="timeline-title fade">ԳԱՐԵԳԻՆ ՆԺԴԵՀ. ԿՅԱՆՔԻ ՈՒՂԻՆ</h2>
+        <div class="divider fade"></div>
+
+        <div class="timeline-wrapper">
+            <!-- Центральная линия с динамической заливкой -->
+            <div class="timeline-center-line">
+                <div class="timeline-line-fill" id="timelineLineFill"></div>
+            </div>
+
+            <!-- Карточки событий -->
+            <div class="timeline-grid">
+                <!-- Событие 1886 -->
+                <div class="timeline-card left" data-glow="1886">
+                    <div class="card-inner">
+                        <div class="card-year">1886</div>
+                        <h3 class="card-title">Նախիջևան. Ծնունդ հերոսի</h3>
+                        <p class="card-text">Գարեգին Տեր-Հարությունյանը ծնվում է Կայծակ գյուղում: Մանկությունն անցնում է հայկական ավանդույթների ու ազգային ոգու մեջ:</p>
+                    </div>
+                </div>
+
+                <!-- Событие 1904 -->
+                <div class="timeline-card right" data-glow="1904">
+                    <div class="card-inner">
+                        <div class="card-year">1904</div>
+                        <h3 class="card-title">ՀՅԴ. Քաղաքական ուղու սկիզբ</h3>
+                        <p class="card-text">Նժդեհը միանում է Հայ Յեղափոխական Դաշնակցությանը: Սկսվում է նրա երկարամյա պայքարը՝ նվիրված ազգային ազատության գաղափարին:</p>
+                    </div>
+                </div>
+
+                <!-- Событие 1918 -->
+                <div class="timeline-card left" data-glow="1918">
+                    <div class="card-inner">
+                        <div class="card-year">1918</div>
+                        <h3 class="card-title">Սարդարապատ. Հերոսական ճակատամարտ</h3>
+                        <p class="card-text">Նժդեհը մասնակցում է Սարդարապատի ճակատամարտին՝ փրկելով Հայաստանը կործանումից: Հայոց պատմության փառավոր էջերից մեկը:</p>
+                    </div>
+                </div>
+
+                <!-- Событие 1921 -->
+                <div class="timeline-card right" data-glow="1921">
+                    <div class="card-inner">
+                        <div class="card-year">1921</div>
+                        <h3 class="card-title">Սյունիք. Լեռնահայաստանի ստեղծում</h3>
+                        <p class="card-text">Գլխավորում է Զանգեզուրի ինքնապաշտպանությունը, հիմնում Լեռնահայաստանի Հանրապետությունը՝ ազգային ինքնության վերջին հենակետը:</p>
+                    </div>
+                </div>
+
+                <!-- Событие 1955 -->
+                <div class="timeline-card left" data-glow="1955">
+                    <div class="card-inner">
+                        <div class="card-year">1955</div>
+                        <h3 class="card-title">Վլադիմիր. Մահ բանտում</h3>
+                        <p class="card-text">Նժդեհը վախճանվում է Վլադիմիրի բանտում: Նրա մարմինը տուն է վերադառնում միայն 1983-ին, իսկ գաղափարները մնում են հավերժ:</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<footer>
+    ՀԱՅԿԱԿԱՆ ԹՎԱՅԻՆ ԹԱՆԳԱՐԱՆ • ՊԱՏՐԱՍՏՎԱԾ Է ՆՎԻՐԱՏՎԱԾՈՒԹՅԱՄԲ • 2026
+</footer>
+
+<script>
+    const light = document.getElementById("light");
+    
+    document.addEventListener("mousemove", (e) => {
+        requestAnimationFrame(() => {
+            light.style.left = e.clientX + "px";
+            light.style.top = e.clientY + "px";
+        });
+    });
+
+    const fadeElements = document.querySelectorAll(".fade");
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add("show");
+                observer.unobserve(entry.target); 
+            }
+        });
+    }, { 
+        threshold: 0.1,
+        rootMargin: "0px 0px -40px 0px" 
+    });
+
+    fadeElements.forEach(el => observer.observe(el));
+
+
+    // =========================
+// ИНТЕРАКТИВНЫЙ ТАЙМЛАЙН
+// =========================
+document.addEventListener('DOMContentLoaded', function() {
+    const timelineSection = document.getElementById('timeline');
+    if (!timelineSection) return;
+
+    // ----- 1. Заполнение центральной линии светом при скролле -----
+    const lineFill = document.getElementById('timelineLineFill');
+    const centerLine = document.querySelector('.timeline-center-line');
+    
+    function updateTimelineFill() {
+        if (!timelineSection || !lineFill) return;
+        
+        const rect = timelineSection.getBoundingClientRect();
+        const sectionTop = rect.top + window.scrollY;
+        const sectionBottom = sectionTop + rect.height;
+        const scrollY = window.scrollY;
+        
+        // Прогресс скролла внутри секции (от верхнего края секции до нижнего)
+        let progress = (scrollY - sectionTop) / (rect.height - window.innerHeight);
+        progress = Math.min(Math.max(progress, 0), 1);
+        
+        // Применяем высоту заливки
+        lineFill.style.height = `${progress * 100}%`;
+    }
+    
+    window.addEventListener('scroll', () => {
+        requestAnimationFrame(updateTimelineFill);
+    });
+    window.addEventListener('resize', updateTimelineFill);
+    updateTimelineFill(); // первоначальный вызов
+    
+    // ----- 2. Появление карточек с IntersectionObserver (ступенчато) -----
+    const cards = document.querySelectorAll('.timeline-card');
+    
+    const observerOptions = {
+        threshold: 0.2,
+        rootMargin: "0px 0px -60px 0px"
+    };
+    
+    const appearObserver = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                appearObserver.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+    
+    cards.forEach(card => {
+        appearObserver.observe(card);
+    });
+    
+    // ----- 3. Эффект изменения фона секции при наведении на карточки -----
+    cards.forEach(card => {
+        card.addEventListener('mouseenter', () => {
+            const glowAttr = card.getAttribute('data-glow');
+            let gradientValue = '';
+            switch(glowAttr) {
+                case '1886':
+                    gradientValue = 'radial-gradient(circle at 20% 30%, rgba(0,0,0,0.2), #080808)';
+                    break;
+                case '1904':
+                    gradientValue = 'radial-gradient(circle at 80% 20%, rgba(212,175,55,0.08), #080808)';
+                    break;
+                case '1918':
+                    gradientValue = 'radial-gradient(circle at 30% 70%, rgba(180,100,30,0.1), #080808)';
+                    break;
+                case '1921':
+                    gradientValue = 'radial-gradient(circle at 60% 40%, rgba(100,70,20,0.12), #080808)';
+                    break;
+                case '1955':
+                    gradientValue = 'radial-gradient(circle at 40% 85%, rgba(80,60,30,0.15), #080808)';
+                    break;
+                default:
+                    gradientValue = 'radial-gradient(circle at 50% 50%, rgba(212,175,55,0.05), #080808)';
+            }
+            timelineSection.style.background = gradientValue;
+            timelineSection.style.transition = 'background 0.35s ease';
+        });
+        
+        card.addEventListener('mouseleave', () => {
+            timelineSection.style.background = '#080808';
+        });
+    });
+});
+
+</script>
+
+</body>
+</html>

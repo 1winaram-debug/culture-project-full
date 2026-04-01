@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Հայ Զինվոր | Главная</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Unbounded:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Unbounded', sans-serif;
+            background-color: #0f0804;
+            color: #e5d5b3;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(180,120,50,0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(140,90,40,0.12) 0%, transparent 45%),
+                repeating-linear-gradient(45deg, rgba(120,75,30,0.03) 0px, rgba(120,75,30,0.03) 2px, transparent 2px, transparent 8px);
+            background-color: #0a0502;
+            z-index: -2;
+        }
+
+        body::after {
+            content: "☦";
+            position: fixed;
+            bottom: 20px; left: 30px;
+            font-size: 15rem;
+            color: rgba(150,100,50,0.1);
+            transform: rotate(15deg);
+            z-index: -1;
+            font-family: serif;
+            pointer-events: none;
+            text-shadow: 0 0 20px rgba(200,150,50,0.2);
+        }
+
+        /* ЯЗЫК */
+        .lang-switcher {
+            position: fixed; top: 20px; left: 30px;
+            display: flex; gap: 8px; z-index: 1100;
+        }
+        .lang-btn {
+            background: rgba(25,15,5,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #c9a063;
+            color: #fadfa3;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.75rem; font-weight: 700;
+            padding: 6px 14px; border-radius: 50px;
+            cursor: pointer; letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .lang-btn:hover, .lang-btn.active {
+            background: #2f2213; border-color: #ffd966;
+            color: #fff6e0; box-shadow: 0 0 15px rgba(218,165,32,0.4);
+        }
+
+        /* ДРОПДАУНЫ И БЛОК ПОЛЬЗОВАТЕЛЯ */
+        .top-dropdown-wrapper {
+            position: fixed; top: 20px; right: 30px;
+            display: flex; gap: 16px; z-index: 1100;
+        }
+        .btn-armenian {
+            background: rgba(25,15,5,0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #c9a063;
+            color: #fadfa3;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 700; font-size: 1rem;
+            padding: 10px 22px; border-radius: 50px;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+            display: flex; align-items: center; gap: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5), 0 0 10px rgba(180,130,70,0.2);
+            letter-spacing: 1px; cursor: pointer;
+        }
+        .btn-armenian i { color: #d4a259; font-size: 1.1rem; filter: drop-shadow(0 0 5px #a7772c); }
+        .btn-armenian:hover {
+            background: #2f2213; border-color: #ffd966; color: #fff6e0;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.7), 0 0 25px rgba(218,165,32,0.5);
+            transform: translateY(-2px);
+        }
+        .dropdown-toggle::after { display: none; }
+        .btn-armenian .fa-chevron-down { transition: transform 0.3s; }
+        .dropdown.show .fa-chevron-down { transform: rotate(180deg); }
+
+        .dropdown-menu { background: transparent; border: none; padding: 0; margin-top: 10px !important; }
+        .dropdown-menu-armenian {
+            background: rgba(25,18,10,0.97);
+            backdrop-filter: blur(15px);
+            border: 1px solid #8b6f48;
+            border-radius: 20px; padding: 10px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 30px rgba(180,130,70,0.3);
+            min-width: 240px;
+        }
+        .dropdown-item-armenian {
+            color: #e1c699; padding: 12px 20px;
+            transition: background 0.2s, color 0.2s, border-left-color 0.2s, padding-left 0.2s;
+            border-radius: 12px; display: flex; align-items: center; gap: 14px;
+            font-family: 'Marcellus', serif; font-size: 1.05rem;
+            border-left: 3px solid transparent; text-decoration: none;
+        }
+        .dropdown-item-armenian i { color: #b58b4a; width: 22px; text-align: center; font-size: 1.1rem; }
+        .dropdown-item-armenian:hover {
+            background: linear-gradient(90deg, #3f2d1a, #281e12);
+            color: #ffefd0; border-left-color: #e6b15c; padding-left: 26px;
+        }
+        .dropdown-header-armenian { color: #b69262; font-size: 0.85rem; letter-spacing: 2px; padding: 8px 15px; font-family: 'Unbounded', sans-serif; }
+        .dropdown-divider-armenian { border-top: 1px dashed #9e7b4b; margin: 8px 15px; opacity: 0.5; }
+
+        /* БЛОК ПОЛЬЗОВАТЕЛЯ В ШАПКЕ */
+        #user-header-block .btn-armenian {
+            padding: 6px 18px 6px 12px;
+        }
+        #header-user-avatar {
+            width: 28px; height: 28px; border-radius: 50%; object-fit: cover;
+            border: 1px solid #d4af37; margin-right: 6px;
+        }
+
+        /* ЦЕНТР */
+        .page-center {
+            min-height: 100vh; display: flex;
+            align-items: center; justify-content: center;
+            padding: 120px 20px 60px;
+        }
+        .center-message { text-align: center; width: 100%; max-width: 1000px; }
+
+        .main-title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(2.8rem, 9vw, 6.5rem);
+            color: #f5e7c8; text-transform: uppercase; letter-spacing: 10px;
+            text-shadow: 2px 2px 0 #4a311a, 4px 4px 0 #2a1c0e, 0 0 30px #c2863a;
+            margin-bottom: 30px;
+            animation: goldShimmer 5s ease-in-out infinite alternate;
+        }
+        @keyframes goldShimmer {
+            0%   { text-shadow: 2px 2px 0 #4a311a, 4px 4px 0 #2a1c0e, 0 0 20px #b87e3a; }
+            50%  { text-shadow: 2px 2px 0 #5a3e1f, 6px 6px 0 #3f2a14, 0 0 35px #e6b468; }
+            100% { text-shadow: 2px 2px 0 #4a311a, 4px 4px 0 #2a1c0e, 0 0 20px #b87e3a; }
+        }
+
+        .description {
+            background: rgba(10,6,2,0.5);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(200,150,70,0.3);
+            padding: 40px 50px;
+            border-radius: 80px 20px 80px 20px;
+            max-width: 860px; margin: 20px auto;
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            line-height: 1.9; color: #f0ddbc;
+            box-shadow: 0 30px 50px -30px black, inset 0 0 40px rgba(180,120,40,0.2);
+        }
+        .description i { color: #e5b46b; margin: 0 12px; font-size: 1.2rem; }
+
+        .armenian-pattern { display: flex; justify-content: center; gap: 22px; margin: 28px 0 18px; }
+        .armenian-pattern span {
+            font-size: 2.2rem; color: #b1804b;
+            animation: pulse 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 8px #a56f2e);
+            display: inline-block;
+        }
+        .armenian-pattern span:nth-child(2) { animation-delay: 0.5s; }
+        .armenian-pattern span:nth-child(3) { animation-delay: 1s; }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50%       { opacity: 1;   transform: scale(1.2); color: #e6b468; }
+        }
+
+        .footer-note {
+            text-align: center; padding: 20px;
+            font-size: 0.85rem; color: #9b7e54;
+            letter-spacing: 4px; text-transform: uppercase;
+            font-weight: 300; text-shadow: 0 0 10px #000;
+        }
+
+        /* ФОРМА ОТЗЫВА */
+        .review-section {
+            max-width: 700px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .review-title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.4rem, 3vw, 2rem);
+            color: #f0ddbc;
+            text-align: center;
+            letter-spacing: 4px;
+            margin-bottom: 30px;
+            text-shadow: 0 0 15px rgba(200,140,50,0.4);
+        }
+
+        .review-box {
+            background: rgba(10,6,2,0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(200,150,70,0.35);
+            border-radius: 32px;
+            padding: 36px 40px;
+            box-shadow: 0 20px 50px -20px rgba(0,0,0,0.8),
+                        inset 0 0 40px rgba(180,120,40,0.1),
+                        0 0 0 1px rgba(200,160,80,0.08);
+        }
+
+        .review-textarea {
+            width: 100%;
+            background: rgba(20,12,4,0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(180,130,60,0.4);
+            border-radius: 20px;
+            padding: 20px 24px;
+            font-family: 'Marcellus', serif;
+            font-size: 1.05rem;
+            line-height: 1.7;
+            color: #f0ddbc;
+            resize: none;
+            min-height: 150px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+            outline: none;
+        }
+        .review-textarea::placeholder { color: #7a5e3a; opacity: 1; }
+        .review-textarea:focus {
+            border-color: #c9a063;
+            box-shadow: 0 0 20px rgba(200,150,60,0.25),
+                        inset 0 0 10px rgba(180,120,40,0.1);
+        }
+
+        .review-send-btn {
+            margin-top: 20px;
+            width: 100%;
+            background: rgba(25,15,5,0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #c9a063;
+            color: #fadfa3;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            padding: 14px 28px;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 2px;
+            display: flex; align-items: center; justify-content: center; gap: 12px;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.5), 0 0 12px rgba(180,130,70,0.2);
+        }
+        .review-send-btn i { color: #d4a259; font-size: 1.1rem; filter: drop-shadow(0 0 5px #a7772c); }
+        .review-send-btn:hover:not(:disabled) {
+            background: #2f2213;
+            border-color: #ffd966;
+            color: #fff6e0;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.7), 0 0 28px rgba(218,165,32,0.5);
+            transform: translateY(-2px);
+        }
+        .review-send-btn:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
+        .review-send-btn.sent {
+            border-color: #7ab87a;
+            color: #b8f0b8;
+            box-shadow: 0 0 20px rgba(120,200,120,0.2);
+        }
+
+        /* Profile Modal */
+        .profile-modal {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            width: 300px;
+            background: rgba(10, 6, 2, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid #d4af37;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.7), 0 0 20px rgba(180,130,70,0.3);
+            z-index: 1200;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: opacity 0.3s, visibility 0.3s, transform 0.3s;
+        }
+        .profile-modal.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .profile-modal-content {
+            padding: 25px 20px;
+            color: #f0ddbc;
+            font-family: 'Marcellus', serif;
+        }
+        .profile-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: #ffd966;
+            text-shadow: 0 0 10px #b8860b;
+            border-bottom: 1px dashed #d4af37;
+            padding-bottom: 10px;
+        }
+        .profile-email {
+            font-size: 0.9rem;
+            color: #b69262;
+            margin-bottom: 25px;
+            word-break: break-all;
+        }
+        .profile-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .profile-btn {
+            background: rgba(25,15,5,0.9);
+            border: 1px solid #c9a063;
+            color: #fadfa3;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1rem;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+        .profile-btn:hover {
+            background: #2f2213;
+            border-color: #ffd966;
+            color: #fff6e0;
+            box-shadow: 0 5px 15px rgba(218,165,32,0.4);
+            transform: translateY(-2px);
+        }
+        .logout-btn {
+            border-color: #b34a4a;
+            color: #ffb3b3;
+        }
+        .logout-btn:hover {
+            background: #4a2a2a;
+            border-color: #ff6b6b;
+            color: #ffe0e0;
+            box-shadow: 0 5px 15px rgba(255,80,80,0.3);
+        }
+
+        /* Hero Quote Section */
+        .hero-quote-section,
+        .artifacts-gallery-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .hero-quote-container {
+            position: relative;
+            background: rgba(15, 10, 5, 0.55);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(200, 150, 70, 0.45);
+            border-radius: 60px 20px 60px 20px;
+            padding: 60px 40px;
+            margin: 20px 0;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6), inset 0 1px 0 rgba(212,175,55,0.2);
+            transition: all 0.4s ease;
+        }
+        .hero-quote-container:hover {
+            border-color: #d4af37;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 30px rgba(212,175,55,0.3);
+        }
+
+        .gold-quote-icon {
+            font-family: 'Unbounded', serif;
+            font-size: 5rem;
+            font-weight: 800;
+            color: #c8962a;
+            opacity: 0.7;
+            text-shadow: 0 0 15px #ffd58c;
+            line-height: 1;
+        }
+        .top-quote { text-align: left; margin-bottom: -10px; }
+        .bottom-quote { text-align: right; margin-top: -20px; }
+        .hero-quote-text {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.6rem, 5vw, 2.6rem);
+            font-weight: 500;
+            color: #f5e7c8;
+            line-height: 1.4;
+            padding: 20px 0;
+            text-shadow: 0 0 8px rgba(0,0,0,0.5);
+            letter-spacing: 1px;
+        }
+        .hero-quote-author {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 4px;
+            color: #d4af37;
+            margin-top: 15px;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+
+        /* 3D Carousel */
+        .deep-3d-carousel-section {
+            padding: 60px 0;
+            overflow: hidden;
+            background: radial-gradient(circle at center, rgba(242, 168, 0, 0.08) 0%, transparent 60%);
+        }
+        .deep-3d-carousel-section h2 {
+            font-size: clamp(1.8rem, 8vw, 3rem);
+            padding: 0 15px;
+        }
+        .carousel-3d-wrapper {
+            width: 100%;
+            height: clamp(350px, 70vw, 500px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            perspective: 2000px;
+            overflow: hidden;
+            cursor: grab;
+        }
+        .carousel-3d-inner {
+            width: 300px;
+            height: 300px;
+            position: relative;
+            transform-style: preserve-3d;
+            animation: rotate3DCarousel 30s linear infinite;
+            will-change: transform;
+        }
+        .carousel-3d-wrapper:hover .carousel-3d-inner { animation-play-state: paused; }
+        .carousel-3d-item {
+            position: absolute;
+            width: 280px;
+            height: 200px;
+            left: 10px;
+            top: 50px;
+            transform: rotateY(calc(var(--index) * (360 / var(--total-items)) * 1deg)) translateZ(700px);
+            background: rgba(var(--bg-color-r), var(--bg-color-g), var(--bg-color-b), 0.15);
+            border: 2px solid rgb(var(--bg-color-r), var(--bg-color-g), var(--bg-color-b));
+            border-radius: 15px;
+            box-shadow: 0 0 30px rgba(var(--bg-color-r), var(--bg-color-g), var(--bg-color-b), 0.5);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            transition: all 0.5s ease-out;
+            backface-visibility: hidden;
+            will-change: transform;
+        }
+        .carousel-3d-item img {
+            width: 90%;
+            height: 65%;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            filter: brightness(0.9);
+        }
+        .carousel-3d-item p {
+            color: #fff;
+            font-size: clamp(0.8rem, 3vw, 1rem);
+            font-weight: bold;
+            text-shadow: 0 0 10px rgba(0,0,0,0.8);
+            margin: 0;
+            padding: 0 5px;
+            text-align: center;
+        }
+        @keyframes rotate3DCarousel {
+            from { transform: rotateY(0deg); }
+            to { transform: rotateY(360deg); }
+        }
+
+        footer {
+            padding: 40px 0 20px;
+            text-align: center;
+            background: #0b0b0b;
+        }
+        footer .navbar-brand {
+            font-size: clamp(1.5rem, 6vw, 2.5rem);
+            margin-bottom: 20px;
+            display: inline-block;
+        }
+        .social-links {
+            margin: 20px 0;
+        }
+        .social-links a {
+            display: inline-block;
+            width: clamp(40px, 10vw, 50px);
+            height: clamp(40px, 10vw, 50px);
+            line-height: clamp(40px, 10vw, 50px);
+            border: 2px solid #c9a063;
+            border-radius: 50%;
+            margin: 0 8px;
+            color: white;
+            font-size: clamp(1rem, 4vw, 1.3rem);
+            transition: all 0.3s;
+            will-change: transform;
+        }
+        .social-links a:hover {
+            background: #c9a063;
+            color: #000;
+            transform: scale(1.1);
+        }
+
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s ease, transform 0.8s cubic-bezier(0.2, 0.8, 0.4, 1);
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* ========== МОБИЛЬНАЯ АДАПТАЦИЯ (не влияет на десктоп) ========== */
+        @media (max-width: 768px) {
+            /* Перестраиваем верхние панели вертикально, чтобы не перекрывались */
+            .lang-switcher {
+                top: 10px;
+                left: 10px;
+                gap: 5px;
+                z-index: 1110;
+            }
+            .lang-btn {
+                font-size: 0.7rem;
+                padding: 4px 10px;
+            }
+            .top-dropdown-wrapper {
+                top: 10px;
+                right: 10px;
+                flex-direction: column;
+                gap: 8px;
+                align-items: flex-end;
+            }
+            .btn-armenian {
+                font-size: 0.75rem;
+                padding: 6px 12px;
+                gap: 6px;
+            }
+            .btn-armenian i:first-child {
+                font-size: 1rem;
+            }
+            /* Чтобы текст не исчезал полностью на телефонах */
+            .btn-armenian span:not(#header-user-name) {
+                display: inline-block;
+            }
+            #header-user-name {
+                font-size: 0.75rem;
+                max-width: 100px;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            /* Профильное модальное окно на всю ширину экрана */
+            .profile-modal {
+                width: calc(100% - 20px);
+                left: 10px;
+                right: 10px;
+                top: 80px;
+            }
+            /* Центральный блок с отступами, чтобы не наезжал на кнопки */
+            .page-center {
+                padding: 130px 15px 40px;
+            }
+            .description {
+                padding: 20px 15px;
+                border-radius: 40px 10px 40px 10px;
+                font-size: 1rem;
+            }
+            .main-title {
+                letter-spacing: 4px;
+                font-size: 2.2rem;
+            }
+            /* Форма отзыва */
+            .review-box {
+                padding: 20px 15px;
+            }
+            .review-textarea {
+                padding: 15px;
+                font-size: 0.95rem;
+                min-height: 120px;
+            }
+            .review-send-btn {
+                padding: 12px 20px;
+                font-size: 0.9rem;
+            }
+            /* Секция цитаты */
+            .hero-quote-container {
+                padding: 30px 20px;
+            }
+            .gold-quote-icon {
+                font-size: 3rem;
+            }
+            .hero-quote-text {
+                font-size: 1.3rem;
+                padding: 10px 0;
+            }
+            /* 3D карусель: уменьшаем дистанцию, чтобы элементы помещались */
+            .carousel-3d-item {
+                width: 200px;
+                height: 150px;
+                left: 50px;
+                top: 75px;
+                transform: rotateY(calc(var(--index) * (360 / var(--total-items)) * 1deg)) translateZ(350px);
+                border-width: 1px;
+            }
+            .carousel-3d-inner {
+                width: 300px;
+                height: 300px;
+            }
+            .deep-3d-carousel-section {
+                padding: 30px 0;
+            }
+            /* Убираем лишние отступы */
+            .artifacts-title {
+                font-size: 1.3rem;
+                letter-spacing: 3px;
+            }
+            .artifact-card-content h3 {
+                font-size: 1.3rem;
+            }
+            /* Предотвращаем горизонтальный скролл */
+            body {
+                overflow-x: hidden;
+            }
+            .container, .hero-quote-section, .artifacts-gallery-section, .review-section {
+                padding-left: 15px;
+                padding-right: 15px;
+            }
+        }
+
+        /* Очень маленькие экраны (до 480px) – ещё немного поджимаем */
+        @media (max-width: 480px) {
+            .btn-armenian span:not(#header-user-name) {
+                display: none;
+            }
+            .btn-armenian i:first-child {
+                font-size: 1.2rem;
+            }
+            .btn-armenian {
+                padding: 8px 12px;
+            }
+            .lang-switcher {
+                top: 8px;
+                left: 8px;
+            }
+            .top-dropdown-wrapper {
+                top: 8px;
+                right: 8px;
+            }
+            .page-center {
+                padding-top: 110px;
+            }
+            .main-title {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+            .hero-quote-text {
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ЯЗЫК -->
+    <div class="lang-switcher">
+        <button class="lang-btn active" onclick="setLanguage('hy', this)">HY</button>
+        <button class="lang-btn" onclick="setLanguage('ru', this)">RU</button>
+        <button class="lang-btn" onclick="setLanguage('en', this)">EN</button>
+    </div>
+
+    <!-- ДРОПДАУНЫ + БЛОК ПОЛЬЗОВАТЕЛЯ -->
+    <div class="top-dropdown-wrapper">
+        <div class="dropdown">
+            <button class="btn btn-armenian dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-shield-halved"></i>
+                <span data-i18n="nav_warriors">ԶՈՐԱՎԱՐՆԵՐ</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-armenian">
+                <li><a class="dropdown-item dropdown-item-armenian" href="vardan.html"><i class="fas fa-chess-king"></i> <span data-i18n="warrior_1">Վարդան Մամիկոնյան</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="andranik.html"><i class="fas fa-chess-queen"></i> <span data-i18n="warrior_2">Նշանավոր Զորավարներ</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="garegin.html"><i class="fas fa-shield-halved"></i> <span data-i18n="warrior_3">Գարեգին Նժդեհ</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="tigran.html"><i class="fas fa-dragon"></i> <span data-i18n="warrior_4">Տիգրան Մեծ</span></a></li>
+                <li><div class="dropdown-divider-armenian"></div></li>
+                <li><div class="dropdown-header-armenian" data-i18n="nav_knights">ԱՍՊԵՏՆԵՐ</div></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="artashes.html"><i class="fas fa-helmet-safety"></i> <span>Արտաշես</span></a></li>
+            </ul>
+        </div>
+
+        <div class="dropdown">
+            <button class="btn btn-armenian dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <i class="fas fa-landmark"></i>
+                <span data-i18n="nav_places">ՎԱՅՐԵՐ</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-armenian">
+                <li><a class="dropdown-item dropdown-item-armenian" href="ararat.html"><i class="fas fa-mountain"></i> <span>Արարատ</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="ecmiatin.html"><i class="fas fa-church"></i> <span data-i18n="place_2">Էջմիածին</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="gexard.html"><i class="fas fa-archway"></i> <span>Գեղարդ</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="sungaet.html"><i class="fas fa-water"></i> <span>Սունգաեթի Ջառթեր</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="44.html"><i class="fas fa-shield-halved"></i> <span>44-օրյա պատերազմ</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="hovhanes.html"><i class="fas fa-book"></i> <span>Հովհաննես Թումանյան</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="marter.html"><i class="fas fa-shield-alt"></i> <span>Մայիսյան հերոսամարտեր</span></a></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="kvest.html"><i class="fas fa-map-marked-alt"></i> <span>Պատմական Կվեսթ</span></a></li>
+                <li><div class="dropdown-divider-armenian"></div></li>
+                <li><a class="dropdown-item dropdown-item-armenian" href="ai.html"><i class="fas fa-shield-alt"></i> <span>Ai</span></a></li>
+            </ul>
+        </div>
+        <!-- БЛОК ПОЛЬЗОВАТЕЛЯ (триггер) -->
+        <div class="dropdown" id="user-header-block" style="display: none;">
+            <button class="btn btn-armenian" id="user-menu-button" onclick="toggleProfileMenu(event)">
+                <img id="header-user-avatar" src="https://via.placeholder.com/40" alt="avatar">
+                <span id="header-user-name">Загрузка...</span>
+                <i class="fas fa-chevron-down"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Profile Modal -->
+    <div id="profile-modal" class="profile-modal">
+        <div class="profile-modal-content">
+            <div class="profile-name" id="display-full-name">Имя Фамилия</div>
+            <div class="profile-email" id="profile-email">email@example.com</div>
+            <div class="profile-actions">
+                <button class="profile-btn settings-btn" onclick="alert('Настройки пока не реализованы')">Настройки</button>
+                <button class="profile-btn logout-btn" onclick="logout()">Выйти из системы</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ЦЕНТРАЛЬНЫЙ БЛОК -->
+    <div class="page-center">
+        <div class="center-message">
+            <div class="armenian-pattern">
+                <span>☦</span><span>⚔️</span><span>☦</span>
+            </div>
+            <h1 class="main-title" data-i18n="main_title">ՀԱՅ ԶԻՆՎՈՐ</h1>
+            <div class="description">
+                <i class="fas fa-quote-left"></i>
+                <span data-i18n="main_desc">Այս կայքը ստեղծվել է հավերժացնելու հայ ռազմիկների սխրանքը,
+                պահպանելու նրանց հիշատակը և պատմելու աշխարհին մեր հերոսների մասին:</span>
+                <i class="fas fa-quote-right"></i>
+            </div>
+            <div class="armenian-pattern">
+                <span>▣</span><span>⚔️</span><span>▣</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Секция цитаты -->
+    <div class="hero-quote-section fade-up" id="heroQuoteSection">
+        <div class="hero-quote-container">
+            <div class="gold-quote-icon top-quote">“</div>
+            <div class="hero-quote-text">
+                «Մենք պետք է ճանաչենք մեր պատմությունը, որպեսզի կերտենք մեր ապագան։<br>
+                Մեր հերոսների հիշատակը մեր ուժն է»
+            </div>
+            <div class="gold-quote-icon bottom-quote">”</div>
+            <div class="hero-quote-author">— Հայ ռազմիկի ուխտ</div>
+        </div>
+    </div>
+
+    <!-- 3D карусель -->
+    <section class="deep-3d-carousel-section py-5">
+        <div class="container text-center">
+            <h2 class="display-4 fw-bold mb-5" data-aos="fade-up">ՄԵՐ ՀԻԱՆԱԼԻ ՏԵՍԱՐԱՆՆԵՐԸ</h2>
+            <div class="carousel-3d-wrapper">
+                <div class="carousel-3d-inner" style="--total-items: 10;">
+                    <div class="carousel-3d-item" style="--index:0; --bg-color-r:217; --bg-color-g:65; --bg-color-b:37;">
+                        <img src="https://avatars.mds.yandex.net/i?id=b51dbbe361724251108f0719a218f3f0_l-5042632-images-thumbs&ref=rim&n=13&w=1005&h=713" alt="Landscape 1" loading="lazy">
+                        <p>Լեռնային տեսարան</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:1; --bg-color-r:242; --bg-color-g:168; --bg-color-b:0;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/1/1c/Sevan_Armenia_%D0%A1%D0%B5%D0%B2%D0%B0%D0%BD_%D0%90%D1%80%D0%BC%D0%B5%D0%BD%D0%B8%D1%8F.jpeg" alt="Lake View" loading="lazy">
+                        <p>Սևանա լիճ</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:2; --bg-color-r:50; --bg-color-g:150; --bg-color-b:200;">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/dd/%D4%B5%D6%80%D5%A5%D6%82%D5%A1%D5%B6.JPG/960px-%D4%B5%D6%80%D5%A5%D6%82%D5%A1%D5%B6.JPG" alt="Cityscape" loading="lazy">
+                        <p>Երևան</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:3; --bg-color-r:150; --bg-color-g:70; --bg-color-b:190;">
+                        <img src="https://media-cdn.tripadvisor.com/media/attractions-splice-spp-674x446/06/e4/c2/9e.jpg" alt="Monastery" loading="lazy">
+                        <p>Գեղարդ</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:4; --bg-color-r:20; --bg-color-g:180; --bg-color-b:100;">
+                        <img src="https://www.journaldutrek.com/upload/la/la-ronde-des-monastares-daarmanie-192/la-ronde-des-monastares-daarmanie-192.jpg" alt="Nature" loading="lazy">
+                        <p>Արարատ</p>
+                    </div>
+                     <div class="carousel-3d-item" style="--index:5; --bg-color-r:217; --bg-color-g:65; --bg-color-b:37;">
+                        <img src="https://img.fotokonkurs.ru/cache/photo_1000w/photos/2019/12/1/74fcf427e311fcf17a5fb923af9bc226/cf5d343f8e913158349c21aa3c8fb7ba.jpeg" alt="Landscape 1" loading="lazy">
+                        <p>Խոր Վիրապ</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:6; --bg-color-r:242; --bg-color-g:168; --bg-color-b:0;">
+                        <img src="https://resize.tripster.ru/nMzj3T21o0egZ0XrG2-bYEO8mSQ=/fit-in/1080x810/filters:no_upscale()/https://cdn.tripster.ru/photos/effc53a3-ad35-44b1-94ed-ab4503a64309.jpg" alt="Lake View" loading="lazy">
+                        <p>Դիլիջան</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:7; --bg-color-r:50; --bg-color-g:150; --bg-color-b:200;">
+                        <img src="https://i.pinimg.com/originals/4e/bd/73/4ebd73a889b34486e22c6f5c3534400b.jpg?nii=t" alt="Cityscape" loading="lazy">
+                        <p>Գառնի</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:8; --bg-color-r:150; --bg-color-g:70; --bg-color-b:190;">
+                        <img src="https://i0.wp.com/capitalhotel.am/wp-content/uploads/2017/08/tatev-monastery.jpg" alt="Monastery" loading="lazy">
+                        <p>Տաթևի վանք</p>
+                    </div>
+                    <div class="carousel-3d-item" style="--index:9; --bg-color-r:20; --bg-color-g:180; --bg-color-b:100;">
+                        <img src="https://armeniaholiday.ru/wp-content/uploads/2018/11/jermuk-armenia-foto.jpg" alt="Nature" loading="lazy">
+                        <p>Ջերմուկ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- ФОРМА ОТЗЫВА -->
+    <div class="review-section">
+        <h2 class="review-title" data-i18n="review_title">✦ ԹՈՂՆԵԼ ԿԱՐԾԻՔ ✦</h2>
+        <div class="review-box">
+            <textarea
+                class="review-textarea"
+                id="reviewText"
+                rows="5"
+                data-i18n-placeholder="review_placeholder"
+                placeholder="Գրեք ձեր կարծիքը..."></textarea>
+            <button class="review-send-btn" id="sendBtn" onclick="sendReview()">
+                <i class="fas fa-paper-plane"></i>
+                <span data-i18n="review_send">ՈՒՂԱՐԿԵԼ</span>
+            </button>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAZ_VD_agVVfQcr8vm39KVPanLn2v2gbc4",
+            authDomain: "shkola-priznavashki.firebaseapp.com",
+            projectId: "shkola-priznavashki",
+            storageBucket: "shkola-priznavashki.firebasestorage.app",
+            messagingSenderId: "593176273697",
+            appId: "1:593176273697:web:4f63b5ef568ea3c7901460"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+
+        let currentUser = null;
+
+        const userBlock = document.getElementById('user-header-block');
+        const userNameSpan = document.getElementById('header-user-name');
+        const userAvatar = document.getElementById('header-user-avatar');
+        const profileModal = document.getElementById('profile-modal');
+        const displayFullName = document.getElementById('display-full-name');
+        const profileEmail = document.getElementById('profile-email');
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                userBlock.style.display = 'block';
+                userNameSpan.textContent = user.displayName || user.email.split('@')[0];
+                userAvatar.src = user.photoURL || 'https://via.placeholder.com/40?text=User';
+                displayFullName.textContent = user.displayName || 'Имя не указано';
+                profileEmail.textContent = user.email || '';
+            } else {
+                currentUser = null;
+                userBlock.style.display = 'none';
+            }
+        });
+
+        window.toggleProfileMenu = function(event) {
+            event.stopPropagation();
+            if (!currentUser) {
+                signInWithPopup(auth, provider).catch(e => console.error(e));
+                return;
+            }
+            profileModal.classList.toggle('show');
+        };
+
+        window.addEventListener('click', function(e) {
+            if (!profileModal.contains(e.target) && !document.getElementById('user-menu-button').contains(e.target)) {
+                profileModal.classList.remove('show');
+            }
+        });
+
+        window.logout = function() {
+            signOut(auth).then(() => {
+                profileModal.classList.remove('show');
+            }).catch(e => console.error(e));
+        };
+
+        window.sendReview = async function () {
+            const btn = document.getElementById('sendBtn');
+            const textarea = document.getElementById('reviewText');
+            const text = textarea.value.trim();
+
+            if (!text) {
+                textarea.style.borderColor = '#c06040';
+                setTimeout(() => textarea.style.borderColor = 'rgba(180,130,60,0.4)', 1500);
+                return;
+            }
+            if (!currentUser) {
+                alert('Сначала войдите в систему');
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> <span>...</span>';
+
+            try {
+                await addDoc(collection(db, "reviews"), {
+                    message: text,
+                    author: currentUser.displayName,
+                    photo: currentUser.photoURL,
+                    timestamp: serverTimestamp()
+                });
+
+                textarea.value = '';
+                btn.innerHTML = '<i class="fas fa-check"></i> <span data-i18n="review_sent">ՈՒՂԱՐԿՎԱԾ է ✓</span>';
+                btn.classList.add('sent');
+
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> <span data-i18n="review_send">ՈՒՂԱՐԿԵԼ</span>';
+                    btn.classList.remove('sent');
+                    btn.disabled = false;
+                }, 2500);
+
+            } catch (e) {
+                console.error(e);
+                btn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> <span>Սխալ</span>';
+                btn.style.borderColor = '#c06040';
+                setTimeout(() => {
+                    btn.innerHTML = '<i class="fas fa-paper-plane"></i> <span>ՈՒՂԱՐԿԵԼ</span>';
+                    btn.style.borderColor = '#c9a063';
+                    btn.disabled = false;
+                }, 2000);
+            }
+        };
+
+        const translations = {
+            hy: {
+                nav_warriors: "ԶՈՐԱՎԱՐՆԵՐ",
+                nav_places: "ՎԱՅՐԵՐ",
+                nav_knights: "ԱՍՊԵՏՆԵՐ",
+                warrior_1: "Վարդան Մամիկոնյան",
+                warrior_2: "Անդրանիկ Օզանյան",
+                warrior_3: "Գարեգին Նժդեհ",
+                warrior_4: "Տիգրան Մեծ",
+                warrior_5: "Մովսես Գորգիսյան",
+                place_1: "Արարատ լեռ",
+                place_2: "Էջմիածին",
+                place_3: "Գառնի",
+                place_4: "Սևանա լիճ",
+                place_5: "Զվարթնոց",
+                main_title: "ՀԱՅ ԶԻՆՎՈՐ",
+                main_desc: "Այս կայքը ստեղծվել է հավերժացնելու հայ ռազմիկների սխրանքը, պահպանելու նրանց հիշատակը և պատմելու աշխարհին մեր հերոսների մասին:",
+                footer: "✦ ՀԱՎԵՐԺ ՓԱՌՔ ✦",
+                review_title: "✦ ԹՈՂՆԵԼ ԿԱՐԾԻՔ ✦",
+                review_placeholder: "Գրեք ձեր կարծիքը...",
+                review_send: "ՈՒՂԱՐԿԵԼ",
+                review_sent: "ՈՒՂԱՐԿՎԱԾ Է ✓"
+            },
+            ru: {
+                nav_warriors: "ПОЛКОВОДЦЫ",
+                nav_places: "МЕСТА",
+                nav_knights: "РЫЦАРИ",
+                warrior_1: "Вардан Мамиконян",
+                warrior_2: "Андраник Озанян",
+                warrior_3: "Гарегин Нжде",
+                warrior_4: "Тигран Великий",
+                warrior_5: "Мовсес Горгисян",
+                place_1: "Гора Арарат",
+                place_2: "Эчмиадзин",
+                place_3: "Гарни",
+                place_4: "Озеро Севан",
+                place_5: "Звартноц",
+                main_title: "АРМЯНСКИЙ ВОИН",
+                main_desc: "Этот сайт создан, чтобы увековечить подвиг армянских воинов, сохранить их память и рассказать миру о наших героях.",
+                footer: "✦ ВЕЧНАЯ СЛАВА ✦",
+                review_title: "✦ ОСТАВИТЬ ОТЗЫВ ✦",
+                review_placeholder: "Напишите ваш отзыв...",
+                review_send: "ОТПРАВИТЬ",
+                review_sent: "ОТПРАВЛЕНО ✓"
+            },
+            en: {
+                nav_warriors: "WARRIORS",
+                nav_places: "PLACES",
+                nav_knights: "KNIGHTS",
+                warrior_1: "Vardan Mamikonian",
+                warrior_2: "Andranik Ozanian",
+                warrior_3: "Garegin Nzhdeh",
+                warrior_4: "Tigranes the Great",
+                warrior_5: "Movses Gorgisyan",
+                place_1: "Mount Ararat",
+                place_2: "Etchmiadzin",
+                place_3: "Garni",
+                place_4: "Lake Sevan",
+                place_5: "Zvartnots",
+                main_title: "ARMENIAN WARRIOR",
+                main_desc: "This site was created to immortalize the feat of Armenian warriors, preserve their memory and tell the world about our heroes.",
+                footer: "✦ ETERNAL GLORY ✦",
+                review_title: "✦ LEAVE A REVIEW ✦",
+                review_placeholder: "Write your review...",
+                review_send: "SEND",
+                review_sent: "SENT ✓"
+            }
+        };
+
+        window.setLanguage = function(lang, btn) {
+            const t = translations[lang];
+            document.querySelectorAll('[data-i18n]').forEach(el => {
+                const key = el.getAttribute('data-i18n');
+                if (t[key]) el.innerText = t[key];
+            });
+            document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+                const key = el.getAttribute('data-i18n-placeholder');
+                if (t[key]) el.placeholder = t[key];
+            });
+            document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+            if (btn) btn.classList.add('active');
+            localStorage.setItem('lang', lang);
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedLang = localStorage.getItem('lang') || 'hy';
+            const btn = document.querySelector(`.lang-btn[onclick*="'${savedLang}'"]`);
+            window.setLanguage(savedLang, btn);
+
+            const newFadeElements = document.querySelectorAll('.hero-quote-section');
+            if (newFadeElements.length) {
+                const observerNew = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('visible');
+                            observerNew.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.2, rootMargin: "0px 0px -40px 0px" });
+                newFadeElements.forEach(el => observerNew.observe(el));
+                newFadeElements.forEach(el => {
+                    const rect = el.getBoundingClientRect();
+                    if (rect.top < window.innerHeight - 80) {
+                        el.classList.add('visible');
+                        observerNew.unobserve(el);
+                    }
+                });
+            }
+        });
+
+        (function init3DCarousel() {
+            const wrapper = document.querySelector('.carousel-3d-wrapper');
+            const inner = document.querySelector('.carousel-3d-inner');
+            if (!wrapper || !inner) return;
+
+            let isDragging = false;
+            let startX = 0;
+            let currentAngle = 0;
+            let targetAngle = 0;
+            let autoRotate = true;
+            let autoRotateTimer = null;
+            let velocity = 0;
+            let lastX = 0;
+            let lastTimestamp = 0;
+            let inertiaFrame = null;
+
+            const totalItems = parseInt(getComputedStyle(inner).getPropertyValue('--total-items')) || 
+                               document.querySelectorAll('.carousel-3d-item').length;
+            if (totalItems) inner.style.setProperty('--total-items', totalItems);
+
+            function updateCarousel(angle) {
+                inner.style.transform = `rotateY(${angle}deg)`;
+                currentAngle = angle;
+            }
+
+            function startAutoRotate() {
+                if (autoRotateTimer) clearInterval(autoRotateTimer);
+                autoRotateTimer = setInterval(() => {
+                    if (!isDragging && autoRotate) {
+                        targetAngle += 0.5;
+                        targetAngle %= 360;
+                        updateCarousel(targetAngle);
+                    }
+                }, 40);
+            }
+
+            function stopAutoRotate() {
+                if (autoRotateTimer) {
+                    clearInterval(autoRotateTimer);
+                    autoRotateTimer = null;
+                }
+            }
+
+            function onPointerStart(e) {
+                e.preventDefault();
+                isDragging = true;
+                autoRotate = false;
+                stopAutoRotate();
+                const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+                startX = clientX;
+                lastX = clientX;
+                lastTimestamp = performance.now();
+                velocity = 0;
+                if (inertiaFrame) cancelAnimationFrame(inertiaFrame);
+                wrapper.style.cursor = 'grabbing';
+            }
+
+            function onPointerMove(e) {
+                if (!isDragging) return;
+                e.preventDefault();
+                const clientX = e.clientX ?? (e.touches ? e.touches[0].clientX : 0);
+                const deltaX = clientX - startX;
+                const now = performance.now();
+                const dt = Math.max(16, now - lastTimestamp);
+                const instantVelocity = (clientX - lastX) / dt;
+                velocity = velocity * 0.6 + instantVelocity * 0.4;
+                lastX = clientX;
+                lastTimestamp = now;
+                const angleChange = deltaX * 0.5;
+                targetAngle += angleChange;
+                startX = clientX;
+                updateCarousel(targetAngle);
+            }
+
+            function onPointerEnd(e) {
+                if (!isDragging) return;
+                isDragging = false;
+                wrapper.style.cursor = 'grab';
+                function applyInertia() {
+                    if (Math.abs(velocity) > 0.02 && !isDragging) {
+                        velocity *= 0.95;
+                        targetAngle += velocity * 8;
+                        updateCarousel(targetAngle);
+                        inertiaFrame = requestAnimationFrame(applyInertia);
+                    } else {
+                        cancelAnimationFrame(inertiaFrame);
+                        inertiaFrame = null;
+                        if (!autoRotate) {
+                            setTimeout(() => {
+                                if (!isDragging) {
+                                    autoRotate = true;
+                                    startAutoRotate();
+                                }
+                            }, 3000);
+                        }
+                    }
+                }
+                if (inertiaFrame) cancelAnimationFrame(inertiaFrame);
+                inertiaFrame = requestAnimationFrame(applyInertia);
+            }
+
+            wrapper.addEventListener('mousedown', onPointerStart);
+            window.addEventListener('mousemove', onPointerMove);
+            window.addEventListener('mouseup', onPointerEnd);
+            wrapper.addEventListener('touchstart', onPointerStart, { passive: false });
+            window.addEventListener('touchmove', onPointerMove, { passive: false });
+            window.addEventListener('touchend', onPointerEnd);
+            startAutoRotate();
+        })();
+    </script>
+</body>
+</html>

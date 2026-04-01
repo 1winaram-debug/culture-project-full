@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Արարատ — Հայոց Սրբազան Լեռ | Թվային Թանգարան</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800;900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: #05050a;
+            color: #f0f0f0;
+            overflow-x: hidden;
+            transition: background-color 0.1s linear;
+        }
+
+        /* Динамический фон-градиент (меняется при скролле) */
+        .dynamic-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            transition: background 0.2s ease-out;
+        }
+
+        /* Частицы-звёзды */
+        #star-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.7;
+        }
+
+        /* Амберовый свет, следующий за курсором */
+        .cursor-light {
+            position: fixed;
+            width: 800px;
+            height: 800px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255, 190, 70, 0.25) 0%, rgba(255, 140, 30, 0.08) 40%, rgba(0,0,0,0) 70%);
+            pointer-events: none;
+            z-index: 999;
+            transform: translate(-50%, -50%);
+            transition: opacity 0.2s;
+            mix-blend-mode: soft-light;
+        }
+
+        /* Основной контент */
+        main {
+            position: relative;
+            z-index: 2;
+        }
+
+        section {
+            padding: 120px 8%;
+            position: relative;
+            backdrop-filter: blur(2px);
+        }
+
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding-top: 100px;
+            position: relative;
+        }
+
+        .hero h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(3rem, 10vw, 7rem);
+            font-weight: 800;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #fff8e7, #ffdd99, #e0b354);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 40px rgba(255, 200, 100, 0.3);
+            margin-bottom: 1rem;
+        }
+
+        .hero-sub {
+            font-size: 1.2rem;
+            font-weight: 400;
+            letter-spacing: 4px;
+            color: #ffdd99;
+            border-top: 1px solid rgba(255, 200, 100, 0.5);
+            border-bottom: 1px solid rgba(255, 200, 100, 0.5);
+            padding: 12px 24px;
+            backdrop-filter: blur(8px);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .hero-image {
+            margin-top: 50px;
+            width: min(80%, 600px);
+            opacity: 0.7;
+            filter: drop-shadow(0 0 20px rgba(255, 200, 100, 0.3));
+        }
+
+        /* Секционные заголовки */
+        .section-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .section-title span {
+            color: #ffcc77;
+            text-shadow: 0 0 10px rgba(255, 200, 100, 0.5);
+        }
+
+        .gold-line {
+            width: 100px;
+            height: 3px;
+            background: #ffcc77;
+            margin: 20px auto 40px;
+            box-shadow: 0 0 12px #ffcc77aa;
+        }
+
+        .lead-text {
+            font-size: 1.3rem;
+            font-weight: 400;
+            max-width: 800px;
+            margin: 0 auto 30px;
+            text-align: center;
+            line-height: 1.6;
+            font-family: 'Montserrat', sans-serif;
+            color: #f5f0e0;
+        }
+
+        .body-text {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #e0dcd0;
+            max-width: 800px;
+            margin: 0 auto 20px;
+            text-align: justify;
+        }
+
+        /* Bento Grid */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 60px;
+        }
+
+        .bento-card {
+            background: rgba(10, 10, 20, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 200, 100, 0.3);
+            border-radius: 32px;
+            padding: 32px 24px;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            text-align: center;
+        }
+
+        .bento-card:hover {
+            transform: translateY(-12px);
+            border-color: #ffcc77;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(255,200,100,0.4);
+            background: rgba(20, 20, 35, 0.7);
+        }
+
+        .bento-card .stat-number {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            color: #ffcc77;
+            line-height: 1;
+            margin-bottom: 12px;
+        }
+
+        .bento-card h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 20px 0 12px;
+            font-family: 'Unbounded', sans-serif;
+            letter-spacing: 1px;
+        }
+
+        .bento-card p {
+            font-size: 0.9rem;
+            color: #d0ccc0;
+            line-height: 1.6;
+        }
+
+        /* Галерея */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-top: 50px;
+        }
+
+        .gallery-item {
+            border-radius: 28px;
+            overflow: hidden;
+            border: 1px solid rgba(255,200,100,0.3);
+            transition: all 0.5s;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.7s, filter 0.5s;
+            filter: brightness(0.75) sepia(0.2);
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+            filter: brightness(0.95) sepia(0.1);
+        }
+
+        .gallery-caption {
+            padding: 15px;
+            background: rgba(0,0,0,0.5);
+            text-align: center;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+        }
+
+        /* Эффект появления */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.3, 1.2), transform 0.8s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            padding: 60px 20px 40px;
+            border-top: 1px solid rgba(255,200,100,0.2);
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            color: #aaa;
+        }
+
+        @media (max-width: 700px) {
+            section { padding: 80px 5%; }
+            .hero h1 { letter-spacing: 4px; }
+            .bento-card .stat-number { font-size: 2.5rem; }
+        }
+
+        /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+<div class="dynamic-bg" id="dynamicBg"></div>
+<canvas id="star-canvas"></canvas>
+<div class="cursor-light" id="cursorLight"></div>
+
+<main>
+    <!-- HERO -->
+    <section class="hero fade-up">
+        <h1>ԱՐԱՐԱՏ.<br>ՍՐԲԱԶԱՆ ԼԵՌ</h1>
+        <div class="hero-sub">Մշակույթի, հավատքի և անմահության խորհրդանիշ</div>
+        <svg class="hero-image" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M50 250 L200 50 L350 250 Z" stroke="#ffcc77" stroke-width="2" fill="url(#grad)" stroke-linecap="round"/>
+            <path d="M150 250 L200 120 L250 250 Z" stroke="#ffcc77" stroke-width="1.5" fill="none" stroke-dasharray="4 2"/>
+            <defs>
+                <linearGradient id="grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                    <stop offset="0%" stop-color="#ffdd99" stop-opacity="0.3"/>
+                    <stop offset="100%" stop-color="#ffcc77" stop-opacity="0.1"/>
+                </linearGradient>
+            </defs>
+        </svg>
+    </section>
+
+    <!-- Введение / Общее величие -->
+    <section class="fade-up">
+        <h2 class="section-title">Արարատ — <span>Հավերժական վեհություն</span></h2>
+        <div class="gold-line"></div>
+        <p class="lead-text">Հազարամյակների ընթացքում Արարատ լեռը եղել է հայ ժողովրդի հոգևոր առանցքը՝ վկայություն ազգային ինքնության, վերածննդի և անսասան հավատքի։</p>
+        <p class="body-text">Սառցապատ գագաթները, որոնք կարծես դիպչում են երկնքին, ոգեշնչել են բանաստեղծների, նկարիչների և ճանապարհորդների սերունդներ։ Այս սրբազան լեռը ոչ միայն բնական հուշարձան է, այլև հայկական ինքնության կենդանի խորհուրդը՝ արմատավորված Նոյյան տապանի աստվածաշնչյան պատմության մեջ։</p>
+    </section>
+
+    <!-- ГЕОЛОГИЯ И МАСШТАБ (Bento Grid) -->
+    <section class="fade-up">
+        <h2 class="section-title">Երկրաբանություն և <span>մեծություն</span></h2>
+        <div class="gold-line"></div>
+        <p class="lead-text">Հսկա հրաբխային զանգված, որը բարձրանում է Արարատյան դաշտից՝ ազդարարելով բնության անհաղթ ուժը։</p>
+        <div class="bento-grid">
+            <div class="bento-card">
+                <div class="stat-number">5165 մ</div>
+                <h3>Մասիս</h3>
+                <p>Արևմտյան գագաթ, Հայկական լեռնաշխարհի ամենաբարձր կետը: Մշտական ձնածածկույթ և սառցադաշտեր:</p>
+            </div>
+            <div class="bento-card">
+                <div class="stat-number">3925 մ</div>
+                <h3>Սիս</h3>
+                <p>Արևելյան գագաթ, որը կազմում է երկգագաթ սիմետրիկ կատարը: Հրաբխային խառնարանային լանջեր:</p>
+            </div>
+            <div class="bento-card">
+                <div class="stat-number">~250,000</div>
+                <h3>Տարիներ</h3>
+                <p>Վերջին խոշոր ժայթքումից անցած ժամանակահատվածը: Լեռը համարվում է քնած հրաբուխ:</p>
+            </div>
+            <div class="bento-card">
+                <div class="stat-number">10+</div>
+                <h3>Սառցադաշտեր</h3>
+                <p>Մշտական սառցային զանգվածներ, որոնք սնուցում են Արաքսի ավազանի գետերը:</p>
+            </div>
+        </div>
+        <p class="body-text" style="margin-top: 40px;">Արարատի երկրաբանական կառուցվածքը բաղկացած է անդեզիտային, բազալտային լավաներից և հրաբխային խարամից: Դեռևս ուշ պլիոցենից այս վիթխարի կոնը ձևավորել է Արարատյան դաշտի լանդշաֆտը։ Այսօր էլ լեռան սառցադաշտերը պահպանում են յուրահատուկ բուսական ու կենդանական աշխարհի միկրոկլիման:</p>
+    </section>
+
+    <!-- ՆՈՅԱՆ ՏԱՊԱՆ (Библейская история) -->
+    <section class="fade-up">
+        <h2 class="section-title">Նոյան տապան — <span>հավատքի սկիզբ</span></h2>
+        <div class="gold-line"></div>
+        <div class="bento-grid" style="grid-template-columns: 1fr 1fr;">
+            <div class="bento-card" style="text-align: left;">
+                <h3>Աստվածաշնչյան ավանդություն</h3>
+                <p>Ըստ Ծննդոց գրքի՝ Ջրհեղեղից հետո Նոյի տապանը կանգ է առել «Արարատի լեռների վրա»։ Այս պատմությունը դարեր շարունակ ամրապնդել է լեռան սրբազան կարգավիճակը քրիստոնյա աշխարհում և հատկապես Հայ առաքելական եկեղեցու ավանդույթում։</p>
+                <p>Վաղ քրիստոնեական դարերից Արարատը համարվում է մարդկության վերածննդի խորհրդանիշ, իսկ նրա ստորոտում կառուցվել են վանքեր ու մատուռներ՝ ի պատիվ Սուրբ Հակոբի և Տիրամոր։</p>
+            </div>
+            <div class="bento-card" style="text-align: left;">
+                <h3>Հայկական հիշողություն</h3>
+                <p>Արարատի պատկերը դարձել է հայ ժողովրդի ազգային ինքնության անբաժան մասը: Այն զետեղված է Հայաստանի Հանրապետության զինանշանի կենտրոնում, ասես հավերժական պահապան։</p>
+                <p>Միջնադարյան մանրանկարչությունից մինչև ժամանակակից արվեստ, լեռը ներկայացվում է որպես հայրենիքի, ազատության և հույսի անմահ խորհուրդ։</p>
+            </div>
+        </div>
+        <div class="gallery" style="margin-top: 40px;">
+            <div class="gallery-item"><img src="https://tse4.mm.bing.net/th/id/OIP.e_EKtj0mj761LE58b--zGQHaDs?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Արարատ լեռը ձմռանը" onerror="this.src='https://placehold.co/600x400?text=Արարատ+Ձմեռ'"><div class="gallery-caption">Արարատի ձյունածածկ գագաթները</div></div>
+            <div class="gallery-item"><img src="https://live.staticflickr.com/1835/43313913864_3b48285e2f_b.jpg" alt="Արարատը Երևանից" onerror="this.src='https://placehold.co/600x400?text=Արարատ+Երևան'"><div class="gallery-caption">Արարատի համայնապատկերը Երևանից</div></div>
+            <div class="gallery-item"><img src="https://mocak.am/wp-content/uploads/2012/02/Yerevan-sundown-and-Ararat-mountain.jpg" alt="Արբանյակային պատկեր" onerror="this.src='https://placehold.co/600x400?text=Արբանյակ+Արարատ'"><div class="gallery-caption">Արարատը տիեզերքից (NASA)</div></div>
+        </div>
+    </section>
+
+    <!-- ՄՇԱԿՈՒԹԱՅԻՆ ԽՈՐՀՈՒՐԴ (Культурный символ) -->
+    <section class="fade-up">
+        <h2 class="section-title">Մշակութային <span>խորհուրդ</span></h2>
+        <div class="gold-line"></div>
+        <div class="bento-grid">
+            <div class="bento-card">
+                <h3>🎨 Արվեստում</h3>
+                <p>Արարատը հանդիպում է Մարտիրոս Սարյանի, Իվան Այվազովսկու և հայ մանրանկարիչների գործերում: Լեռան ուրվագիծը դարձել է հայկական գեղանկարչության «այցեքարտը»։</p>
+            </div>
+            <div class="bento-card">
+                <h3>📜 Գրականություն</h3>
+                <p>Եղիշե Չարենցի «Ես իմ անուշ Հայաստանի» պոեմից մինչև ժամանակակից բանաստեղծներ, Արարատը հանդես է գալիս որպես հայրենիքի, անմահության և ազգային վերածննդի խորհուրդ:</p>
+            </div>
+            <div class="bento-card">
+                <h3>🏛️ Զինանշան</h3>
+                <p>Հայաստանի Հանրապետության զինանշանի կենտրոնում պատկերված է Արարատ լեռը՝ Նոյան տապանի հետ, որն ընդգծում է երկրի պատմական ու հոգևոր ժառանգությունը:</p>
+            </div>
+            <div class="bento-card">
+                <h3>🎶 Երաժշտություն</h3>
+                <p>Կոմիտասի, Արամ Խաչատրյանի երկերում լեռան մոտիվները հնչում են որպես ազգային ինքնության վեհ ձայն: Բազմաթիվ երգեր ու շարականներ են նվիրված Արարատին:</p>
+            </div>
+        </div>
+        <p class="body-text" style="margin-top: 40px;">Արարատը ոչ միայն աշխարհագրական առանձնահատկություն է, այլև հայ ժողովրդի հավաքական հիշողության ամենախորը շերտը: Այն դիմակայել է ժամանակի փորձություններին, մնացել է նույնքան անսասան, որքան հայկական ոգին:</p>
+    </section>
+
+    <!-- ЭКОЛОГИЯ И ЗАЩИТА (доп. блок) -->
+    <section class="fade-up">
+        <h2 class="section-title">Պահպանություն և <span>ապագա</span></h2>
+        <div class="gold-line"></div>
+        <p class="body-text">Այսօր Արարատը գտնվում է Թուրքիայի տարածքում, սակայն նրա հանդեպ հայ ժողովրդի հարգանքն ու կապը անսահման է: Բազմաթիվ միջազգային նախաձեռնություններ ուղղված են լեռան բնապահպանական պահպանությանը, սառցադաշտերի ուսումնասիրմանը և պատմամշակութային ժառանգության պահպանմանը: Հայաստանից բացվող տեսարանը դեպի սրբազան լեռը մնում է հույզերի և հպարտության ամենամեծ աղբյուրը:</p>
+        <div class="gallery" style="grid-template-columns: 1fr 1fr;">
+            <div class="gallery-item"><img src="https://tse1.mm.bing.net/th/id/OIP.QwkO1fslIk3nPn2C0bgpsQHaD4?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Խոր Վիրապի դիմաց Արարատը" onerror="this.src='https://placehold.co/600x400?text=Խոր+Վիրապ'"><div class="gallery-caption">Խոր Վիրապ վանքը և Արարատը</div></div>
+            <div class="gallery-item"><img src="https://i.pinimg.com/736x/36/7c/e0/367ce0d41a50b1dd73d92753a9cbddc3.jpg" alt="Մայրամուտ Արարատի հետ" onerror="this.src='https://placehold.co/600x400?text=Արարատ+մայրամուտ'"><div class="gallery-caption">Արարատը ոսկեգույն լույսի տակ</div></div>
+        </div>
+    </section>
+
+    <footer>
+        <p>Հայկական Թվային Թանգարան | Արարատ — Հավերժության լեռ</p>
+        <p style="margin-top: 10px; font-size: 0.7rem;">✧ Մշակութային ժառանգության թվային ներկայացում ✧</p>
+    </footer>
+</main>
+
+<script>
+    // 1. ДИНАМИЧЕСКИЙ ФОН ПРИ СКРОЛЛЕ (от тёмного к светлому)
+    const dynamicBg = document.getElementById('dynamicBg');
+    function updateBackground() {
+        const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+        // темный: #05050a (0) -> светлый: #f0f0f5 (1)
+        const darkR = 5, darkG = 5, darkB = 10;
+        const lightR = 240, lightG = 240, lightB = 245;
+        const r = Math.floor(darkR + (lightR - darkR) * scrollPercent);
+        const g = Math.floor(darkG + (lightG - darkG) * scrollPercent);
+        const b = Math.floor(darkB + (lightB - darkB) * scrollPercent);
+        // плавный переход, также добавим легкий градиент для глубины
+        dynamicBg.style.background = `radial-gradient(circle at 50% 30%, rgba(${r},${g},${b},1), rgba(${Math.floor(r*0.7)},${Math.floor(g*0.7)},${Math.floor(b*0.9)},1))`;
+    }
+    window.addEventListener('scroll', updateBackground);
+    window.addEventListener('resize', updateBackground);
+    updateBackground();
+
+    // 2. ЗВЕЗДНОЕ ПОЛЕ (частицы)
+    const starCanvas = document.getElementById('star-canvas');
+    const ctxStar = starCanvas.getContext('2d');
+    let stars = [];
+    let w, h;
+
+    function resizeStars() {
+        w = window.innerWidth;
+        h = window.innerHeight;
+        starCanvas.width = w;
+        starCanvas.height = h;
+        initStars();
+    }
+
+    function initStars() {
+        stars = [];
+        const starCount = 200;
+        for (let i = 0; i < starCount; i++) {
+            stars.push({
+                x: Math.random() * w,
+                y: Math.random() * h,
+                radius: Math.random() * 1.8 + 0.6,
+                alpha: Math.random() * 0.5 + 0.2,
+                speed: 0.02 + Math.random() * 0.03,
+                angle: Math.random() * Math.PI * 2,
+            });
+        }
+    }
+
+    function drawStars() {
+        if (!ctxStar) return;
+        ctxStar.clearRect(0, 0, w, h);
+        for (let s of stars) {
+            ctxStar.beginPath();
+            const twinkle = 0.5 + 0.5 * Math.sin(Date.now() * 0.002 * s.speed + s.angle);
+            const finalAlpha = s.alpha * (0.5 + twinkle * 0.6);
+            ctxStar.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+            ctxStar.fillStyle = `rgba(255, 215, 150, ${finalAlpha * 0.9})`;
+            ctxStar.fill();
+        }
+        requestAnimationFrame(drawStars);
+    }
+
+    window.addEventListener('resize', () => {
+        resizeStars();
+    });
+    resizeStars();
+    drawStars();
+
+    // 3. ДИНАМИЧЕСКИЙ АМБЕРОВЫЙ СВЕТ (следит за курсором)
+    const cursorLight = document.getElementById('cursorLight');
+    let mouseX = 0, mouseY = 0;
+    let lightX = 0, lightY = 0;
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function updateLight() {
+        lightX += (mouseX - lightX) * 0.1;
+        lightY += (mouseY - lightY) * 0.1;
+        cursorLight.style.left = lightX + 'px';
+        cursorLight.style.top = lightY + 'px';
+        requestAnimationFrame(updateLight);
+    }
+    updateLight();
+
+    // 4. ЭФФЕКТ ПОЯВЛЕНИЯ (Intersection Observer)
+    const fadeElements = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.1, rootMargin: "0px 0px -20px 0px" });
+    fadeElements.forEach(el => observer.observe(el));
+
+    // 5. Плавная навигация (якоря)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            const targetId = this.getAttribute('href');
+            if (targetId && targetId !== '#') {
+                const target = document.querySelector(targetId);
+                if (target) {
+                    e.preventDefault();
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            }
+        });
+    });
+
+    // дополнительно: меняем интенсивность света при скролле (для атмосферы)
+    window.addEventListener('scroll', () => {
+        const scrollPercent = window.scrollY / (document.body.scrollHeight - window.innerHeight);
+        // при скролле вниз свет становится чуть холоднее и слабее
+        const intensity = 0.25 + (1 - scrollPercent) * 0.2;
+        cursorLight.style.opacity = Math.min(0.5, intensity);
+        // background particles can also adjust opacity
+    });
+</script>
+</body>
+</html>

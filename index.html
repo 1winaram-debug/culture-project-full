@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Create Account</title>
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;500;700&family=Marcellus&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Unbounded', sans-serif;
+            background-color: #0a0502;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Фоновые градиенты */
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(180,120,50,0.18) 0%, transparent 45%),
+                radial-gradient(circle at 80% 75%, rgba(140,90,40,0.14) 0%, transparent 50%),
+                repeating-linear-gradient(45deg,
+                    rgba(120,75,30,0.025) 0px, rgba(120,75,30,0.025) 2px,
+                    transparent 2px, transparent 9px);
+            z-index: 0;
+        }
+
+        /* Декоративный символ */
+        body::after {
+            content: "☦";
+            position: fixed;
+            bottom: -20px;
+            right: 40px;
+            font-size: 22rem;
+            color: rgba(150,100,50,0.07);
+            font-family: serif;
+            pointer-events: none;
+            z-index: 0;
+            transform: rotate(-10deg);
+            text-shadow: 0 0 40px rgba(200,150,50,0.15);
+        }
+
+        /* Карточка формы */
+        #register-form {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            max-width: 420px;
+            margin: 20px;
+            background: rgba(12, 7, 3, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201,160,99,0.35);
+            border-radius: 28px;
+            padding: 48px 44px 44px;
+            box-shadow:
+                0 30px 60px rgba(0,0,0,0.7),
+                0 0 0 1px rgba(200,160,80,0.06),
+                inset 0 0 60px rgba(150,100,40,0.06);
+        }
+
+        /* Иконка-щит над заголовком */
+        #register-form::before {
+            content: "\f3ed"; /* fa-shield-halved */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            display: block;
+            text-align: center;
+            font-size: 2.2rem;
+            color: #d4a259;
+            filter: drop-shadow(0 0 12px rgba(200,150,50,0.55));
+            margin-bottom: 14px;
+        }
+
+        /* Заголовок */
+        #register-form h3 {
+            font-family: 'Marcellus', serif;
+            font-size: 1.65rem;
+            color: #f5e7c8;
+            text-align: center;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 36px;
+            text-shadow: 0 0 20px rgba(200,140,50,0.35);
+        }
+
+        /* Лейблы */
+        #register-form label {
+            display: block;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 2.5px;
+            text-transform: uppercase;
+            color: #b58b4a;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        /* Поля ввода */
+        #register-form input[type="email"],
+        #register-form input[type="password"] {
+            width: 100%;
+            background: rgba(20,12,4,0.75);
+            border: 1px solid rgba(180,130,60,0.38);
+            border-radius: 14px;
+            padding: 14px 18px;
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            color: #f0ddbc;
+            outline: none;
+            margin-bottom: 22px;
+            transition: border-color 0.3s, box-shadow 0.3s, background 0.3s;
+        }
+        #register-form input::placeholder { color: #6a4e2a; }
+        #register-form input:focus {
+            border-color: #c9a063;
+            background: rgba(30,18,6,0.85);
+            box-shadow: 0 0 0 3px rgba(201,160,99,0.12), 0 0 20px rgba(200,150,60,0.2);
+        }
+
+        /* Кнопка «Create Account» */
+        #submit {
+            width: 100%;
+            background: rgba(25,15,5,0.9);
+            border: 1px solid #c9a063;
+            border-radius: 50px;
+            padding: 15px 24px;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: 2.5px;
+            color: #fadfa3;
+            cursor: pointer;
+            margin-bottom: 24px;
+            transition: background 0.3s, border-color 0.3s, box-shadow 0.3s, transform 0.2s;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.45), 0 0 12px rgba(180,130,70,0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        #submit::before {
+            content: "\f007"; /* fa-user */
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            color: #d4a259;
+            font-size: 0.95rem;
+        }
+        #submit:hover {
+            background: #2f2213;
+            border-color: #ffd966;
+            color: #fff6e0;
+            box-shadow: 0 8px 28px rgba(0,0,0,0.65), 0 0 28px rgba(218,165,32,0.45);
+            transform: translateY(-2px);
+        }
+        #submit:active { transform: translateY(0); box-shadow: 0 4px 12px rgba(0,0,0,0.5); }
+
+        /* Разделитель */
+        .social {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .social::before {
+            content: "";
+            position: absolute;
+            left: 0; right: 0; top: 50%;
+            height: 1px;
+            background: rgba(200,150,70,0.2);
+        }
+        .social::after {
+            content: "или";
+            position: absolute;
+            background: rgba(12,7,3,0.95);
+            padding: 0 14px;
+            font-size: 0.7rem;
+            color: #7a5e3a;
+            letter-spacing: 2px;
+        }
+
+        /* Кнопка Google */
+        #google-btn {
+            margin-top: 20px;
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid rgba(200,200,200,0.6);
+            border-radius: 50px;
+            padding: 13px 20px;
+            font-family: 'Roboto', 'Unbounded', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            letter-spacing: 0.5px;
+            color: #3c3c3c;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            transition: background 0.25s, box-shadow 0.25s, transform 0.2s;
+            box-shadow: 0 3px 14px rgba(0,0,0,0.35);
+        }
+        #google-btn i {
+            font-size: 1.1rem;
+            /* цвета Google */
+            background: linear-gradient(135deg, #4285F4 0%, #EA4335 35%, #FBBC05 65%, #34A853 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        #google-btn:hover {
+            background: #f5f5f5;
+            box-shadow: 0 6px 22px rgba(0,0,0,0.4), 0 0 18px rgba(66,133,244,0.2);
+            transform: translateY(-2px);
+        }
+        #google-btn:active { transform: translateY(0); }
+
+        /* Адаптив */
+        @media (max-width: 480px) {
+            #register-form { padding: 36px 28px 36px; }
+            #register-form h3 { font-size: 1.35rem; letter-spacing: 3px; }
+        }
+
+        /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+    <form id="register-form">
+        <h3>Ստեղծել հաշիվ</h3>
+
+        <label for="email">Email</label>
+        <input type="email" placeholder="Մուտքագրեք ձեր էլ․ հասցեն" id="email" required>
+
+        <label for="password">Password</label>
+        <input type="password" placeholder="Առնվազն 6 նիշ" id="password" required>
+
+        <button type="button" id="submit">Create Account</button>
+
+        <div class="social">
+            <div id="google-btn"><i class="fab fa-google"></i> Շարունակել Google-ով</div>
+        </div>
+    </form>
+
+    <div id="auth-screen">
+    </div>
+       <div id="main-screen" style="display: none;">
+       <h1 id="welcome-text">Բարի գալուստ!</h1>
+    </div>
+
+    <script type="module">
+      // Импортируем Firebase из сети
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+      import { 
+        getAuth, 
+        createUserWithEmailAndPassword, 
+        GoogleAuthProvider, 
+        signInWithPopup,
+        onAuthStateChanged
+      } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    
+      // Твоя конфигурация
+      const firebaseConfig = {
+        apiKey: "AIzaSyAZ_VD_agVVfQcr8vm39KVPanLn2v2gbc4",
+        authDomain: "shkola-priznavashki.firebaseapp.com",
+        projectId: "shkola-priznavashki",
+        storageBucket: "shkola-priznavashki.appspot.com",
+        messagingSenderId: "593176273697",
+        appId: "1:593176273697:web:4f63b5ef568ea3c7901460"
+      };
+    
+      // Инициализация
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+      const provider = new GoogleAuthProvider();
+      
+      console.log("Firebase успешно подключен!");
+    
+      // 1. Логика регистрации через Email и пароль
+      document.getElementById('submit').addEventListener('click', () => {
+        const email = document.getElementById('email').value;
+        const password = document.getElementById('password').value;
+    
+        createUserWithEmailAndPassword(auth, email, password)
+          .then((userCredential) => {
+            // После успешной регистрации переходим на главную страницу
+            window.location.href = "index.html";
+          })
+          .catch((error) => {
+            alert("Ошибка: " + error.message);
+          });
+      });
+    
+      // 2. Логика входа через Google
+      document.getElementById('google-btn').addEventListener('click', () => {
+        signInWithPopup(auth, provider)
+          .then((result) => {
+            // После успешного входа через Google переходим на главную страницу
+            window.location.href = "index.html";
+          })
+          .catch((error) => {
+            alert("Ошибка Google: " + error.message);
+          });
+      }); 
+    
+      // Авто-вход при перезагрузке: если пользователь уже залогинен, сразу перенаправляем
+      onAuthStateChanged(auth, (user) => {
+        if (user) {
+          window.location.href = "index.html";
+        }
+      });
+    </script>
+</body>
+</html>

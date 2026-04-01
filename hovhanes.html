@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Հովհաննես Թումանյան | Հայկական Թվային Թանգարան</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #0a0907;
+            color: #ece3d8;
+            font-family: 'Crimson Pro', 'Georgia', serif;
+            font-weight: 400;
+            line-height: 1.55;
+            overflow-x: hidden;
+            cursor: default;
+        }
+
+        /* Тёмный фон с сеткой и радиальным градиентом */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(45deg, rgba(100, 70, 40, 0.06) 0px, rgba(100, 70, 40, 0.06) 1px, transparent 1px, transparent 20px);
+            pointer-events: none;
+            z-index: 0;
+        }
+        body::after {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(100, 60, 30, 0.2) 0%, #0a0907 85%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Янтарный свет за курсором */
+        .amber-light {
+            position: fixed;
+            width: 550px;
+            height: 550px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(200, 150, 42, 0.22) 0%, rgba(200, 150, 42, 0.08) 40%, rgba(200, 150, 42, 0) 70%);
+            filter: blur(45px);
+            pointer-events: none;
+            z-index: 1;
+            transform: translate(-50%, -50%);
+            will-change: transform;
+            transition: transform 0.05s linear;
+        }
+
+        /* основной контейнер */
+        .museum-container {
+            position: relative;
+            z-index: 5;
+            max-width: 1300px;
+            margin: 0 auto;
+            padding: 0 2rem 5rem;
+        }
+
+        /* Фиксированная навигация */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            backdrop-filter: blur(16px);
+            background: rgba(10, 9, 7, 0.75);
+            border-bottom: 1px solid rgba(200, 150, 42, 0.3);
+            z-index: 100;
+            padding: 1rem 2rem;
+        }
+        .nav-container {
+            max-width: 1300px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .logo {
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 600;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            color: #c8962a;
+            text-decoration: none;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            color: #ece3d8;
+            text-decoration: none;
+            font-family: 'Unbounded', sans-serif;
+            font-weight: 400;
+            font-size: 0.8rem;
+            letter-spacing: 1px;
+            transition: 0.2s;
+            padding: 0.3rem 0;
+            border-bottom: 1px solid transparent;
+        }
+        .nav-links a:hover {
+            color: #c8962a;
+            border-bottom-color: #c8962a;
+        }
+
+        /* Hero секция */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            position: relative;
+            margin-top: 5rem;
+            border-radius: 32px;
+            overflow: hidden;
+            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.7)), url('https://upload.wikimedia.org/wikipedia/commons/5/5c/Hovhannes_Tumanyan_1890s.jpg');
+            background-size: cover;
+            background-position: center 20%;
+            box-shadow: 0 20px 35px -12px rgba(0,0,0,0.6);
+        }
+        .hero-content {
+            padding: 5rem 2rem;
+            backdrop-filter: blur(2px);
+        }
+        .hero h1 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            font-weight: 700;
+            background: linear-gradient(135deg, #f5e7c8, #c8962a);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 0 12px rgba(200,150,42,0.3);
+            margin-bottom: 1rem;
+        }
+        .hero p {
+            font-size: 1.4rem;
+            letter-spacing: 2px;
+            color: #c8962a;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        /* общие стили */
+        .section {
+            margin: 5rem 0;
+        }
+        .section-title {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+            color: #c8962a;
+            letter-spacing: -0.5px;
+        }
+        .section-title:after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 70px;
+            height: 2px;
+            background: #c8962a;
+        }
+
+        /* стеклянные карточки */
+        .glass-card {
+            background: rgba(20, 17, 14, 0.65);
+            backdrop-filter: blur(12px);
+            border-radius: 28px;
+            padding: 1.8rem;
+            border: 1px solid rgba(200, 150, 42, 0.35);
+            transition: 0.3s ease;
+            margin-bottom: 1.5rem;
+        }
+        .glass-card:hover {
+            border-color: #c8962a;
+            background: rgba(30, 24, 18, 0.8);
+            transform: translateY(-4px);
+        }
+
+        /* Bento сетка для Вернатуна и произведений */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin: 2rem 0;
+        }
+        .bento-item {
+            background: rgba(18, 15, 12, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 28px;
+            padding: 1.5rem;
+            border: 1px solid rgba(200, 150, 42, 0.3);
+            transition: all 0.25s ease;
+        }
+        .bento-item:hover {
+            transform: translateY(-6px);
+            border-color: #c8962a;
+            background: rgba(28, 22, 16, 0.85);
+            box-shadow: 0 12px 20px -8px black;
+        }
+        .bento-item h3 {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 1.3rem;
+            color: #c8962a;
+            margin-bottom: 0.7rem;
+        }
+        .bento-item p, .bento-item ul {
+            font-size: 1rem;
+            color: #f0e6d8;
+        }
+        .bento-item ul {
+            padding-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+        .bento-item li {
+            margin: 0.3rem 0;
+        }
+
+        /* галерея (ч/б -> цвет) */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+        .gallery-item {
+            border-radius: 24px;
+            overflow: hidden;
+            aspect-ratio: 4 / 3;
+            background: #1e1914;
+            box-shadow: 0 12px 20px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: grayscale(100%) contrast(0.9) brightness(0.85);
+            transition: all 0.45s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            display: block;
+        }
+        .gallery-item:hover {
+            transform: scale(1.02);
+        }
+        .gallery-item:hover img {
+            filter: grayscale(0%) contrast(1.05) brightness(1.02);
+            transform: scale(1.05);
+        }
+
+        /* анимация появления */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.8s ease;
+        }
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 5rem;
+            padding-top: 2rem;
+            border-top: 1px solid rgba(200,150,42,0.3);
+            font-size: 0.85rem;
+            opacity: 0.75;
+        }
+
+        @media (max-width: 780px) {
+            .museum-container {
+                padding: 0 1.2rem 3rem;
+            }
+            .nav-links {
+                gap: 1rem;
+            }
+            .hero-content {
+                padding: 3rem 1rem;
+            }
+        }
+
+        /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+    </style>
+</head>
+<body>
+<div class="amber-light" id="amberLight"></div>
+
+<div class="museum-container">
+    <!-- Hero -->
+    <div id="home" class="hero fade-up">
+        <div class="hero-content">
+            <h1>Հովհաննես Թումանյան</h1>
+            <p>Բանաստեղծ, արձակագիր, մեծ հումանիստ</p>
+        </div>
+    </div>
+
+    <!-- Биография -->
+    <div id="bio" class="section fade-up">
+        <h2 class="section-title">📖 Կենսագրություն</h2>
+        <div class="glass-card">
+            <p>Հովհաննես Թումանյանը ծնվել է 1869 թվականի փետրվարի 19-ին Լոռվա Դսեղ գյուղում։ 1877-1879 թվականներին Թումանյանը սովորել է Դսեղի ծխական դպրոցում։ 1879-1883 թվականներին սովորել է Ջալալօղլու (այժմ Ստեփանավան) նորաբաց երկսեռ դպրոցում։ 1883 թվականից բնակվել է Թիֆլիսում։ 1883-1887 թվականներին սովորել է Թիֆլիսի Ներսիսյան դպրոցում, սակայն նյութական ծանր դրության պատճառով 1887 թվականին կիսատ թողնելով ուսումը՝ աշխատել է Թիֆլիսի հայ եկեղեցական դատարանում, այնուհետև Հայ Հրատարակչական միության գրասենյակում (մինչև 1893 թ.)։ 1893 թվականից աշխատակցել է «Աղբյուր», «Մուրճ», «Հասկեր», «Հորիզոն» գրական պարբերականներին։</p>
+        </div>
+    </div>
+
+    <!-- Вернатун (литературный кружок) - Bento Grid -->
+    <div id="vernatun" class="section fade-up">
+        <h2 class="section-title">🏛 «Վերնատուն» գրական խմբակ</h2>
+        <div class="bento-grid">
+            <div class="bento-item">
+                <h3>Հիմնադրում</h3>
+                <p>1899 թվականին Հովհաննես Թումանյանի նախաձեռնությամբ Թիֆլիսում ստեղծվել է «Վերնատուն» գրական խմբակը։ Որոշ ընդմիջումներով խմբակը գործել է մինչև 1908 թվականը։</p>
+            </div>
+            <div class="bento-item">
+                <h3>Անդամներ</h3>
+                <ul>
+                    <li>Հովհաննես Թումանյան</li>
+                    <li>Դերենիկ Դեմիրճյան</li>
+                    <li>Լևոն Շանթ</li>
+                    <li>Ղազարոս Աղայան</li>
+                    <li>Ավետիք Իսահակյան</li>
+                    <li>Նիկոլ Աղբալյան</li>
+                    <li>և ուրիշներ</li>
+                </ul>
+            </div>
+            <div class="bento-item">
+                <h3>Դերը մշակույթում</h3>
+                <p>«Վերնատունը» դարձավ հայ գրական կյանքի կենտրոն, որտեղ քննարկվում էին նոր ստեղծագործությունները, ազգային և հասարակական հարցեր։ Այն համախմբեց հայ մտավորականության ծաղիկը։</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Творчество: первое произведение, жанры -->
+    <div id="works" class="section fade-up">
+        <h2 class="section-title">✍️ Ստեղծագործական ուղի</h2>
+        <div class="glass-card">
+            <p>Թումանյանն իր առաջին ստեղծագործությունը գրել է 12 տարեկանում, երբ սովորում էր Ջալալօղլու դպրոցում։ Թումանյանը գրել է բանաստեղծություններ, պոեմներ, քառյակներ, բալլադներ, պատմվածքներ ու հեքիաթներ, ակնարկներ, քննադատական ու հրապարակախոսական հոդվածներ։</p>
+        </div>
+
+        <!-- Знаменитые произведения (сетка карточек) -->
+        <h2 class="section-title" style="margin-top: 3rem;">📚 Հանրահայտ երկեր</h2>
+        <div class="bento-grid">
+            <div class="bento-item"><h3>Անուշ</h3><p>Պոեմ սիրո և ողբերգության մասին</p></div>
+            <div class="bento-item"><h3>Գիքորը</h3><p>Պատմվածք մի փոքրիկ գյուղացի տղայի մասին</p></div>
+            <div class="bento-item"><h3>Քաջ Նազարը</h3><p>Երգիծական հեքիաթ-բանաստեղծություն</p></div>
+            <div class="bento-item"><h3>Շունն ու կատուն</h3><p>Հանրահայտ առակ-հեքիաթ</p></div>
+            <div class="bento-item"><h3>Ախթամարը</h3><p>Լեգենդար բալլադ</p></div>
+            <div class="bento-item"><h3>Թմկաբերդի առումը</h3><p>Հերոսական պոեմ</p></div>
+            <div class="bento-item"><h3>Մի կաթիլ մեղրը</h3><p>Խրատական հեքիաթ</p></div>
+            <div class="bento-item"><h3>Լոռեցի Սաքոն</h3><p>Արձակ գործ, ժողովրդական կյանքի նկարագիր</p></div>
+        </div>
+        <p style="margin-top: 0.5rem; font-style: italic; text-align: center; opacity: 0.85;">Թումանյանի յուրաքանչյուր ստեղծագործություն ազգային ոգու և մարդկության հավերժական արժեքների արտացոլումն է:</p>
+    </div>
+
+    <!-- Галерея (черно-белые фото -> цвет при наведении) -->
+    <div id="gallery" class="section fade-up">
+        <h2 class="section-title">🖼 Պատկերասրահ</h2>
+        <div class="gallery">
+            <div class="gallery-item">
+                <img src="https://tse2.mm.bing.net/th/id/OIP.KZ1uWRtp2RjZE3awp5HxJAHaD4?rs=1&pid=ImgDetMain&o=7&rm=3"Թումանյան 1890-ականներ">
+            </div>
+            <div class="gallery-item">
+                <img src="https://mir-s3-cdn-cf.behance.net/project_modules/fs/b1c2d167957729.5b4ca49ba0c04.png" alt="Թումանյան 1910-ականներ">
+            </div>
+            <div class="gallery-item">
+                <img src="https://www.vnews.am/uploads/uploads/2019/12/%D5%A9%D5%B8%D6%82%D5%B4%D5%A1%D5%B6%D5%B5%D5%A1%D5%B6.jpg" alt="Թումանյանի ընտանիքը">
+            </div>
+            <div class="gallery-item">
+                <img src="https://www.panorama.am/files/images/1024px-Statue_of_Hovhannes_Tumanyan_in_Yerevan_01.jpg" alt="Թումանյանի արձանը Երևանում">
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">Սահեցրե՛ք մկնիկը պատկերի վրա՝ տեսնելու հավերժական կերպարը</p>
+    </div>
+
+    <footer class="fade-up">
+        <p>Հայկական Թվային Թանգարան — Ի հիշատակ Մեծ Բանաստեղծի</p>
+        <p style="margin-top: 0.5rem;">✍ «Ամեն մարդ մի աշխարհ է» — Հովհաննես Թումանյան</p>
+    </footer>
+</div>
+
+<script>
+    // 1. ДИНАМИЧЕСКИЙ ЯНТАРНЫЙ СВЕТ ЗА КУРСОРОМ
+    const amber = document.getElementById('amberLight');
+    let mouseX = 0, mouseY = 0;
+    let lightX = 0, lightY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+    });
+
+    function animateAmber() {
+        lightX += (mouseX - lightX) * 0.12;
+        lightY += (mouseY - lightY) * 0.12;
+        if (amber) {
+            amber.style.transform = `translate(${lightX}px, ${lightY}px) translate(-50%, -50%)`;
+        }
+        requestAnimationFrame(animateAmber);
+    }
+    animateAmber();
+
+    // 2. INTERSECTION OBSERVER (появление блоков при скролле)
+    const fadeElements = document.querySelectorAll('.fade-up');
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.2, rootMargin: "0px 0px -30px 0px" });
+
+    fadeElements.forEach(el => observer.observe(el));
+
+    // Дополнительно для уже видимых элементов при загрузке
+    window.addEventListener('load', () => {
+        fadeElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 80) {
+                el.classList.add('visible');
+                observer.unobserve(el);
+            }
+        });
+    });
+
+    // 3. Плавная навигация по якорям
+    document.querySelectorAll('.nav-links a').forEach(anchor => {
+        anchor.addEventListener('click', function(e) {
+            e.preventDefault();
+            const targetId = this.getAttribute('href').substring(1);
+            if (targetId === 'home') {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+                return;
+            }
+            const target = document.getElementById(targetId);
+            if (target) {
+                target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        });
+    });
+
+    // 4. Защита от битых изображений в галерее (подстановка резервной)
+    const galleryImages = document.querySelectorAll('.gallery-item img');
+    galleryImages.forEach(img => {
+        img.addEventListener('error', function() {
+            if (!this.hasAttribute('data-fallback')) {
+                this.setAttribute('data-fallback', 'true');
+                this.src = 'https://upload.wikimedia.org/wikipedia/commons/5/5c/Hovhannes_Tumanyan_1890s.jpg';
+            }
+        });
+    });
+</script>
+</body>
+</html>

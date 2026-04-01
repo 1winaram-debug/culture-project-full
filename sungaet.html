@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Սումգայիթի ջարդեր · Հայկական թվային թանգարան</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ----- ОСНОВНОЙ ФОН: шоколадный + диагональная текстура + радиальное свечение ----- */
+    body {
+      background-color: #0d0905;
+      background-image: 
+        repeating-linear-gradient(135deg, rgba(200, 150, 42, 0.05) 0px, rgba(200, 150, 42, 0.05) 2px, transparent 2px, transparent 8px),
+        radial-gradient(circle at 50% 30%, rgba(200, 150, 42, 0.12) 0%, rgba(13, 9, 5, 0.98) 80%);
+      color: #e5d5b3;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      line-height: 1.6;
+      scroll-behavior: smooth;
+      position: relative;
+    }
+
+    /* Водяной знак — армянский крест ☦ с размытием */
+    body::after {
+      content: "☦";
+      position: fixed;
+      bottom: 5%;
+      right: 5%;
+      font-size: 28vw;
+      font-family: serif;
+      color: rgba(200, 150, 42, 0.08);
+      pointer-events: none;
+      filter: blur(6px);
+      z-index: 0;
+      transform: rotate(-8deg);
+      text-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+
+    /* дополнительный крест в левом верхнем углу для эстетики */
+    body::before {
+      content: "☦";
+      position: fixed;
+      top: 3%;
+      left: 3%;
+      font-size: 12vw;
+      font-family: serif;
+      color: rgba(200, 150, 42, 0.05);
+      pointer-events: none;
+      filter: blur(4px);
+      z-index: 0;
+    }
+
+    /* ----- НАВИГАЦИЯ (стекло, золотые акценты) ----- */
+    nav {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background: rgba(13, 9, 5, 0.75);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(200, 150, 42, 0.35);
+      display: flex;
+      justify-content: center;
+      gap: 2.2rem;
+      flex-wrap: wrap;
+      padding: 1rem 2rem;
+      z-index: 1100;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 400;
+    }
+
+    nav a {
+      color: #e5d5b3;
+      text-decoration: none;
+      font-size: 0.85rem;
+      letter-spacing: 1px;
+      transition: 0.25s;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid transparent;
+    }
+
+    nav a:hover {
+      color: #c8962a;
+      border-bottom-color: #c8962a;
+      text-shadow: 0 0 5px rgba(200, 150, 42, 0.5);
+    }
+
+    /* ----- ОСНОВНОЙ КОНТЕЙНЕР ----- */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.8rem;
+      position: relative;
+      z-index: 5;
+    }
+
+    /* ----- ХЕДЕР (героическая секция) ----- */
+    .hero {
+      min-height: 85vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      position: relative;
+      background: linear-gradient(135deg, rgba(13,9,5,0.85), rgba(0,0,0,0.6)), url('https://picsum.photos/id/104/1600/700?grayscale');
+      background-size: cover;
+      background-position: center 30%;
+      border-bottom: 1px solid rgba(200,150,42,0.3);
+      margin-bottom: 2rem;
+    }
+
+    .hero h1 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 3.6rem;
+      font-weight: 600;
+      color: #e5d5b3;
+      text-shadow: 0 0 12px #c8962a, 0 2px 5px #000;
+      letter-spacing: 2px;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(8px);
+      display: inline-block;
+      padding: 1.2rem 2.2rem;
+      border-radius: 42px;
+      border: 1px solid rgba(200,150,42,0.4);
+    }
+
+    .hero p {
+      margin-top: 1rem;
+      font-size: 1.1rem;
+    }
+
+    /* ----- СТЕКЛЯННЫЕ СЕКЦИИ (glassmorphism + золотая кайма) ----- */
+    .glass-section {
+      background: rgba(13, 9, 5, 0.55);
+      backdrop-filter: blur(12px);
+      border-radius: 32px;
+      border: 1px solid rgba(200, 150, 42, 0.25);
+      padding: 2.5rem 2rem;
+      margin-bottom: 3rem;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+    }
+
+    .glass-section:hover {
+      border-color: rgba(200, 150, 42, 0.5);
+      box-shadow: 0 20px 35px -12px rgba(0,0,0,0.5);
+    }
+
+    h2 {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 2.1rem;
+      color: #c8962a;
+      text-shadow: 0 0 8px rgba(200,150,66,0.4);
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.3px;
+      border-left: 4px solid #c8962a;
+      padding-left: 1.2rem;
+    }
+
+    h3 {
+      font-family: 'Unbounded', sans-serif;
+      color: #e5d5b3;
+      margin: 1rem 0 0.5rem;
+      font-weight: 500;
+    }
+
+    /* ----- ТЕКСТ ----- */
+    p {
+      font-size: 1.08rem;
+      margin-bottom: 1.2rem;
+      color: #f0e5d0;
+    }
+
+    /* ----- ВЕРТИКАЛЬНАЯ ХРОНОЛОГИЯ (золотые акценты) ----- */
+    .timeline-vertical {
+      border-left: 2px solid #c8962a;
+      padding-left: 1.8rem;
+      margin: 1.5rem 0;
+    }
+    .timeline-item {
+      margin-bottom: 2rem;
+      position: relative;
+    }
+    .timeline-item::before {
+      content: "";
+      position: absolute;
+      left: -2.45rem;
+      top: 0.4rem;
+      width: 12px;
+      height: 12px;
+      background: #c8962a;
+      border-radius: 50%;
+      box-shadow: 0 0 6px #c8962a;
+    }
+    .timeline-date {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 600;
+      color: #c8962a;
+      font-size: 1.1rem;
+      letter-spacing: 1px;
+      margin-bottom: 0.4rem;
+      display: inline-block;
+    }
+    .timeline-desc {
+      font-size: 0.98rem;
+      color: #e0cfb0;
+    }
+
+    /* ----- СЕТКА ГАЛЕРЕИ (золотые рамки, градиент при ховере) ----- */
+    .gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.8rem;
+      margin: 2rem 0 1rem;
+    }
+    .gallery-card {
+      background: rgba(0,0,0,0.4);
+      border-radius: 24px;
+      overflow: hidden;
+      border: 1px solid rgba(200, 150, 42, 0.4);
+      transition: all 0.3s ease;
+      backdrop-filter: blur(4px);
+    }
+    .gallery-card:hover {
+      border-color: #c8962a;
+      box-shadow: 0 8px 22px rgba(200,150,66,0.2);
+      transform: translateY(-5px);
+    }
+    .gallery-card img {
+      width: 100%;
+      height: 220px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(70%) sepia(15%);
+      transition: filter 0.4s ease, transform 0.3s;
+    }
+    .gallery-card:hover img {
+      filter: grayscale(0%) sepia(0%);
+      transform: scale(1.02);
+    }
+    .img-caption {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      font-family: 'Unbounded', sans-serif;
+      letter-spacing: 0.5px;
+      color: #c8962a;
+      border-top: 1px solid rgba(200,150,42,0.3);
+      background: rgba(0,0,0,0.5);
+    }
+
+    /* ----- СТАТИСТИЧЕСКИЙ БЛОК (цифры) ----- */
+    .stats-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+    }
+    .stat-card {
+      flex: 1;
+      background: rgba(0,0,0,0.45);
+      backdrop-filter: blur(4px);
+      border-radius: 28px;
+      padding: 1.5rem 0.8rem;
+      text-align: center;
+      border: 1px solid rgba(200,150,42,0.3);
+      transition: 0.2s;
+    }
+    .stat-number {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #c8962a;
+      text-shadow: 0 0 4px #a57328;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #cfc19e;
+    }
+
+    /* ----- КАРТА (стилизованный контейнер) ----- */
+    .map-wrapper {
+      border-radius: 28px;
+      border: 1px solid rgba(200, 150, 42, 0.5);
+      overflow: hidden;
+      background: #0a0704;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+    }
+    .map-wrapper iframe {
+      width: 100%;
+      height: 420px;
+      border: 0;
+      filter: brightness(0.85) contrast(1.1) sepia(0.1);
+      transition: filter 0.3s;
+      display: block;
+    }
+    .map-wrapper:hover iframe {
+      filter: brightness(0.95) contrast(1.05);
+    }
+
+    /* ----- АНИМАЦИЯ ПРИ СКРОЛЛЕ (fade-up) ----- */
+    .fade {
+      opacity: 0;
+      transform: translateY(32px);
+      transition: opacity 0.8s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.7s ease;
+    }
+    .fade.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ----- ФУТЕР ----- */
+    footer {
+      text-align: center;
+      padding: 2rem 0 3rem;
+      font-size: 0.75rem;
+      border-top: 1px solid rgba(200,150,42,0.2);
+      margin-top: 2rem;
+      color: #9e8b64;
+    }
+
+    /* адаптивность */
+    @media (max-width: 780px) {
+      .hero h1 { font-size: 2.2rem; padding: 1rem 1.5rem; }
+      h2 { font-size: 1.8rem; }
+      .glass-section { padding: 1.5rem; }
+      nav { gap: 1rem; }
+      .stat-number { font-size: 1.8rem; }
+    }
+    @media (max-width: 550px) {
+      .container { padding: 0 1rem; }
+      .gallery-grid { gap: 1rem; }
+    }
+
+    /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<header id="home" class="hero">
+  <div>
+    <h1>Սումգայիթի ջարդեր<br>1988</h1>
+    <p style="margin-top: 1.2rem; font-style: italic;">«Հիշողությունը մեր զենքն է»</p>
+  </div>
+</header>
+
+<main class="container">
+  
+  <!-- ՊԱՏՄՈՒԹՅԱՆ ԲԼՈԿ -->
+  <section id="history" class="glass-section fade">
+    <h2>Պատմական ակնարկ</h2>
+    <p>1988 թվականի փետրվարի 27-29-ը Ադրբեջանական ԽՍՀ Սումգայիթ քաղաքում տեղի ունեցան հայ բնակչության զանգվածային ջարդեր, որոնք դարձան 20-րդ դարի հայոց պատմության ողբերգական էջերից մեկը: Զինված ամբոխները դաժանաբար սպանում, թալանում և այրում էին հայկական տները, հարձակվում անպաշտպան մարդկանց վրա:</p>
+    <p>Պաշտոնական տվյալներով զոհվել է 32 հայ, սակայն անկախ աղբյուրները վկայում են հարյուրավոր զոհերի մասին: Հազարավոր հայեր բռնի տեղահանվեցին, լքեցին իրենց տները և ապաստան գտան Հայաստանում ու Ռուսաստանում: Սումգայիթը խորհրդանշում է ցեղասպանական քաղաքականության սկիզբը՝ ընդդեմ Արցախի և հայության:</p>
+    <div class="stats-row">
+      <div class="stat-card"><div class="stat-number">32+</div><div class="stat-label">ՊԱՇՏՈՆԱԿԱՆ ԶՈՀԵՐ</div></div>
+      <div class="stat-card"><div class="stat-number">14 000+</div><div class="stat-label">ՓԱՍՏԱԲԱՆՎԱԾ ՓԱԽՍՏԱԿԱՆՆԵՐ</div></div>
+      <div class="stat-card"><div class="stat-number">1988</div><div class="stat-label">ՍԱՐԳԱՎՈՐԱԿԱՆ ՏԱՐԻ</div></div>
+      <div class="stat-card"><div class="stat-number">0</div><div class="stat-label">ՊԱՏԺԱՆՔԻ ԵՆԹԱՐԿՎԱԾՆԵՐ (ԽՍՀՄ)</div></div>
+    </div>
+  </section>
+
+  <!-- ԺԱՄԱՆԱԿԱԳՐՈՒԹՅՈՒՆ (timeline) -->
+  <section id="timeline" class="glass-section fade">
+    <h2>Ժամանակագրություն</h2>
+    <div class="timeline-vertical">
+      <div class="timeline-item">
+        <div class="timeline-date">27 Փետրվար, 1988</div>
+        <div class="timeline-desc">Սումգայիթում սկսվում են կազմակերպված հարձակումներ հայերի վրա: Ամբոխը շրջափակում է հայկական թաղամասերը, սկսվում է ջարդն ու թալանը:</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">28 Փետրվար</div>
+        <div class="timeline-desc">Բռնությունները հասնում են գագաթնակետին: Այրվում են տներ, սպանվում են կանայք, երեխաներ, տարեցներ: Տեղի ոստիկանությունը չի միջամտում:</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">29 Փետրվար</div>
+        <div class="timeline-desc">Խորհրդային բանակի զորամասերը մտնում են քաղաք, սակայն ջարդերը շարունակվում են: Պաշտոնական Մոսկվան լռության վարագույր է իջեցնում:</div>
+      </div>
+      <div class="timeline-item">
+        <div class="timeline-date">1988-1989 թթ.</div>
+        <div class="timeline-desc">Հայերի զանգվածային արտահոսք Սումգայիթից, Կիրովաբադից և Ադրբեջանի այլ քաղաքներից: Սկիզբ է դրվում հետագա էթնիկ զտումներին:</div>
+      </div>
+    </div>
+    <p style="font-size:0.9rem; margin-top:0.5rem;">«Սումգայիթի ողբերգությունը ազդարարեց նոր ցեղասպանական դարաշրջան...» —  պատմաբաններ</p>
+  </section>
+
+  <!-- ՊԱՏԿԵՐԱՍՐԱՀ / GALLERY (modern grid, gold borders, grayscale hover) -->
+  <section id="gallery" class="glass-section fade">
+    <h2>Պատկերասրահ</h2>
+    <div class="gallery-grid">
+      <div class="gallery-card">
+        <img src="https://aparaj.am/wp-content/uploads/2018/02/7B50AAEE-C9E3-491D-A1AB-3C4AF9DA275F_cx0_cy8_cw0_w1023_r1_s.jpg" alt="Սումգայիթի ջարդեր, 1988">
+        <div class="img-caption">Ավերված փողոց, փետրվար 1988</div>
+      </div>
+      <div class="gallery-card">
+        <img src="https://www.usanogh.am/wp-content/uploads/2020/02/sumgayit44-1.png" alt="Փախստականներ">
+        <div class="img-caption">Հայ փախստականներ Սումգայիթից</div>
+      </div>
+      <div class="gallery-card">
+        <img src="https://times.am/v3/wp-content/uploads/2023/02/10704160_0_164_3057_1884_1920x0_80_0_0_aa8b9db2efe23864efbbf3e11930d094.jpg-e1677480225221-1024x484.webp" alt="Հիշատակի արարողություն">
+        <div class="img-caption">Տարելիցի հիշատակի միջոցառում</div>
+      </div>
+      <div class="gallery-card">
+        <img src="https://th.bing.com/th/id/R.c1c2836da15cf3284830a63f916a03de?rik=1C%2baXvsc1oLBng&riu=http%3a%2f%2faparaj.am%2fwp-content%2fuploads%2f2019%2f02%2f280219Sumgait.jpg&ehk=fkV9W10BAgMcF7aEwze4oWDqDebxFXBYHnqVviB%2bok4%3d&risl=&pid=ImgRaw&r=0" alt="Զոհերի հիշատակ">
+        <div class="img-caption">Անմեղ զոհերի հիշատակը հավերժ է</div>
+      </div>
+    </div>
+    <p style="text-align: center; font-size: 0.85rem; margin-top: 0.8rem;">* Պատկերները խորհրդանշում են ողբերգական իրադարձությունները, հիմնված արխիվային նյութերի վրա</p>
+  </section>
+
+  <!-- ՔԱՐՏԵԶ (стилизованная тёмная карта) -->
+  <section id="map" class="glass-section fade">
+    <h2>Քարտեզ · Սումգայիթ</h2>
+    <div class="map-wrapper">
+      <iframe src="https://maps.google.com/maps?q=Sumgait,+Azerbaijan&t=&z=12&ie=UTF8&iwloc=&output=embed" 
+              title="Սումգայիթի քարտեզ" loading="lazy"></iframe>
+    </div>
+    <p style="margin-top: 1rem; font-size: 0.85rem;">Սումգայիթ, Ադրբեջանական ԽՍՀ — այստեղ 1988թ. փետրվարին տեղի ունեցավ հայ բնակչության ցեղասպանական ջարդը:</p>
+  </section>
+</main>
+
+<footer>
+  <p>© 2026 — Հայկական թվային թանգարան | Ի հիշատակ Սումգայիթի անմեղ զոհերի</p>
+  <p style="font-size:0.7rem;">Հավերժ հիշողություն ✝️</p>
+</footer>
+
+<script>
+  // scroll fade animation (появление элементов при скролле)
+  const faders = document.querySelectorAll('.fade');
+  
+  const appearOnScroll = () => {
+    const triggerBottom = window.innerHeight * 0.85;
+    faders.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < triggerBottom && rect.bottom > 0) {
+        el.classList.add('show');
+      } else {
+        // можно оставить, чтобы не мигало, но пусть остаются видны после показа
+        if (el.classList.contains('show') && rect.bottom < 0) {
+          // не убираем класс, чтобы не исчезали
+        }
+      }
+    });
+  };
+  
+  window.addEventListener('scroll', appearOnScroll);
+  window.addEventListener('resize', appearOnScroll);
+  appearOnScroll(); // immediate check
+  
+  // лёгкая анимация для заголовков и золотого свечения
+  const navLinks = document.querySelectorAll('nav a');
+  navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      const targetId = this.getAttribute('href').substring(1);
+      const targetElement = document.getElementById(targetId);
+      if (targetElement) {
+        const offset = 80;
+        const elementPosition = targetElement.getBoundingClientRect().top + window.scrollY;
+        window.scrollTo({
+          top: elementPosition - offset,
+          behavior: 'smooth'
+        });
+      }
+    });
+  });
+  
+  // добавим золотой курсор? (необязательно, но эстетично) – просто small touch
+  const styleCursor = document.createElement('style');
+  styleCursor.textContent = `
+    a, button, .gallery-card, .stat-card, .timeline-item, .map-wrapper {
+      transition: all 0.2s ease;
+    }
+  `;
+  document.head.appendChild(styleCursor);
+  
+  // дополнительный эффект: при наведении на стат-карты лёгкое изменение
+  const statCards = document.querySelectorAll('.stat-card');
+  statCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.style.transform = 'translateY(-5px)';
+      card.style.borderColor = '#c8962a';
+      card.style.backgroundColor = 'rgba(200,150,66,0.1)';
+    });
+    card.addEventListener('mouseleave', () => {
+      card.style.transform = 'translateY(0)';
+      card.style.borderColor = 'rgba(200,150,42,0.3)';
+      card.style.backgroundColor = 'rgba(0,0,0,0.45)';
+    });
+  });
+</script>
+</body>
+</html>

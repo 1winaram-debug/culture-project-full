@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Ապրիլյան պատերազմ 2016 — Հայկական Թվային Թանգարան</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,300;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --blood: #8B0000;
+  --blood-dark: #5a0000;
+  --blood-light: #9c1c1c;
+  --gold: #b8960c;
+  --gold-light: #d4aa3a;
+  --silver: #c0c0c0;
+  --white: #f0ece4;
+  --bg: #080608;
+  --bg2: #0e0a0e;
+  --glass: rgba(255,255,255,0.03);
+  --glass-border: rgba(255,255,255,0.07);
+}
+
+*, *::before, *::after {
+  margin: 0; padding: 0;
+  box-sizing: border-box;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Crimson Pro', Georgia, serif;
+  overflow-x: hidden;
+  cursor: none;
+}
+
+/* ─── CURSOR ─────────────────────────────────────────────── */
+#cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: var(--blood);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.08s ease, width 0.2s, height 0.2s, background 0.2s;
+  mix-blend-mode: screen;
+}
+#cursor-glow {
+  position: fixed;
+  width: 320px; height: 320px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9990;
+  transform: translate(-50%,-50%);
+  background: radial-gradient(circle, rgba(139,0,0,0.13) 0%, rgba(139,0,0,0.04) 40%, transparent 70%);
+  transition: opacity 0.3s;
+}
+
+/* ─── BACKGROUND LAYERS ──────────────────────────────────── */
+body::before {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    repeating-linear-gradient(
+      -45deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.012) 60px,
+      rgba(255,255,255,0.012) 61px
+    ),
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 60px,
+      rgba(255,255,255,0.008) 60px,
+      rgba(255,255,255,0.008) 61px
+    );
+  z-index: 0; pointer-events: none;
+}
+
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(139,0,0,0.07) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(90,0,0,0.05) 0%, transparent 50%),
+    radial-gradient(ellipse at 60% 80%, rgba(60,0,0,0.06) 0%, transparent 50%);
+  z-index: 0; pointer-events: none;
+}
+
+/* Armenian cross SVG background */
+.bg-cross {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: min(90vw, 900px);
+  opacity: 0.028;
+  pointer-events: none;
+  z-index: 0;
+  animation: breathe 12s ease-in-out infinite;
+}
+@keyframes breathe {
+  0%,100% { opacity: 0.028; transform: translate(-50%,-50%) scale(1); }
+  50%      { opacity: 0.042; transform: translate(-50%,-50%) scale(1.03); }
+}
+
+/* ─── NAVBAR ─────────────────────────────────────────────── */
+nav {
+  position: fixed; top: 0; left: 0; right: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 60px;
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  background: rgba(8,6,8,0.72);
+  border-bottom: 1px solid var(--glass-border);
+  transition: padding 0.3s;
+}
+nav.scrolled { padding: 12px 60px; }
+
+.nav-logo {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+.nav-logo span { color: var(--blood-light); }
+
+.nav-links {
+  display: flex; gap: 40px;
+  list-style: none;
+}
+.nav-links a {
+  color: rgba(240,236,228,0.6);
+  text-decoration: none;
+  font-family: 'Crimson Pro', serif;
+  font-size: 15px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  transition: color 0.3s;
+  position: relative;
+}
+.nav-links a::after {
+  content: '';
+  position: absolute; bottom: -4px; left: 0; width: 0; height: 1px;
+  background: var(--blood-light);
+  transition: width 0.3s;
+}
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+
+/* ─── HERO ───────────────────────────────────────────────── */
+header {
+  position: relative;
+  height: 100vh;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  text-align: center;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-bg {
+  position: absolute; inset: 0;
+  background: url("raket.jpg") center/cover no-repeat;
+  filter: brightness(0.25) saturate(0.6);
+  transform: scale(1.05);
+  animation: heroZoom 20s ease-in-out infinite alternate;
+}
+@keyframes heroZoom {
+  from { transform: scale(1.05); }
+  to   { transform: scale(1.12); }
+}
+
+.hero-overlay {
+  position: absolute; inset: 0;
+  background:
+    linear-gradient(to bottom, rgba(8,6,8,0.3) 0%, rgba(8,6,8,0) 40%, rgba(8,6,8,0) 60%, rgba(8,6,8,0.95) 100%),
+    radial-gradient(ellipse at center, transparent 30%, rgba(8,6,8,0.5) 100%);
+}
+
+.hero-content {
+  position: relative; z-index: 2;
+  max-width: 860px;
+  padding: 0 30px;
+}
+
+.hero-eyebrow {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 10px;
+  letter-spacing: 6px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 28px;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.3s forwards;
+}
+
+header h1 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 900;
+  line-height: 1.08;
+  letter-spacing: -1px;
+  color: var(--white);
+  text-shadow: 0 0 80px rgba(139,0,0,0.5), 0 4px 40px rgba(0,0,0,0.8);
+  opacity: 0;
+  animation: fadeUp 1s ease 0.6s forwards;
+}
+
+header h1 em {
+  color: var(--blood-light);
+  font-style: normal;
+  display: block;
+}
+
+header p {
+  margin-top: 28px;
+  font-size: clamp(16px, 2vw, 20px);
+  font-weight: 300;
+  line-height: 1.8;
+  color: rgba(240,236,228,0.72);
+  max-width: 640px;
+  margin-left: auto; margin-right: auto;
+  opacity: 0;
+  animation: fadeUp 1s ease 0.9s forwards;
+}
+
+.hero-scroll {
+  position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  opacity: 0;
+  animation: fadeUp 1s ease 1.5s forwards;
+}
+.hero-scroll span {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 9px; letter-spacing: 4px;
+  color: rgba(240,236,228,0.4);
+  text-transform: uppercase;
+}
+.scroll-line {
+  width: 1px; height: 60px;
+  background: linear-gradient(to bottom, rgba(139,0,0,0.8), transparent);
+  animation: scrollPulse 2s ease-in-out infinite;
+}
+@keyframes scrollPulse {
+  0%,100% { opacity: 0.4; transform: scaleY(1); }
+  50%      { opacity: 1;   transform: scaleY(1.1); }
+}
+
+/* ─── SECTION BASE ───────────────────────────────────────── */
+section {
+  position: relative; z-index: 1;
+  padding: 120px 8%;
+}
+
+.section-label {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 9px; letter-spacing: 5px;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 16px;
+  display: flex; align-items: center; gap: 16px;
+}
+.section-label::before {
+  content: '';
+  display: block; width: 40px; height: 1px;
+  background: var(--gold);
+}
+
+.section-title {
+  font-family: 'Unbounded', sans-serif;
+  font-size: clamp(24px, 3.5vw, 42px);
+  font-weight: 700;
+  line-height: 1.2;
+  margin-bottom: 60px;
+}
+
+/* ─── GLASS CARDS ────────────────────────────────────────── */
+#heroes { background: transparent; }
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 24px;
+}
+
+.glass-card {
+  position: relative;
+  border-radius: 2px;
+  overflow: hidden;
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(8px);
+  transition: border-color 0.4s, transform 0.4s;
+  opacity: 0;
+  transform: translateY(40px);
+  transition: opacity 0.7s ease, transform 0.7s ease, border-color 0.4s;
+}
+.glass-card.show { opacity: 1; transform: translateY(0); }
+.glass-card:hover { border-color: rgba(139,0,0,0.4); transform: translateY(-4px) !important; }
+
+.card-img {
+  height: 240px;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(80%) contrast(1.1);
+  transition: filter 0.6s ease, transform 0.6s ease;
+}
+.glass-card:hover .card-img {
+  filter: grayscale(0%) contrast(1);
+  transform: scale(1.04);
+}
+
+.card-img-1 { background-image: url("zinvor.jpg"); }
+.card-img-2 { background-image: url("pastpanutyun.jpg"); }
+.card-img-3 { background-image: url("sahmanagic.jpg"); }
+
+.card-body {
+  padding: 28px 30px 32px;
+}
+.card-body h3 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--blood-light);
+  margin-bottom: 12px;
+}
+.card-body p {
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(240,236,228,0.72);
+  font-weight: 300;
+}
+
+.card-num {
+  position: absolute; top: 20px; right: 24px;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 48px; font-weight: 900;
+  color: rgba(139,0,0,0.12);
+  line-height: 1;
+}
+
+/* ─── TIMELINE ───────────────────────────────────────────── */
+#timeline { 
+  background: linear-gradient(to bottom, transparent, rgba(139,0,0,0.04), transparent);
+}
+
+.timeline-wrap {
+  position: relative;
+  max-width: 780px;
+  margin: 0 auto;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 50%; top: 0; bottom: 0;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, var(--blood) 10%, var(--blood) 90%, transparent);
+  transform: translateX(-50%);
+}
+
+.timeline-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  gap: 0 40px;
+  margin-bottom: 80px;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.timeline-item.show { opacity: 1; transform: translateY(0); }
+
+.timeline-item:nth-child(odd) .tl-content { grid-column: 1; text-align: right; }
+.timeline-item:nth-child(odd) .tl-empty   { grid-column: 3; }
+.timeline-item:nth-child(even) .tl-content { grid-column: 3; }
+.timeline-item:nth-child(even) .tl-empty   { grid-column: 1; }
+
+.tl-dot-wrap {
+  grid-column: 2;
+  display: flex; flex-direction: column; align-items: center;
+  z-index: 2;
+}
+
+.tl-dot {
+  width: 14px; height: 14px;
+  border-radius: 50%;
+  background: var(--blood);
+  border: 2px solid var(--blood-light);
+  box-shadow: 0 0 20px rgba(139,0,0,0.6);
+  flex-shrink: 0;
+}
+
+.tl-date {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 9px; letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.tl-content h3 {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 15px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--white);
+  line-height: 1.3;
+}
+
+.tl-content p {
+  font-size: 16px;
+  line-height: 1.8;
+  color: rgba(240,236,228,0.6);
+  font-weight: 300;
+}
+
+/* ─── QUOTES ─────────────────────────────────────────────── */
+#quotes {
+  background: rgba(0,0,0,0.3);
+}
+
+.quotes-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 40px;
+}
+
+.quote-block {
+  padding: 44px 40px;
+  border: 1px solid var(--glass-border);
+  border-top: 3px solid var(--blood);
+  background: linear-gradient(135deg, rgba(139,0,0,0.06), transparent 60%);
+  position: relative;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.quote-block.show { opacity: 1; transform: translateY(0); }
+
+.quote-mark {
+  font-family: 'Crimson Pro', serif;
+  font-size: 100px;
+  line-height: 0.7;
+  color: rgba(139,0,0,0.25);
+  position: absolute;
+  top: 24px; left: 30px;
+  font-style: italic;
+  pointer-events: none;
+}
+
+.quote-text {
+  font-family: 'Crimson Pro', serif;
+  font-size: 20px;
+  font-style: italic;
+  line-height: 1.7;
+  color: rgba(240,236,228,0.88);
+  margin-bottom: 24px;
+  position: relative; z-index: 1;
+  padding-top: 20px;
+}
+
+.quote-hero {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+.quote-sub {
+  font-size: 14px;
+  color: rgba(240,236,228,0.45);
+  margin-top: 4px;
+  font-weight: 300;
+}
+
+/* ─── GALLERY ────────────────────────────────────────────── */
+#gallery { background: transparent; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 300px 200px;
+  gap: 3px;
+}
+
+.gallery-item {
+  overflow: hidden;
+  position: relative;
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 0.8s ease, transform 0.8s ease;
+}
+.gallery-item.show { opacity: 1; transform: scale(1); }
+
+.gallery-item:nth-child(1) { grid-column: 1/3; grid-row: 1; }
+.gallery-item:nth-child(2) { grid-column: 3;   grid-row: 1; }
+.gallery-item:nth-child(3) { grid-column: 4;   grid-row: 1; }
+.gallery-item:nth-child(4) { grid-column: 1;   grid-row: 2; }
+.gallery-item:nth-child(5) { grid-column: 2/4; grid-row: 2; }
+.gallery-item:nth-child(6) { grid-column: 4;   grid-row: 2; }
+
+.gallery-img {
+  width: 100%; height: 100%;
+  background-size: cover;
+  background-position: center;
+  filter: grayscale(100%) sepia(20%) brightness(0.8);
+  transform: scale(1.05);
+  transition: filter 0.7s ease, transform 0.7s ease;
+}
+.gallery-item:hover .gallery-img {
+  filter: grayscale(0%) sepia(0%) brightness(1);
+  transform: scale(1.1);
+}
+
+.gallery-img-1 { background-image: url("heros1.jpg"); }
+.gallery-img-2 { background-image: url("heros2.jpg"); }
+.gallery-img-3 { background-image: url("heros3.jpg"); }
+.gallery-img-4 { background-image: url("heros4.jpg"); }
+.gallery-img-5 { background-image: url("zinvor.jpg"); }
+.gallery-img-6 { background-image: url("pastpanutyun.jpg"); }
+
+.gallery-caption {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  padding: 40px 20px 20px;
+  background: linear-gradient(transparent, rgba(0,0,0,0.8));
+  font-family: 'Unbounded', sans-serif;
+  font-size: 9px; letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(240,236,228,0.6);
+  transform: translateY(10px); opacity: 0;
+  transition: opacity 0.4s, transform 0.4s;
+}
+.gallery-item:hover .gallery-caption { opacity: 1; transform: translateY(0); }
+
+/* ─── MEMORIAL BUTTON ────────────────────────────────────── */
+.memorial-section {
+  padding: 80px 8%;
+  text-align: center;
+  position: relative; z-index: 1;
+}
+
+.memorial-btn {
+  display: inline-block;
+  padding: 18px 56px;
+  background: transparent;
+  border: 1px solid var(--blood);
+  color: var(--white);
+  font-family: 'Unbounded', sans-serif;
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s;
+}
+.memorial-btn::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: var(--blood);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.5s cubic-bezier(0.77,0,0.175,1);
+}
+.memorial-btn:hover::before { transform: scaleX(1); }
+.memorial-btn span { position: relative; z-index: 1; }
+.memorial-btn:hover { color: var(--white); }
+
+.pulse-ring {
+  display: inline-block;
+  margin-bottom: 40px;
+  width: 60px; height: 60px;
+  border-radius: 50%;
+  border: 2px solid var(--blood);
+  position: relative;
+}
+.pulse-ring::before, .pulse-ring::after {
+  content: '';
+  position: absolute; inset: -12px;
+  border-radius: 50%;
+  border: 1px solid var(--blood);
+  opacity: 0;
+  animation: ringPulse 2.5s ease-in-out infinite;
+}
+.pulse-ring::after { animation-delay: 1.2s; }
+@keyframes ringPulse {
+  0%   { opacity: 0.6; transform: scale(1); }
+  100% { opacity: 0;   transform: scale(1.8); }
+}
+.pulse-ring-inner {
+  position: absolute; inset: 14px;
+  background: var(--blood);
+  border-radius: 50%;
+}
+
+/* ─── FOOTER ─────────────────────────────────────────────── */
+footer {
+  position: relative; z-index: 1;
+  border-top: 1px solid var(--glass-border);
+  padding: 60px 8%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.footer-brand {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 10px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--gold-light);
+}
+
+.footer-center {
+  text-align: center;
+  flex: 1;
+}
+.footer-center p {
+  font-family: 'Crimson Pro', serif;
+  font-size: 18px;
+  font-style: italic;
+  color: rgba(240,236,228,0.5);
+}
+.footer-center strong {
+  display: block;
+  font-family: 'Unbounded', sans-serif;
+  font-size: 9px;
+  letter-spacing: 4px;
+  color: var(--blood-light);
+  margin-top: 8px;
+  font-style: normal;
+  font-weight: 400;
+}
+
+.footer-year {
+  font-family: 'Unbounded', sans-serif;
+  font-size: 48px;
+  font-weight: 900;
+  color: rgba(139,0,0,0.12);
+}
+
+/* ─── DIVIDER ────────────────────────────────────────────── */
+.divider {
+  width: 80px; height: 1px;
+  background: linear-gradient(to right, transparent, var(--blood-light), transparent);
+  margin: 0 auto 60px;
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────────────── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  nav { padding: 16px 24px; }
+  .nav-links { display: none; }
+  section { padding: 80px 6%; }
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: auto;
+  }
+  .gallery-item { grid-column: auto !important; grid-row: auto !important; height: 200px; }
+  .timeline-line { display: none; }
+  .timeline-item { grid-template-columns: 1fr; }
+  .tl-dot-wrap { display: none; }
+  .timeline-item:nth-child(odd) .tl-content,
+  .timeline-item:nth-child(even) .tl-content { grid-column: 1; text-align: left; }
+  .timeline-item:nth-child(odd) .tl-empty,
+  .timeline-item:nth-child(even) .tl-empty { display: none; }
+  footer { flex-direction: column; text-align: center; }
+}
+
+/* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div id="cursor"></div>
+<div id="cursor-glow"></div>
+
+<!-- Background Armenian cross -->
+<svg class="bg-cross" viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg" fill="none">
+  <g stroke="white" stroke-width="1.5">
+    <!-- Khachkar / Armenian Cross arms -->
+    <rect x="195" y="50" width="110" height="400" rx="8"/>
+    <rect x="50" y="195" width="400" height="110" rx="8"/>
+    <!-- decorative inner crosslets -->
+    <rect x="220" y="80"  width="60" height="60" rx="4"/>
+    <rect x="220" y="360" width="60" height="60" rx="4"/>
+    <rect x="80"  y="220" width="60" height="60" rx="4"/>
+    <rect x="360" y="220" width="60" height="60" rx="4"/>
+    <rect x="220" y="220" width="60" height="60" rx="4"/>
+    <!-- circle -->
+    <circle cx="250" cy="250" r="160" stroke-width="0.8"/>
+    <circle cx="250" cy="250" r="200" stroke-width="0.4"/>
+  </g>
+</svg>
+
+<!-- Navigation -->
+<nav id="navbar">
+  <div class="nav-logo">Հայկական <span>Թ</span>անգարան</div>
+  <ul class="nav-links">
+    <li><a href="#heroes">Հերոսներ</a></li>
+    <li><a href="#timeline">Քրոնիկոն</a></li>
+    <li><a href="#quotes">Հիշողություն</a></li>
+    <li><a href="#gallery">Պատկերասրահ</a></li>
+  </ul>
+</nav>
+
+<!-- Hero -->
+<header>
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Հայկական թվային թանգարան &nbsp;·&nbsp; Ապրիլ 2016</p>
+    <h1>Քառօրյա <em>Պատերազմ</em></h1>
+    <p>Չորս օր, որ հավերժ արձանագրվեցին պատմության մեջ։ Հայ զինվորները իրենց կյանքով պաշտպանեցին հայրենի հողը, ստեղծելով հերոսության նոր էջ մեր ժողովրդի կյանքում։</p>
+  </div>
+  <div class="hero-scroll">
+    <span>Ոլորել ներքև</span>
+    <div class="scroll-line"></div>
+  </div>
+</header>
+
+<!-- Hero Soldiers -->
+<section id="heroes">
+  <div class="section-label">01 — Հերոս Զինվորներ</div>
+  <h2 class="section-title">Նրանք, ովքեր չհանձնվեցին</h2>
+  <div class="cards-grid">
+
+    <div class="glass-card" data-delay="0">
+      <div class="card-num">01</div>
+      <div class="card-img card-img-1"></div>
+      <div class="card-body">
+        <h3>Հայ Զինվոր</h3>
+        <p>Հայ զինվորները ցուցաբերեցին անձնուրաց խիզախություն։ Ոչ մի զոհ, ոչ մի կորուստ չէր կոտրել նրանց ոգին, երբ նրանք կանգ էին առնում հայրենի հողի պաշտպանության համար։</p>
+      </div>
+    </div>
+
+    <div class="glass-card" data-delay="150">
+      <div class="card-num">02</div>
+      <div class="card-img card-img-2"></div>
+      <div class="card-body">
+        <h3>Պաշտպանություն</h3>
+        <p>Հայկական բանակը, ստանալով հանկարծակի հարձակումը, կազմակերպեց ամուր պաշտպանություն։ Ամեն դիրք, ամեն բարձունք դարձավ ամրոց, ամեն զինվոր՝ ժայռ հայ ժողովրդի ճամփին։</p>
+      </div>
+    </div>
+
+    <div class="glass-card" data-delay="300">
+      <div class="card-num">03</div>
+      <div class="card-img card-img-3"></div>
+      <div class="card-body">
+        <h3>Անառիկ Սահման</h3>
+        <p>Պաշտպանական գիծն ամուր մնաց չորս ծանր օրերի ընթացքում։ Հայ մարտիկների դիմակայությունը դարձավ ոչ միայն ռազմական հաղթանակ, այլ ժողովրդի ոգու հաղթանակ։</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Timeline -->
+<section id="timeline">
+  <div class="section-label">02 — Ժամանակագրություն</div>
+  <h2 class="section-title">Չորս Օրվա Քրոնիկոն</h2>
+
+  <div class="timeline-wrap">
+    <div class="timeline-line"></div>
+
+    <div class="timeline-item" data-delay="0">
+      <div class="tl-content">
+        <span class="tl-date">2 Ապրիլ, 2016</span>
+        <h3>Ադրբեջանի հանկարծակի հարձակումը</h3>
+        <p>Գիշերվա ժամը 00:05-ին Ադրբեջանը հանկարծ հրաձգություն բացեց ամբողջ շփման գծի երկայնքով՝ կիրառելով ծանր հրետանի, հարձակողական ուղղաթիռներ, անօդաչու թռչող սարքեր և զրահամեքենաներ։ Հայ և արցախյան ուժերը անհապաղ ու կազմակերպված պատասխանեցին հարձակմանը։</p>
+      </div>
+      <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+      <div class="tl-empty"></div>
+    </div>
+
+    <div class="timeline-item" data-delay="150">
+      <div class="tl-empty"></div>
+      <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+      <div class="tl-content">
+        <span class="tl-date">3 Ապրիլ, 2016</span>
+        <h3>Հակահարձակումներ ու հերոսական դիմակայություն</h3>
+        <p>Հայ և արցախյան ուժերը ծանր մարտերում անցան հակահարձակման։ Ջրականի ուղղությամբ ադրբեջանական ուժերին հաջողվեց մի քանի բլուր գրավել, սակայն մի շարք ուղղություններով հայ մարտիկները վերագրավեցին դիրքերը՝ կրկնապատկված ոգով ու վճռականությամբ։</p>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-delay="300">
+      <div class="tl-content">
+        <span class="tl-date">4 Ապրիլ, 2016</span>
+        <h3>Ֆիզուլու ու Ագդամի ճակատ</h3>
+        <p>Ծանրագույն մարտեր ծավալվեցին Ֆիզուլու, Ագդամի ու Հադրութի ուղղություններով։ Հայ ուժերը հսկողության տակ պահեցին ռազմավարական կարևոր կետերը։ Մարտերի ծանրությունը և հերոսությունը ամրագրեցին ժամանակի ամենակոշտ էջերը։</p>
+      </div>
+      <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+      <div class="tl-empty"></div>
+    </div>
+
+    <div class="timeline-item" data-delay="450">
+      <div class="tl-empty"></div>
+      <div class="tl-dot-wrap"><div class="tl-dot"></div></div>
+      <div class="tl-content">
+        <span class="tl-date">5 Ապրիլ, 2016</span>
+        <h3>Հրադադար — Հայ Ոգու Հաղթանակ</h3>
+        <p>Ռուսաստանի միջնորդությամբ հրատապ հրադադար ստորագրվեց։ Հայ ու արցախյան ուժերը պահպանեցին ռազմավարական նախաձեռնությունը, ցուցադրելով, որ ոչ մի ուժ ի վիճակի չէ կոտրել Արցախի պաշտպանների կամքը։</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Quotes -->
+<section id="quotes">
+  <div class="section-label">03 — Հերոսների Հիշողություն</div>
+  <h2 class="section-title">Անմոռանալի Անուններ</h2>
+
+  <div class="quotes-grid">
+
+    <div class="quote-block" data-delay="0">
+      <div class="quote-mark">"</div>
+      <p class="quote-text">Ես կռվեցի Հայրենիքի համար, ոչ թե հաղթանակի կամ փառքի — ես կռվեցի, որ ուրիշ մայրեր չտան այն արցունքը, ինչ տվեց իմ մայրը։</p>
+      <div class="quote-hero">Ռոբերտ Աբաջյան</div>
+      <div class="quote-sub">Ապրիլ 2016-ի հերոս, Ազատամարտիկ</div>
+    </div>
+
+    <div class="quote-block" data-delay="150">
+      <div class="quote-mark">"</div>
+      <p class="quote-text">Մինչ մեկ հայ շունչ կա կենդանի — Արցախի հողը կմնա Հայ։ Ես հավատում եմ դրան ամեն բջջով, ամեն բաբախյունով։</p>
+      <div class="quote-hero">Կյարամ Սլոյան</div>
+      <div class="quote-sub">Ազատամարտիկ, Հերոս Զինվոր</div>
+    </div>
+
+    <div class="quote-block" data-delay="300">
+      <div class="quote-mark">"</div>
+      <p class="quote-text">Լեռները, որ մեր հայրերն են կերտել արյամբ ու ոսկորով, մեր ձեռքերն են պահելու — ի՛նչ գին էլ վճարենք, ինչ ժամ էլ գա։</p>
+      <div class="quote-hero">Հայ Մարտիկ</div>
+      <div class="quote-sub">Անհայտ Հերոս, Ապրիլ 2016</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- Gallery -->
+<section id="gallery">
+  <div class="section-label">04 — Փաստաթղթային Պատկերներ</div>
+  <h2 class="section-title">Պատկերասրահ</h2>
+
+  <div class="gallery-grid">
+    <div class="gallery-item" data-delay="0">
+      <div class="gallery-img gallery-img-1"></div>
+      <div class="gallery-caption">Ապրիլ 2016 — Արցախ</div>
+    </div>
+    <div class="gallery-item" data-delay="100">
+      <div class="gallery-img gallery-img-2"></div>
+      <div class="gallery-caption">Ռազմաճակատ</div>
+    </div>
+    <div class="gallery-item" data-delay="200">
+      <div class="gallery-img gallery-img-3"></div>
+      <div class="gallery-caption">Հայ Մարտիկ</div>
+    </div>
+    <div class="gallery-item" data-delay="300">
+      <div class="gallery-img gallery-img-4"></div>
+      <div class="gallery-caption">Պաշտպանություն</div>
+    </div>
+    <div class="gallery-item" data-delay="400">
+      <div class="gallery-img gallery-img-5"></div>
+      <div class="gallery-caption">Արցախյան Ոգի</div>
+    </div>
+    <div class="gallery-item" data-delay="500">
+      <div class="gallery-img gallery-img-6"></div>
+      <div class="gallery-caption">Հաղթանակ</div>
+    </div>
+  </div>
+</section>
+
+<!-- Memorial -->
+<div class="memorial-section">
+  <div class="pulse-ring"><div class="pulse-ring-inner"></div></div>
+  <br>
+  <button class="memorial-btn" onclick="showMemorial()">
+    <span>Հիշում ենք Հերոսներին 🇦🇲</span>
+  </button>
+</div>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-brand">Հայկական Թ. Թանգարան</div>
+  <div class="footer-center">
+    <p>«Հավերժ փառք հայ հողի պաշտպաններին»</p>
+    <strong>Ապրիլ 2016 — Անմոռանալի</strong>
+  </div>
+  <div class="footer-year">2016</div>
+</footer>
+
+<script>
+/* ─── CUSTOM CURSOR ──────────────────────────────────────── */
+const cursor = document.getElementById('cursor');
+const cursorGlow = document.getElementById('cursor-glow');
+
+let mouseX = -300, mouseY = -300;
+let glowX = -300, glowY = -300;
+
+document.addEventListener('mousemove', e => {
+  mouseX = e.clientX;
+  mouseY = e.clientY;
+});
+
+function animateCursor() {
+  cursor.style.left = mouseX + 'px';
+  cursor.style.top  = mouseY + 'px';
+
+  glowX += (mouseX - glowX) * 0.06;
+  glowY += (mouseY - glowY) * 0.06;
+  cursorGlow.style.left = glowX + 'px';
+  cursorGlow.style.top  = glowY + 'px';
+
+  requestAnimationFrame(animateCursor);
+}
+animateCursor();
+
+/* interactive cursor states */
+document.querySelectorAll('a, button, .glass-card, .gallery-item').forEach(el => {
+  el.addEventListener('mouseenter', () => {
+    cursor.style.width = '24px';
+    cursor.style.height = '24px';
+    cursor.style.background = 'rgba(139,0,0,0.6)';
+  });
+  el.addEventListener('mouseleave', () => {
+    cursor.style.width = '12px';
+    cursor.style.height = '12px';
+    cursor.style.background = 'var(--blood)';
+  });
+});
+
+/* ─── NAVBAR SCROLL ──────────────────────────────────────── */
+const navbar = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  navbar.classList.toggle('scrolled', window.scrollY > 60);
+});
+
+/* ─── INTERSECTION OBSERVER ──────────────────────────────── */
+const observerOptions = {
+  threshold: 0.12,
+  rootMargin: '0px 0px -60px 0px'
+};
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const el = entry.target;
+      const delay = parseInt(el.dataset.delay || 0);
+      setTimeout(() => el.classList.add('show'), delay);
+      observer.unobserve(el);
+    }
+  });
+}, observerOptions);
+
+document.querySelectorAll(
+  '.glass-card, .gallery-item, .timeline-item, .quote-block'
+).forEach(el => observer.observe(el));
+
+/* ─── MEMORIAL ───────────────────────────────────────────── */
+function showMemorial() {
+  const overlay = document.createElement('div');
+  overlay.style.cssText = `
+    position:fixed;inset:0;background:rgba(0,0,0,0.92);
+    display:flex;flex-direction:column;
+    align-items:center;justify-content:center;
+    z-index:9000;text-align:center;padding:40px;
+    font-family:'Crimson Pro',serif;
+    backdrop-filter:blur(12px);
+    animation:fadeIn 0.5s ease;
+  `;
+
+  overlay.innerHTML = `
+    <style>@keyframes fadeIn{from{opacity:0}to{opacity:1}}</style>
+    <div style="
+      font-family:'Unbounded',sans-serif;
+      font-size:9px;letter-spacing:6px;
+      color:#b8960c;text-transform:uppercase;margin-bottom:30px;
+    ">Հայկական Թ. Թանգարան</div>
+    <div style="
+      font-size:clamp(28px,5vw,56px);
+      font-weight:300;
+      color:#f0ece4;
+      line-height:1.4;
+      margin-bottom:16px;
+      font-style:italic;
+    ">Հիշում ենք և հպարտանում</div>
+    <div style="
+      font-family:'Unbounded',sans-serif;
+      font-size:clamp(16px,3vw,28px);
+      font-weight:900;
+      color:#8B0000;
+      letter-spacing:2px;
+      margin-bottom:32px;
+    ">մեր հերոսներով 🇦🇲</div>
+    <div style="
+      width:60px;height:1px;
+      background:rgba(139,0,0,0.5);
+      margin:0 auto 32px;
+    "></div>
+    <p style="
+      font-size:18px;line-height:1.8;
+      color:rgba(240,236,228,0.6);
+      max-width:520px;font-weight:300;
+    ">Ապրիլ 2016-ի հերոս մարտիկները կմնան հավիտյան Հայ ժողովրդի սրտերում։ Նրանց հիշատակը անմար է, ինչպես Արցախի լեռները։</p>
+    <button onclick="this.parentElement.remove()" style="
+      margin-top:44px;padding:14px 44px;
+      background:transparent;
+      border:1px solid rgba(139,0,0,0.6);
+      color:#f0ece4;
+      font-family:'Unbounded',sans-serif;
+      font-size:10px;letter-spacing:4px;
+      text-transform:uppercase;
+      cursor:pointer;
+      transition:background 0.3s;
+    " onmouseover="this.style.background='rgba(139,0,0,0.3)'"
+       onmouseout="this.style.background='transparent'">
+      Փակել
+    </button>
+  `;
+
+  document.body.appendChild(overlay);
+}
+</script>
+</body>
+</html>

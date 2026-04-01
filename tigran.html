@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Տիգրան Մեծ · Հայկական թվային թանգարան</title>
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ---------- ОСНОВНОЙ ФОН: шоколадный, сетка, свечение, крест ---------- */
+    body {
+      background-color: #0d0905;
+      background-image: repeating-linear-gradient(135deg, rgba(200, 150, 66, 0.05) 0px, rgba(200, 150, 66, 0.05) 1px, transparent 1px, transparent 10px),
+                        radial-gradient(circle at 50% 40%, rgba(180, 120, 50, 0.18) 0%, rgba(13, 9, 5, 0.98) 85%);
+      color: #e5d5b3;
+      font-family: 'Georgia', 'Times New Roman', serif;
+      line-height: 1.55;
+      scroll-behavior: smooth;
+    }
+
+    /* Водяной знак — армянский крест (фиксированный) */
+    body::after {
+      content: "☦";
+      position: fixed;
+      bottom: 3%;
+      right: 2%;
+      font-size: 32vw;
+      font-family: serif;
+      color: rgba(200, 150, 66, 0.045);
+      pointer-events: none;
+      filter: blur(7px);
+      z-index: 0;
+      transform: rotate(-5deg);
+    }
+
+    body::before {
+      content: "☦";
+      position: fixed;
+      top: -5%;
+      left: -5%;
+      font-size: 28vw;
+      font-family: serif;
+      color: rgba(200, 150, 66, 0.03);
+      pointer-events: none;
+      filter: blur(12px);
+      z-index: 0;
+    }
+
+    /* контейнер с z-index */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 2rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* ----- СТЕКЛЯННЫЕ СЕКЦИИ (glassmorphism + золотая кайма) ----- */
+    .glass-panel {
+      background: rgba(13, 9, 5, 0.55);
+      backdrop-filter: blur(14px);
+      border-radius: 48px;
+      border: 1px solid rgba(200, 150, 66, 0.35);
+      padding: 2.8rem 2.4rem;
+      margin-bottom: 4rem;
+      transition: border-color 0.3s, box-shadow 0.2s;
+      box-shadow: 0 25px 40px -15px rgba(0, 0, 0, 0.5);
+    }
+
+    .glass-panel:hover {
+      border-color: rgba(200, 150, 66, 0.7);
+      box-shadow: 0 30px 45px -18px rgba(200, 150, 66, 0.2);
+    }
+
+    /* заголовки */
+    h1, h2, h3 {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+
+    h1 {
+      font-size: 3.8rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, #e5d5b3 0%, #c8962a 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      text-shadow: 0 2px 12px rgba(200, 150, 66, 0.3);
+      margin-bottom: 1rem;
+    }
+
+    h2 {
+      font-size: 2.2rem;
+      color: #c8962a;
+      text-shadow: 0 0 6px rgba(200, 150, 66, 0.4);
+      border-left: 4px solid #c8962a;
+      padding-left: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    h3 {
+      font-size: 1.4rem;
+      color: #e5d5b3;
+      margin: 0.5rem 0;
+    }
+
+    /* Hero-секция */
+    .hero {
+      min-height: 90vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      flex-direction: column;
+      padding: 2rem;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #c8962a;
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 300;
+      margin-top: 1rem;
+      border-top: 1px solid rgba(200, 150, 66, 0.5);
+      display: inline-block;
+      padding-top: 0.8rem;
+    }
+
+    /* анимация появления для hero */
+    .fade-in-up {
+      animation: fadeUp 1.2s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+    }
+
+    @keyframes fadeUp {
+      0% {
+        opacity: 0;
+        transform: translateY(45px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ---------- КАРТА ИМПЕРИИ (SVG стилизованная) ---------- */
+    .map-wrapper {
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 36px;
+      padding: 1rem;
+    }
+    .empire-map {
+      width: 100%;
+      border-radius: 28px;
+      background: #0c0804;
+      display: block;
+    }
+    .map-legend {
+      display: flex;
+      justify-content: center;
+      gap: 1.8rem;
+      margin-top: 1rem;
+      font-size: 0.75rem;
+      color: #c8962a;
+      font-family: 'Unbounded', sans-serif;
+    }
+    .legend-dot {
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      background: #c8962a;
+      border-radius: 2px;
+      margin-right: 6px;
+      box-shadow: 0 0 4px #c8962a;
+    }
+
+    /* сетка галереи (артефакты) */
+    .artifacts-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 2rem;
+      margin-top: 1rem;
+    }
+    .artifact-card {
+      background: rgba(10, 7, 3, 0.65);
+      backdrop-filter: blur(8px);
+      border-radius: 28px;
+      border: 1px solid rgba(200, 150, 66, 0.4);
+      overflow: hidden;
+      transition: all 0.35s ease;
+    }
+    .artifact-card:hover {
+      transform: translateY(-6px);
+      border-color: #c8962a;
+      box-shadow: 0 20px 30px -12px rgba(200, 150, 66, 0.3);
+    }
+    .artifact-img {
+      width: 100%;
+      height: 240px;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(65%) sepia(30%) contrast(0.9);
+      transition: filter 0.5s ease, transform 0.4s;
+    }
+    .artifact-card:hover .artifact-img {
+      filter: grayscale(0%) sepia(0%) contrast(1.05);
+      transform: scale(1.02);
+      box-shadow: inset 0 0 15px rgba(200,150,66,0.5);
+    }
+    .artifact-card h3 {
+      padding: 1rem 1rem 0.2rem;
+      font-size: 1.25rem;
+    }
+    .artifact-card p {
+      padding: 0 1rem 1.2rem;
+      font-size: 0.85rem;
+      color: #cfc5aa;
+    }
+
+    /* инфографика: военная хроника (битвы и достижения) */
+    .chronicle-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: space-between;
+    }
+    .chronicle-col {
+      flex: 1;
+      min-width: 230px;
+      background: rgba(0,0,0,0.4);
+      border-radius: 28px;
+      padding: 1.2rem;
+      border-left: 2px solid #c8962a;
+    }
+    .battle-item, .achievement-item {
+      margin-bottom: 1.2rem;
+      padding-left: 0.8rem;
+      border-left: 1px solid rgba(200,150,66,0.4);
+    }
+    .battle-name {
+      font-family: 'Unbounded', sans-serif;
+      font-weight: 600;
+      color: #c8962a;
+      font-size: 1rem;
+    }
+    .battle-date {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    .stat-number {
+      font-family: 'Unbounded', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #c8962a;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    /* fade элементы (Intersection Observer) */
+    .fade-on-scroll {
+      opacity: 0;
+      transform: translateY(35px);
+      transition: opacity 0.9s cubic-bezier(0.2, 0.9, 0.3, 1.1), transform 0.8s ease;
+    }
+    .fade-on-scroll.revealed {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* дополнительный стиль для текста */
+    p {
+      font-size: 1.05rem;
+      margin-bottom: 1rem;
+      color: #ede2cd;
+    }
+
+    .gold-accent {
+      color: #c8962a;
+      font-weight: 500;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2.5rem 0;
+      border-top: 1px solid rgba(200,150,66,0.2);
+      margin-top: 2rem;
+      font-size: 0.75rem;
+      color: #a3916a;
+    }
+
+    @media (max-width: 760px) {
+      .container { padding: 0 1.2rem; }
+      h1 { font-size: 2.3rem; }
+      h2 { font-size: 1.7rem; }
+      .glass-panel { padding: 1.6rem; }
+      .chronicle-grid { flex-direction: column; }
+    }
+
+    /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <!-- Hero-секция -->
+  <div class="hero fade-in-up">
+    <h1>Տիգրան II Մեծ<br>Արքայից Արքա</h1>
+    <div style="font-size: 1.8rem; letter-spacing: 2px;">«От моря до моря»</div>
+    <div class="hero-sub">Տիեզերքի տիրակալ · Մ.թ.ա. 95–55</div>
+    <p style="max-width: 680px; margin-top: 2rem;">Հզորագույն թագավոր, որի օրոք Մեծ Հայքը տարածվեց Կասպիցից մինչև Միջերկրական ծով՝ դառնալով Հելլենիստական աշխարհի գերտերություններից մեկը:</p>
+  </div>
+
+  <!-- ИНТЕРАКТИВНАЯ КАРТА ИМПЕРИИ (стилизованный SVG) -->
+  <div class="glass-panel fade-on-scroll" id="mapSection">
+    <h2>🏛️ Տիրակալության սահմաններ · Քարտեզ</h2>
+    <div class="map-wrapper">
+      <svg class="empire-map" viewBox="0 0 960 540" xmlns="http://www.w3.org/2000/svg">
+        <rect width="960" height="540" fill="#0c0804" rx="20" />
+        <!-- Средиземное море, Черное море, Каспий (стилизовано) -->
+        <path d="M80,220 L180,200 L260,230 L320,210 L380,240 L420,290 L380,340 L280,360 L180,350 L120,310 L80,260 Z" fill="#1f2a1c" stroke="#c8962a" stroke-width="1.2" stroke-dasharray="3 2" opacity="0.8"/>
+        <text x="140" y="280" fill="#c8962a" font-size="9" font-family="Unbounded">Միջերկրական ծով</text>
+        <!-- Черное море -->
+        <path d="M500,110 L600,100 L680,130 L720,180 L680,230 L580,240 L510,210 L480,170 Z" fill="#1f2a1c" stroke="#c8962a" stroke-width="1" opacity="0.8"/>
+        <text x="560" y="170" fill="#c8962a" font-size="8" font-family="Unbounded">Սև ծով</text>
+        <!-- Каспий -->
+        <path d="M800,210 L850,220 L860,300 L830,360 L770,340 L760,280 L780,240 Z" fill="#1f2a1c" stroke="#c8962a" stroke-width="1" opacity="0.7"/>
+        <text x="780" y="300" fill="#c8962a" font-size="8" font-family="Unbounded">Կասպից ծով</text>
+        
+        <!-- Границы империи Тиграна (контур) -->
+        <polygon points="180,280 260,180 380,140 520,110 660,130 740,200 720,320 600,370 460,360 320,380 200,340 160,300" 
+                 fill="none" stroke="#c8962a" stroke-width="2.5" stroke-dasharray="6 3" />
+        <polygon points="210,290 280,200 390,165 510,140 630,160 700,220 680,310 570,350 440,345 310,365 220,330" 
+                 fill="rgba(200,150,66,0.05)" stroke="none" />
+        
+        <!-- Города и регионы -->
+        <circle cx="320" cy="250" r="5" fill="#c8962a" stroke="#e5d5b3" stroke-width="1.2"/>
+        <text x="330" y="245" fill="#e5d5b3" font-size="9">Տիգրանակերտ</text>
+        
+        <circle cx="560" cy="200" r="4" fill="#c8962a" />
+        <text x="570" y="195" fill="#e5d5b3" font-size="9">Արտաշատ</text>
+        
+        <circle cx="420" cy="300" r="4" fill="#c8962a"/>
+        <text x="430" y="305" fill="#e5d5b3" font-size="9">Անտիոք</text>
+
+        <circle cx="710" cy="270" r="3.5" fill="#c8962a"/>
+        <text x="720" y="275" fill="#e5d5b3" font-size="9">Եկբատան</text>
+        
+        <text x="240" y="400" fill="#c8962a" font-size="10" font-style="italic" font-family="Georgia">Հայկական կայսրություն մ.թ.ա. 80-ական թթ.</text>
+      </svg>
+      <div class="map-legend">
+        <span><span class="legend-dot"></span> Տիգրան Մեծի տիրույթներ</span>
+        <span><span style="background:#3a4a2e; display:inline-block; width:14px; height:14px; border-radius:2px; margin-right:6px;"></span> Վասալական թագավորություններ</span>
+        <span><span style="background:#c8962a33; width:14px; height:14px; display:inline-block; border:1px solid #c8962a;"></span> Ռազմական արշավներ</span>
+      </div>
+    </div>
+    <p style="margin-top: 1.2rem; font-size:0.9rem;">Տիգրան Մեծը միավորեց հայկական հողերը, նվաճեց Սիրիան, Փյունիկիան, Կիլիկիան և հասավ մինչև Եգիպտոսի սահմանները՝ հիմնելով հելլենիստական աշխարհի ամենահզոր կայսրություններից մեկը:</p>
+  </div>
+
+  <!-- ГАЛЕРЕЯ "Артефакты былой славы" (сетка + hover эффект сепия -> цвет) -->
+  <div class="glass-panel fade-on-scroll">
+    <h2>📜 Արտեֆակտներ · Փառքի վկաներ</h2>
+    <div class="artifacts-grid">
+      <div class="artifact-card">
+        <img class="artifact-img" src="https://tse4.mm.bing.net/th/id/OIP.xNPxIC_bNbPrHdiPrPd_owHaHS?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Տիգրան Մեծի արծաթե դրամ" loading="lazy">
+        <h3>Տիգրան Մեծի դրամ</h3>
+        <p>Արծաթյա տետրադրախմա՝ արքայի պատկերով և թագով: Դարձերեսին պատկերված է Տյուխե աստվածուհին:</p>
+      </div>
+      <div class="artifact-card">
+        <img class="artifact-img" src="https://mediamag.am/wp-content/uploads/2023/02/TigranGreat_mediamag-1024x576.jpg" alt="Տիգրան Մեծի արձան" loading="lazy">
+        <h3>Հեծյալ արձան (Երևան)</h3>
+        <p>Խորհրդանշում է հզորությունը, իմաստությունը և ռազմական փառքը: Տեղադրված է Օղակաձև զբոսայգում:</p>
+      </div>
+      <div class="artifact-card">
+        <img class="artifact-img" src="https://tse2.mm.bing.net/th/id/OIP.p_Lj8os3Ef_6iYYaINgKOAHaFo?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Իմպերիայի քարտեզ" loading="lazy">
+        <h3>Կայսրության քարտեզ</h3>
+        <p>Հայկական տերությունը Կասպիցից մինչև Միջերկրական: «Ծովից ծով» ռազմավարական հաջողություն:</p>
+      </div>
+      <div class="artifact-card">
+        <img class="artifact-img" src="https://www.aspar.am/photo-tigranakert/013-tigranakert.jpg" alt="Տիգրանակերտի ավերակներ" loading="lazy">
+        <h3>Տիգրանակերտ (պեղումներ)</h3>
+        <p>Նոր մայրաքաղաքի մնացորդները՝ հելլենիստական ճարտարապետության փառահեղ նմուշ:</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ИНФОГРАФИКА: военная хроника (битвы и достижения) -->
+  <div class="glass-panel fade-on-scroll">
+    <h2>⚔️ Ռազմական ժամանակագրություն · Փառքի ուղի</h2>
+    <div class="chronicle-grid">
+      <div class="chronicle-col">
+        <h3 style="margin-bottom: 1.2rem;">🏆 Գլխավոր ճակատամարտեր</h3>
+        <div class="battle-item">
+          <div class="battle-name">Տիգրանակերտի ճակատամարտ</div>
+          <div class="battle-date">Մ.թ.ա. 69 թ. · ընդդեմ Հռոմի (Լուկուլլոս)</div>
+          <p style="font-size: 0.85rem;">Չնայած պարտությանը, հայկական բանակը ցույց տվեց աննկուն ոգի: Տիգրանը վերակազմավորեց ուժերը:</p>
+        </div>
+        <div class="battle-item">
+          <div class="battle-name">Արտաշատի ճակատամարտ</div>
+          <div class="battle-date">Մ.թ.ա. 68 թ.</div>
+          <p style="font-size: 0.85rem;">Հռոմեացիների դեմ հաջող պաշտպանություն, որից հետո կնքվեց հաշտություն:</p>
+        </div>
+        <div class="battle-item">
+          <div class="battle-name">Պարթևական արշավանք</div>
+          <div class="battle-date">Մ.թ.ա. 77–70 թթ.</div>
+          <p style="font-size: 0.85rem;">Նվաճեց Միջագետքը և Ատրպատականը՝ հաստատելով գերիշխանություն արևելքում:</p>
+        </div>
+      </div>
+      <div class="chronicle-col">
+        <h3 style="margin-bottom: 1.2rem;">👑 Փառահեղ նվաճումներ</h3>
+        <div class="achievement-item">
+          <span class="stat-number">13</span> <span class="gold-accent">նահանգներ</span> — կայսրությունը բաժանված էր ռազմավարական տարածքների:
+        </div>
+        <div class="achievement-item">
+          <span class="stat-number">«Արքայից արքա»</span> տիտղոս, որն ընդունվել է Մերձավոր Արևելքի բոլոր միապետների կողմից:
+        </div>
+        <div class="achievement-item">
+          <span class="stat-number">300 000</span> հետիոտ զինվոր, <span class="stat-number">20 000</span> հեծյալ — հզորագույն բանակներից մեկը հնագույն աշխարհում:
+        </div>
+        <div class="achievement-item">
+          Հիմնադրեց Տիգրանակերտ մայրաքաղաքը՝ հելլենիստական մշակույթի կենտրոն:
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 2rem; padding: 1rem; background: rgba(0,0,0,0.35); border-radius: 32px; text-align: center;">
+      <span style="font-family: 'Unbounded'; font-size: 0.9rem;">📜 «Որի հզորության ներքո Հայաստանը դարձավ աշխարհի ամենահզոր տերություններից մեկը» — Պլուտարքոս</span>
+    </div>
+  </div>
+
+  <footer>
+    <p>Հայկական թվային թանգարան · Տիգրան Մեծի ժառանգությունը · Հիշողությունը մեր ուժն է</p>
+    <p style="margin-top: 0.5rem;">✝️ «Արիություն, միասնություն, հավատ»</p>
+  </footer>
+</div>
+
+<script>
+  // Intersection Observer API для плавного появления элементов
+  const fadeElements = document.querySelectorAll('.fade-on-scroll');
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        observer.unobserve(entry.target); // после появления больше не следим
+      }
+    });
+  }, { threshold: 0.2, rootMargin: "0px 0px -30px 0px" });
+  
+  fadeElements.forEach(el => observer.observe(el));
+  
+  // дополнительная инициализация: если элементы уже видны при загрузке
+  window.addEventListener('load', () => {
+    fadeElements.forEach(el => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight - 100) {
+        el.classList.add('revealed');
+        observer.unobserve(el);
+      }
+    });
+  });
+  
+  // маленький эффект золотого свечения для карт и карточек при наведении (усиление)
+  const cards = document.querySelectorAll('.artifact-card');
+  cards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.style.transition = 'all 0.3s';
+    });
+  });
+  
+  // Добавим динамический эффект для заголовка на hero (сделано через CSS)
+  console.log("Տիգրան Մեծ - Թվային թանգարան");
+</script>
+</body>
+</html>

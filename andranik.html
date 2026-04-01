@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Անդրանիկ Օզանյան — ազգային հերոս</title>
+  <style>
+    /* ===== RESET & GLOBAL ===== */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth; /* fallback, но кастомный smooth scroll переопределит для якорей */
+    }
+
+    body {
+      background-color: #0a0a0a;
+      color: #e0e0e0;
+      font-family: 'Montserrat', 'Segoe UI', system-ui, sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Премиальные шрифты */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Montserrat:wght@300;400;600&display=swap');
+
+    h1, h2, h3 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+    }
+
+    h2 {
+      font-size: 3rem;
+      color: #d4af37;
+      margin-bottom: 2rem;
+      border-left: 6px solid #d4af37;
+      padding-left: 1.5rem;
+    }
+
+    .gold-accent {
+      color: #d4af37;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+    }
+
+    /* ===== ПРОГРЕСС-БАР ===== */
+    #progress-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: #d4af37;
+      box-shadow: 0 0 12px #d4af37;
+      z-index: 9999;
+      transition: width 0.1s ease;
+    }
+
+    /* ===== HEADER ===== */
+    header {
+      position: sticky;
+      top: 0;
+      background: rgba(10, 10, 10, 0.9);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      z-index: 1000;
+      padding: 0.8rem 2rem;
+    }
+
+    nav {
+      display: flex;
+      justify-content: center;
+      gap: 2.5rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: #f0f0f0;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 1.1rem;
+      padding: 0.5rem 1rem;
+      border-radius: 40px;
+      transition: color 0.3s, text-shadow 0.3s;
+      position: relative;
+      cursor: pointer;
+      display: inline-block;
+    }
+
+    .nav-link:hover {
+      color: #d4af37;
+      text-shadow: 0 0 8px rgba(212, 175, 55, 0.5);
+    }
+
+    /* ===== HERO С ЭФФЕКТОМ ИСКР (CANVAS) ===== */
+    .hero {
+      position: relative;
+      height: 100vh;
+      min-height: 700px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      overflow: hidden;
+    }
+
+    #spark-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 900px;
+      padding: 2rem;
+    }
+
+    .hero h1 {
+      font-size: 7rem;
+      font-weight: 900;
+      line-height: 1.1;
+      text-transform: uppercase;
+      color: #d4af37;
+      text-shadow: 0 0 20px #d4af37, 0 0 40px #b8860b;
+      margin-bottom: 1rem;
+      animation: glitch 3s infinite;
+    }
+
+    .hero p {
+      font-size: 1.8rem;
+      letter-spacing: 4px;
+      color: #fff;
+      text-shadow: 2px 2px 0 #000;
+    }
+
+    @keyframes glitch {
+      0%, 100% { transform: skew(0deg, 0deg); opacity: 1; }
+      95% { transform: skew(2deg, 1deg); opacity: 0.9; }
+      96% { transform: skew(-2deg, -1deg); opacity: 1; }
+      97% { transform: skew(0deg, 0deg); }
+    }
+
+    /* ===== ТАЙМЛАЙН ===== */
+    .timeline-section {
+      padding: 5rem 0;
+      background: #0a0a0a;
+      position: relative;
+    }
+
+    .timeline-wrapper {
+      display: flex;
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .timeline-line-container {
+      width: 6px;
+      background: #2a2a2a;
+      border-radius: 10px;
+      margin-right: 3rem;
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .timeline-fill {
+      width: 100%;
+      background: #d4af37;
+      border-radius: 10px;
+      box-shadow: 0 0 16px #d4af37;
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 0%;
+      transition: height 0.2s ease-out;
+    }
+
+    .timeline-events {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6rem;
+    }
+
+    .timeline-event {
+      opacity: 0;
+      transform: translateX(50px);
+      transition: opacity 0.7s cubic-bezier(0.2, 0.9, 0.3, 1), transform 0.7s cubic-bezier(0.2, 0.9, 0.3, 1);
+      background: rgba(20, 20, 20, 0.7);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: 20px;
+      padding: 2rem;
+      box-shadow: 0 20px 30px -10px rgba(0,0,0,0.8);
+    }
+
+    .timeline-event.visible {
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    .event-year {
+      font-size: 3rem;
+      font-weight: 900;
+      color: #d4af37;
+      font-family: 'Playfair Display', serif;
+      line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+
+    .event-title {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+      color: #fff;
+    }
+
+    .event-desc {
+      font-size: 1.1rem;
+      color: #ccc;
+    }
+
+    .event-desc .ru {
+      font-size: 0.9rem;
+      color: #a0a0a0;
+      margin-top: 0.5rem;
+      font-style: italic;
+    }
+
+    /* ===== ОБЩИЕ БЛОКИ ===== */
+    .section-block {
+      padding: 5rem 0;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem;
+    }
+
+    .card {
+      background: #111;
+      border-radius: 24px;
+      padding: 2rem;
+      border: 1px solid #2a2a2a;
+      transition: border-color 0.4s, box-shadow 0.4s;
+    }
+
+    .card:hover {
+      border-color: #d4af37;
+      box-shadow: 0 10px 30px -5px rgba(212, 175, 55, 0.3);
+    }
+
+    .card h3 {
+      font-size: 2rem;
+      color: #d4af37;
+      margin-bottom: 1rem;
+    }
+
+    .battle-list {
+      list-style: none;
+    }
+    .battle-list li {
+      margin-bottom: 1.2rem;
+      padding-left: 1.5rem;
+      border-left: 3px solid #d4af37;
+    }
+
+    /* ===== БЛОК ЦИТАТ ===== */
+    .quotes-section {
+      background: #000;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .quotes-section::before {
+      content: "“";
+      font-size: 20rem;
+      color: rgba(212, 175, 55, 0.1);
+      position: absolute;
+      top: -2rem;
+      left: 2rem;
+      font-family: serif;
+      pointer-events: none;
+    }
+
+    .quote-card {
+      max-width: 800px;
+      margin: 0 auto;
+      text-align: center;
+      font-size: 2rem;
+      font-style: italic;
+      color: #fff;
+      position: relative;
+      z-index: 2;
+      padding: 3rem;
+    }
+
+    .quote-author {
+      margin-top: 2rem;
+      color: #d4af37;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+
+    .parallax-bg {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.1"><path d="M20,20 Q40,10 60,20 T100,20" stroke="%23d4af37" fill="none" stroke-width="1"/><path d="M10,50 Q30,40 50,50 T90,50" stroke="%23d4af37" fill="none" stroke-width="1"/><path d="M30,80 Q50,70 70,80" stroke="%23d4af37" fill="none" stroke-width="1"/></svg>');
+      background-size: cover;
+      background-attachment: fixed;
+      z-index: 1;
+    }
+
+    /* ===== НАСЛЕДИЕ ===== */
+    .legacy-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: center;
+    }
+    .legacy-item {
+      background: #1a1a1a;
+      border-radius: 30px;
+      padding: 2rem;
+      flex: 1 1 250px;
+      text-align: center;
+      border: 1px solid #333;
+    }
+    .legacy-item i {
+      font-size: 3rem;
+      color: #d4af37;
+      margin-bottom: 1rem;
+      display: block;
+    }
+
+    /* ===== КНОПКА МАГНИТ ===== */
+    .magnetic-btn {
+      display: inline-block;
+      padding: 0.8rem 2.5rem;
+      background: transparent;
+      border: 2px solid #d4af37;
+      color: #d4af37;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: background 0.3s, color 0.3s, box-shadow 0.3s;
+      position: relative;
+      will-change: transform;
+      margin: 1rem 0;
+    }
+
+    .magnetic-btn:hover {
+      background: #d4af37;
+      color: #0a0a0a;
+      box-shadow: 0 0 25px #d4af37;
+    }
+
+    /* ===== ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (имитация дублирования) ===== */
+    .lang-toggle {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: #0a0a0a;
+      border: 1px solid #d4af37;
+      border-radius: 60px;
+      padding: 0.5rem;
+      z-index: 999;
+      backdrop-filter: blur(10px);
+    }
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: #fff;
+      padding: 0.6rem 1.2rem;
+      border-radius: 30px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .lang-btn.active {
+      background: #d4af37;
+      color: #000;
+    }
+
+    /* ===== АНИМАЦИИ ПОЯВЛЕНИЯ ===== */
+    .fade-up {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
+    }
+    .fade-up.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ===== ФУТЕР ===== */
+    footer {
+      text-align: center;
+      padding: 3rem;
+      color: #666;
+      border-top: 1px solid #222;
+    }
+
+    /* ===== АДАПТАЦИЯ ===== */
+    @media (max-width: 800px) {
+      h2 { font-size: 2.5rem; }
+      .hero h1 { font-size: 4rem; }
+      .grid-2 { grid-template-columns: 1fr; }
+      .timeline-wrapper { flex-direction: column; }
+      .timeline-line-container { margin-right: 0; margin-bottom: 2rem; height: 300px; width: 100%; }
+    }
+
+    /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div id="progress-bar"></div>
+
+  <main>
+    <!-- HERO С CANVAS ИСКРЫ -->
+    <section id="hero" class="hero">
+      <canvas id="spark-canvas"></canvas>
+      <div class="hero-content">
+        <h1>Անդրանիկ Օզանյան</h1>
+        <p>Ազգային հերոս • Զորավար • Ասպետ</p>
+        <p style="font-size:1rem; color:#aaa; margin-top:2rem;">Андраник Озанян • Национальный герой</p>
+        <button class="magnetic-btn" id="explore-btn">Իմանալ ավելին</button>
+      </div>
+    </section>
+
+    <!-- КОРОТКАЯ БИОГРАФИЯ (СЕКЦИЯ С ДВУМЯ КОЛОНКАМИ) -->
+    <section id="bio" class="section-block container">
+      <h2>Կենսագրություն</h2>
+      <div class="grid-2">
+        <div class="card fade-up">
+          <h3>Վաղ տարիներ</h3>
+          <p>Անդրանիկ Օզանյանը ծնվել է 1865 թ. փետրվարի 25-ին Շապին Գարահիսարում։ Երիտասարդ տարիներին միացել է հայդուկային շարժմանը՝ պայքարելով արևմտահայերի ազատության համար։</p>
+          <p class="ru" style="color:#aaa;">Родился 25 февраля 1865 в Шапин-Гарахисаре. В юности примкнул к фидаинскому движению.</p>
+        </div>
+        <div class="card fade-up">
+          <h3>Հասունություն և մարտեր</h3>
+          <p>1890-ականներից ղեկավարել է Սասունի ինքնապաշտպանությունը, ապա մասնակցել Բալկանյան և Առաջին համաշխարհային պատերազմներին։ 1918-ին փառավորապես պաշտպանել է Զանգեզուրը։</p>
+          <p class="ru">С 1890-х руководил самообороной Сасуна, затем участвовал в Балканских и Первой мировой войнах. В 1918 доблестно защищал Зангезур.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ИНТЕРАКТИВНЫЙ ПУТЬ (ТАЙМЛАЙН) -->
+    <section id="timeline" class="timeline-section">
+      <div class="container">
+        <h2>Սասդունի ուղին</h2>
+      </div>
+      <div class="timeline-wrapper container">
+        <div class="timeline-line-container">
+          <div class="timeline-fill" id="timelineFill"></div>
+        </div>
+        <div class="timeline-events" id="timelineEvents">
+          <div class="timeline-event" data-year="1890">
+            <div class="event-year">1890-ականներ</div>
+            <div class="event-title">Սասունի ինքնապաշտպանություն</div>
+            <div class="event-desc">Անդրանիկը կազմակերպում է դիմադրությունը, դառնում հայդուկների ավագ։ Ջոկատները հարվածում են թուրքական ջարդարարներին։<br><span class="ru">Организует сопротивление в Сасуне, становится предводителем фидаинов.</span></div>
+          </div>
+          <div class="timeline-event" data-year="1912">
+            <div class="event-year">1912-1913</div>
+            <div class="event-title">Բալկանյան պատերազմ</div>
+            <div class="event-desc">Կամավորական ջոկատով կռվում է բուլղարական բանակի կազմում թուրքերի դեմ, աչքի ընկնում արիությամբ։<br><span class="ru">Сражается в составе болгарской армии против турок.</span></div>
+          </div>
+          <div class="timeline-event" data-year="1914">
+            <div class="event-year">1914-1918</div>
+            <div class="event-title">Առաջին համաշխարհային</div>
+            <div class="event-desc">Հայ կամավորական գնդերի հրամանատար, մասնակցում է Կովկասյան ռազմաճակատի մարտերին, ազատագրում հայկական գավառները։<br><span class="ru">Командир армянских добровольческих отрядов на Кавказском фронте.</span></div>
+          </div>
+          <div class="timeline-event" data-year="1918">
+            <div class="event-year">1918</div>
+            <div class="event-title">Զանգեզուրի պաշտպանություն</div>
+            <div class="event-desc">Զանգեզուրում ջախջախում է թուրքական և ադրբեջանական ուժերին, փրկում հայությանը կոտորածներից։<br><span class="ru">Разгром турецко-азербайджанских сил в Зангезуре, спасение армян.</span></div>
+          </div>
+          <!-- Добавим ещё одну дату для длины -->
+          <div class="timeline-event" data-year="1927">
+            <div class="event-year">1927</div>
+            <div class="event-title">Վախճան</div>
+            <div class="event-desc">Օգոստոսի 31-ին վախճանվում է ԱՄՆ-ում։ Նրա աճյունը տեղափոխվում է Փարիզ, ապա 2000-ին՝ Երևան։<br><span class="ru">Скончался 31 августа в США. Прах перезахоронен в Париже, затем в Ереване.</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ВОЕННЫЕ ДОСТИЖЕНИЯ -->
+    <section id="battles" class="section-block container">
+      <h2>Ռազմական նվաճումներ</h2>
+      <div class="grid-2">
+        <div class="card fade-up">
+          <h3>Հայտնի մարտեր</h3>
+          <ul class="battle-list">
+            <li><strong>1897, Խանասորի արշավանք</strong> – պատժիչ գործողություն քուրդ ցեղապետերի դեմ:<br><span class="ru">Карательная операция против курдских вождей.</span></li>
+            <li><strong>1904, Սասունի երկրորդ ապստամբություն</strong> – ղեկավարել է պաշտպանությունը:<br><span class="ru">Руководство обороной Сасуна.</span></li>
+            <li><strong>1915, Վանի ինքնապաշտպանություն</strong> – օգնություն է ցույց տվել պաշարված քաղաքին:<br><span class="ru">Помощь осаждённому Вану.</span></li>
+          </ul>
+        </div>
+        <div class="card fade-up">
+          <h3>Մարտավարական հնարքներ</h3>
+          <p>Անդրանիկն առաջիններից էր, որ կիրառեց պարտիզանական գիշերային հարձակումներ և լեռնային արագ մանևրներ։ Թշնամին նրան անվանում էր «Սև մարդ» (Կարո)։<br><span class="ru">Одним из первых применил ночные партизанские атаки и горные манёвры. Враг звал его «Чёрным человеком».</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ЦИТАТЫ С ПАРАЛЛАКСОМ -->
+    <section id="quotes" class="quotes-section section-block">
+      <div class="parallax-bg"></div>
+      <div class="container">
+        <div class="quote-card fade-up">
+          «Ես հայ եմ, և իմ սուրը պատկանում է հայ ազգին։ Մենք կկռվենք մինչև վերջին շունչը՝ հանուն ազատության։»
+          <div class="quote-author">— Անդրանիկ Օզանյան</div>
+          <div style="font-size:1.2rem; color:#aaa; margin-top:1rem;">«Я армянин, и мой меч принадлежит армянскому народу. Мы будем сражаться до последнего вздоха за свободу».</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- НАСЛЕДИЕ -->
+    <section id="legacy" class="section-block container">
+      <h2>Ժառանգություն</h2>
+      <div class="legacy-items">
+        <div class="legacy-item fade-up">
+          <i>🏅</i>
+          <h3>Շքանշաններ</h3>
+          <p>Բուլղարիայի «Արիության» ոսկե շքանշան, Ֆրանսիայի Պատվո լեգեոնի ասպետ, Հունաստանի արծաթե խաչ։<br><span class="ru">Орден «За храбрость» Болгарии, кавалер ордена Почётного легиона Франции.</span></p>
+        </div>
+        <div class="legacy-item fade-up">
+          <i>🗿</i>
+          <h3>Հուշարձաններ</h3>
+          <p>Երևան, Մարսել, Պլովդիվ, Էջմիածին, Բուենոս Այրես։<br><span class="ru">Памятники в Ереване, Марселе, Пловдиве, Эчмиадзине, Буэнос-Айресе.</span></p>
+        </div>
+        <div class="legacy-item fade-up">
+          <i>📜</i>
+          <h3>Անմահություն</h3>
+          <p>Անդրանիկի անունով կոչվում են փողոցներ, դպրոցներ, զորամասեր։ Նա հայ ժողովրդի ազատության խորհրդանիշն է։<br><span class="ru">Именем Андраника называют улицы, школы, воинские части. Символ свободы.</span></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ДОПОЛНИТЕЛЬНЫЙ КОНТЕНТ ДЛИНЫ: ПОДРОБНОСТИ ОРДЕНОВ И ПИСЕМ -->
+    <section class="section-block container">
+      <h2>Մանրամասներ նամակներից և հուշերից</h2>
+      <div class="card fade-up" style="margin-bottom:2rem;">
+        <p>Անդրանիկի նամակներից մեկում (1919) գրված է. «Մենք չենք նահանջելու, որովհետև մեր թիկունքում մեր տներն են, մեր երեխաները, մեր հավատը»։ Այս տողերը դարձան դիմադրության հիմն։<br><span class="ru">В одном из писем 1919 года: «Мы не отступим, потому что за нами наши дома, дети, вера».</span></p>
+      </div>
+      <div class="card fade-up">
+        <p>Զորավարի անձնական դրոշը, որ կարված էր ոսկե թելերով, այժմ պահվում է Հայաստանի պատմության թանգարանում։ Ասում են, որ այն երբեք չի ընկել թշնամու ձեռքը։<br><span class="ru">Личное знамя генерала хранится в музее истории Армении.</span></p>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2026 • Անդրանիկ Օզանյան • Հավերժ փառք հերոսին</p>
+    <p style="color:#555;">Вечная слава герою</p>
+  </footer>
+
+  <script>
+    (function() {
+      "use strict";
+
+      // ========== ПРОГРЕСС-БАР ==========
+      const progressBar = document.getElementById('progress-bar');
+      function updateProgressBar() {
+        const winScroll = window.scrollY;
+        const height = document.documentElement.scrollHeight - window.innerHeight;
+        const scrolled = (winScroll / height) * 100;
+        progressBar.style.width = scrolled + '%';
+      }
+      window.addEventListener('scroll', updateProgressBar);
+      window.addEventListener('resize', updateProgressBar);
+
+      // ========== ПЛАВНЫЙ СКРОЛЛ (SMOOTH SCROLL) ДЛЯ ЯКОРЕЙ ==========
+      const links = document.querySelectorAll('.smooth-scroll');
+      links.forEach(link => {
+        link.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetId = link.getAttribute('href');
+          if (targetId && targetId !== '#') {
+            const targetEl = document.querySelector(targetId);
+            if (targetEl) {
+              targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+          }
+        });
+      });
+
+      // ========== MAGNETIC BUTTONS ==========
+      const magneticBtns = document.querySelectorAll('.magnetic-btn');
+      magneticBtns.forEach(btn => {
+        btn.addEventListener('mousemove', (e) => {
+          const rect = btn.getBoundingClientRect();
+          const x = e.clientX - rect.left - rect.width / 2;
+          const y = e.clientY - rect.top - rect.height / 2;
+          const strength = 8; // максимальное смещение
+          const distance = Math.sqrt(x*x + y*y);
+          const maxDist = 100;
+          if (distance < maxDist) {
+            const moveX = (x / maxDist) * strength;
+            const moveY = (y / maxDist) * strength;
+            btn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+          } else {
+            btn.style.transform = 'translate(0,0)';
+          }
+        });
+        btn.addEventListener('mouseleave', () => {
+          btn.style.transform = 'translate(0,0)';
+        });
+      });
+
+      // ========== КАНВАС С ИСКРАМИ ==========
+      const canvas = document.getElementById('spark-canvas');
+      const ctx = canvas.getContext('2d');
+      let width, height;
+      let particles = [];
+
+      function initCanvas() {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        canvas.width = width;
+        canvas.height = height;
+        // создаём 150 частиц
+        for (let i = 0; i < 180; i++) {
+          particles.push({
+            x: Math.random() * width,
+            y: Math.random() * height,
+            vx: (Math.random() - 0.5) * 0.4,
+            vy: (Math.random() - 0.5) * 0.4,
+            size: Math.random() * 3 + 1,
+            color: `rgba(212, 175, 55, ${Math.random() * 0.7 + 0.2})`,
+          });
+        }
+      }
+
+      function drawParticles() {
+        ctx.clearRect(0, 0, width, height);
+        particles.forEach(p => {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.shadowColor = '#d4af37';
+          ctx.shadowBlur = 10;
+          ctx.fill();
+          // движение
+          p.x += p.vx;
+          p.y += p.vy;
+          // возврат если ушли
+          if (p.x < 0) p.x = width;
+          if (p.x > width) p.x = 0;
+          if (p.y < 0) p.y = height;
+          if (p.y > height) p.y = 0;
+        });
+        requestAnimationFrame(drawParticles);
+      }
+
+      window.addEventListener('resize', () => {
+        initCanvas();
+      });
+      initCanvas();
+      drawParticles();
+
+      // ========== INTERSECTION OBSERVER (для появления блоков fade-up, timeline-event) ==========
+      const fadeElements = document.querySelectorAll('.fade-up, .timeline-event');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+          } else {
+            // можно убирать, если нужно повторное появление — оставим
+            // entry.target.classList.remove('visible');
+          }
+        });
+      }, { threshold: 0.2, rootMargin: '0px 0px -30px 0px' });
+
+      fadeElements.forEach(el => observer.observe(el));
+
+      // ========== TIMELINE FILL (золотая линия заполняется при скролле) ==========
+      const timelineSection = document.querySelector('.timeline-section');
+      const timelineFill = document.getElementById('timelineFill');
+      const timelineEvents = document.getElementById('timelineEvents');
+
+      function updateTimelineFill() {
+        if (!timelineSection) return;
+        const rect = timelineSection.getBoundingClientRect();
+        const scrollTop = window.scrollY - timelineSection.offsetTop + rect.height;
+        const sectionHeight = timelineSection.offsetHeight;
+        const windowHeight = window.innerHeight;
+
+        // прогресс от 0 до 1, когда секция входит и выходит
+        let progress = (window.scrollY + windowHeight - timelineSection.offsetTop) / (sectionHeight + windowHeight);
+        progress = Math.min(1, Math.max(0, progress));
+        timelineFill.style.height = (progress * 100) + '%';
+      }
+
+      window.addEventListener('scroll', updateTimelineFill);
+      window.addEventListener('resize', updateTimelineFill);
+      updateTimelineFill(); // сразу вызвать
+
+      // ========== КНОПКА "ИМЕНАЛ АВЕЛИН" ==========
+      document.getElementById('explore-btn')?.addEventListener('click', () => {
+        document.querySelector('#bio').scrollIntoView({ behavior: 'smooth' });
+      });
+
+      // ========== ПЕРЕКЛЮЧАТЕЛЬ ЯЗЫКА (имитация — скрывает/показывает русский дубляж) ==========
+      const langHy = document.getElementById('lang-hy');
+      const langRu = document.getElementById('lang-ru');
+      const ruTexts = document.querySelectorAll('.ru');
+
+      function setLang(lang) {
+        if (lang === 'hy') {
+          ruTexts.forEach(el => el.style.display = 'none');
+          langHy.classList.add('active');
+          langRu.classList.remove('active');
+        } else {
+          ruTexts.forEach(el => el.style.display = 'block');
+          langRu.classList.add('active');
+          langHy.classList.remove('active');
+        }
+      }
+
+      langHy.addEventListener('click', () => setLang('hy'));
+      langRu.addEventListener('click', () => setLang('ru'));
+      setLang('hy'); // по умолчанию армянский
+
+      // ========== ПАРАЛЛАКС ЭФФЕКТ ДЛЯ ЦИТАТ (опционально) ==========
+      window.addEventListener('scroll', () => {
+        const parallax = document.querySelector('.parallax-bg');
+        if (parallax) {
+          const scrolled = window.scrollY;
+          parallax.style.transform = `translateY(${scrolled * 0.2}px)`;
+        }
+      });
+
+      // ========== ДОБАВИМ ДЛИНЫ — ДОПОЛНИТЕЛЬНЫЙ КОНТЕНТ (уже есть) ==========
+    })();
+  </script>
+  <!-- Дополнительный текст на армянском уже есть, страница длинная -->
+</body>
+</html>

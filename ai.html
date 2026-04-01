@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Հայ Զինվոր | Արհեստական Բանականություն</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Unbounded:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Unbounded', sans-serif;
+            background-color: #0a0502;
+            color: #e5d5b3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 15% 25%, rgba(180,120,50,0.16) 0%, transparent 42%),
+                radial-gradient(circle at 85% 70%, rgba(140,90,40,0.13) 0%, transparent 48%),
+                repeating-linear-gradient(45deg,
+                    rgba(120,75,30,0.025) 0px, rgba(120,75,30,0.025) 2px,
+                    transparent 2px, transparent 9px);
+            z-index: 0;
+        }
+
+        body::after {
+            content: "☦";
+            position: fixed;
+            bottom: -40px;
+            right: -20px;
+            font-size: 26rem;
+            color: rgba(150,100,50,0.055);
+            transform: rotate(12deg);
+            z-index: 0;
+            font-family: serif;
+            pointer-events: none;
+        }
+
+        /* ══════════════════════════════════
+           TOPBAR
+        ══════════════════════════════════ */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(8,5,2,0.9);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(200,150,70,0.18);
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+        }
+
+        .topbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            text-decoration: none;
+        }
+        .topbar-logo i { font-size: 1.3rem; color: #c9a063; filter: drop-shadow(0 0 8px rgba(200,150,50,0.5)); }
+        .topbar-logo-text {
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            color: #f5e7c8;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+
+        .status-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(25,15,5,0.8);
+            border: 1px solid #c9a063;
+            border-radius: 50px;
+            padding: 6px 16px;
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            color: #fadfa3;
+        }
+        .status-dot {
+            width: 7px; height: 7px;
+            border-radius: 50%;
+            background: #7ab87a;
+            box-shadow: 0 0 8px rgba(120,200,120,0.7);
+            animation: blink 2.2s ease-in-out infinite;
+        }
+        .status-dot.thinking { background: #c9a063; box-shadow: 0 0 8px rgba(200,160,50,0.8); animation: blink-fast 0.6s ease-in-out infinite; }
+        .status-dot.recording { background: #e05050; box-shadow: 0 0 8px rgba(220,80,80,0.8); animation: blink-fast 0.4s ease-in-out infinite; }
+        .status-dot.speaking { background: #6ab0e0; box-shadow: 0 0 8px rgba(100,170,220,0.8); animation: blink-fast 0.8s ease-in-out infinite; }
+        @keyframes blink { 0%,100%{opacity:1}50%{opacity:0.3} }
+        @keyframes blink-fast { 0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.7)} }
+
+        .topbar-nav {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+        .nav-chip {
+            background: rgba(25,15,5,0.75);
+            border: 1px solid rgba(201,160,99,0.35);
+            color: #e1c699;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-chip i { color: #b58b4a; font-size: 0.75rem; }
+        .nav-chip:hover, .nav-chip.active {
+            background: #2f2213;
+            border-color: #ffd966;
+            color: #fff6e0;
+            box-shadow: 0 0 14px rgba(218,165,32,0.3);
+        }
+
+        .tts-toggle {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            background: rgba(25,15,5,0.75);
+            border: 1px solid rgba(201,160,99,0.35);
+            border-radius: 50px;
+            padding: 6px 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: #7a6040;
+        }
+        .tts-toggle.active { border-color: #6ab0e0; color: #a0d0f0; background: rgba(20,40,60,0.6); }
+        .tts-toggle i { font-size: 0.8rem; }
+
+        /* ══════════════════════════════════
+           PERSONA BANNER — показывается под topbar при активном персонаже
+        ══════════════════════════════════ */
+        .persona-banner {
+            position: fixed;
+            top: 60px;
+            left: 0; right: 0;
+            height: 0;
+            overflow: hidden;
+            transition: height 0.35s ease, opacity 0.35s ease;
+            opacity: 0;
+            z-index: 999;
+        }
+        .persona-banner.visible {
+            height: 44px;
+            opacity: 1;
+        }
+        .persona-banner-inner {
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            border-bottom: 1px solid;
+        }
+        .persona-banner-inner i { font-size: 0.9rem; }
+        /* цвета для каждого персонажа */
+        .persona-banner[data-persona="tigran"] .persona-banner-inner {
+            background: rgba(80,30,5,0.95);
+            color: #ffd080;
+            border-color: rgba(255,200,80,0.3);
+        }
+        .persona-banner[data-persona="khorenatsi"] .persona-banner-inner {
+            background: rgba(20,40,20,0.95);
+            color: #90c890;
+            border-color: rgba(100,200,100,0.25);
+        }
+        .persona-banner[data-persona="guide"] .persona-banner-inner {
+            background: rgba(15,35,60,0.95);
+            color: #80c0f0;
+            border-color: rgba(100,170,240,0.25);
+        }
+        .persona-exit-btn {
+            background: transparent;
+            border: 1px solid currentColor;
+            border-radius: 50px;
+            color: inherit;
+            font-size: 0.6rem;
+            font-weight: 700;
+            padding: 3px 10px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            font-family: 'Unbounded', sans-serif;
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        .persona-exit-btn:hover { opacity: 1; }
+
+        /* ══════════════════════════════════
+           PERSONA SELECTOR MODAL
+        ══════════════════════════════════ */
+        .persona-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            backdrop-filter: blur(6px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .persona-overlay.open { display: flex; }
+
+        .persona-modal {
+            background: rgba(12,7,2,0.98);
+            border: 1px solid rgba(200,150,70,0.4);
+            border-radius: 20px;
+            padding: 32px 28px;
+            max-width: 560px;
+            width: calc(100% - 40px);
+            box-shadow: 0 30px 80px rgba(0,0,0,0.8);
+            animation: modal-in 0.3s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes modal-in {
+            from { opacity:0; transform:scale(0.92) translateY(16px); }
+            to   { opacity:1; transform:scale(1) translateY(0); }
+        }
+        .persona-modal-title {
+            font-family: 'Marcellus', serif;
+            font-size: 1.1rem;
+            color: #f5e7c8;
+            letter-spacing: 3px;
+            text-align: center;
+            margin-bottom: 6px;
+        }
+        .persona-modal-sub {
+            font-family: 'Marcellus', serif;
+            font-size: 0.78rem;
+            color: #5a4020;
+            text-align: center;
+            letter-spacing: 1px;
+            margin-bottom: 24px;
+        }
+
+        .persona-cards {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .persona-card {
+            background: rgba(20,12,4,0.9);
+            border: 1px solid rgba(200,150,70,0.2);
+            border-radius: 14px;
+            padding: 18px 16px;
+            cursor: pointer;
+            transition: all 0.25s;
+            text-align: center;
+        }
+        .persona-card:hover {
+            border-color: var(--accent);
+            background: rgba(35,20,6,0.95);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        .persona-card.selected {
+            border-color: var(--accent);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.25);
+        }
+        .persona-card[data-persona="default"] { --accent: #c9a063; --accent-rgb: 201,160,99; }
+        .persona-card[data-persona="tigran"]   { --accent: #ffcc44; --accent-rgb: 255,204,68; }
+        .persona-card[data-persona="khorenatsi"] { --accent: #88cc88; --accent-rgb: 136,204,136; }
+        .persona-card[data-persona="guide"]    { --accent: #66aaee; --accent-rgb: 102,170,238; }
+
+        .persona-card-icon {
+            font-size: 1.8rem;
+            margin-bottom: 10px;
+            filter: drop-shadow(0 0 8px var(--accent));
+        }
+        .persona-card-name {
+            font-family: 'Marcellus', serif;
+            font-size: 0.9rem;
+            color: var(--accent);
+            letter-spacing: 1px;
+            margin-bottom: 6px;
+        }
+        .persona-card-desc {
+            font-family: 'Marcellus', serif;
+            font-size: 0.72rem;
+            color: #4a3015;
+            line-height: 1.5;
+        }
+
+        .persona-modal-close {
+            margin-top: 20px;
+            width: 100%;
+            background: transparent;
+            border: 1px solid rgba(200,150,70,0.3);
+            border-radius: 50px;
+            color: #5a4020;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .persona-modal-close:hover { border-color: #c9a063; color: #c9a063; }
+
+        /* ══════════════════════════════════
+           PAGE & CHAT
+        ══════════════════════════════════ */
+        .page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 0;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+            transition: padding-top 0.35s ease;
+        }
+        .page.persona-active { padding-top: 124px; }
+
+        .center-block {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            text-align: center;
+        }
+        .center-block.hidden { display: none; }
+
+        .armenian-pattern {
+            display: flex;
+            gap: 16px;
+            font-size: 1.6rem;
+            color: #b1804b;
+        }
+        .armenian-pattern span {
+            animation: pulse-icon 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 6px #a56f2e);
+            display: inline-block;
+        }
+        .armenian-pattern span:nth-child(2) { animation-delay: 0.6s; }
+        .armenian-pattern span:nth-child(3) { animation-delay: 1.2s; }
+        @keyframes pulse-icon { 0%,100%{opacity:0.45;transform:scale(1)}50%{opacity:1;transform:scale(1.18);color:#e6b468} }
+
+        .hero-title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            color: #f5e7c8;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #4a311a, 0 0 25px rgba(194,134,58,0.5);
+            animation: goldShimmer 5s ease-in-out infinite alternate;
+        }
+        @keyframes goldShimmer {
+            0%   { text-shadow: 2px 2px 0 #4a311a, 0 0 18px #b87e3a; }
+            50%  { text-shadow: 2px 2px 0 #5a3e1f, 0 0 30px #e6b468; }
+            100% { text-shadow: 2px 2px 0 #4a311a, 0 0 18px #b87e3a; }
+        }
+
+        .hero-sub {
+            font-family: 'Marcellus', serif;
+            font-size: 0.85rem;
+            color: #7a6040;
+            letter-spacing: 2.5px;
+        }
+
+        .quick-chips {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            justify-content: center;
+            margin-top: 8px;
+        }
+        .quick-chip {
+            background: rgba(25,15,5,0.85);
+            border: 1px solid rgba(200,150,70,0.3);
+            border-radius: 50px;
+            padding: 8px 16px;
+            font-family: 'Marcellus', serif;
+            font-size: 0.8rem;
+            color: #c9a063;
+            cursor: pointer;
+            transition: all 0.25s;
+            letter-spacing: 0.5px;
+        }
+        .quick-chip:hover { border-color: #c9a063; background: rgba(47,34,19,0.9); color: #fff6e0; transform: translateY(-1px); }
+
+        .chat-history {
+            width: 100%;
+            max-width: 720px;
+            display: none;
+            flex-direction: column;
+            gap: 18px;
+            padding: 24px 0 20px;
+            flex: 1;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+        .chat-history.visible { display: flex; }
+        .chat-history::-webkit-scrollbar { width: 4px; }
+        .chat-history::-webkit-scrollbar-thumb { background: linear-gradient(#c9a063,#7a5e3a); border-radius:10px; }
+
+        .msg-row { display: flex; }
+        .msg-row.user { justify-content: flex-end; animation: slideRight 0.35s cubic-bezier(0.16,1,0.3,1); }
+        .msg-row.ai   { justify-content: flex-start; gap: 12px; align-items: flex-start; animation: slideLeft 0.4s cubic-bezier(0.16,1,0.3,1); }
+        @keyframes slideRight { from{opacity:0;transform:translateX(16px)} to{opacity:1;transform:translateX(0)} }
+        @keyframes slideLeft  { from{opacity:0;transform:translateX(-16px)} to{opacity:1;transform:translateX(0)} }
+
+        .ai-avatar {
+            width: 34px; height: 34px;
+            border-radius: 50%;
+            background: rgba(20,12,4,0.9);
+            border: 1px solid #c9a063;
+            display: flex; align-items: center; justify-content: center;
+            color: #c9a063;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            margin-top: 3px;
+            box-shadow: 0 0 12px rgba(200,150,50,0.25);
+            transition: all 0.3s;
+        }
+        /* Цвета аватара по персонажу */
+        .ai-avatar[data-persona="tigran"]     { border-color: #ffcc44; color: #ffcc44; box-shadow: 0 0 12px rgba(255,200,50,0.3); }
+        .ai-avatar[data-persona="khorenatsi"] { border-color: #88cc88; color: #88cc88; box-shadow: 0 0 12px rgba(100,200,100,0.3); }
+        .ai-avatar[data-persona="guide"]      { border-color: #66aaee; color: #66aaee; box-shadow: 0 0 12px rgba(100,170,220,0.3); }
+        .ai-avatar.speaking { border-color: #6ab0e0 !important; color: #6ab0e0 !important; animation: avatar-speak 0.8s ease-in-out infinite alternate; }
+        @keyframes avatar-speak { 0%{transform:scale(1)} 100%{transform:scale(1.08)} }
+
+        .bubble {
+            max-width: 75%;
+            padding: 13px 18px;
+            font-family: 'Marcellus', serif;
+            font-size: 0.97rem;
+            line-height: 1.7;
+            position: relative;
+        }
+        .bubble.user {
+            background: rgba(47,34,19,0.85);
+            border: 1px solid rgba(200,150,70,0.38);
+            border-radius: 20px 20px 4px 20px;
+            color: #f0ddbc;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+        }
+        .bubble.ai {
+            background: rgba(10,6,2,0.6);
+            border: 1px solid rgba(200,150,70,0.2);
+            border-radius: 4px 20px 20px 20px;
+            color: #e5d5b3;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+        }
+        /* Цвет рамки пузыря по персонажу */
+        .bubble.ai[data-persona="tigran"]     { border-color: rgba(255,200,50,0.25); }
+        .bubble.ai[data-persona="khorenatsi"] { border-color: rgba(100,200,100,0.2); }
+        .bubble.ai[data-persona="guide"]      { border-color: rgba(100,170,220,0.2); }
+
+        .bubble.ai.typing::after {
+            content: '|';
+            color: #c9a063;
+            animation: cursor-blink 0.75s step-end infinite;
+            margin-left: 2px;
+        }
+        .bubble.ai.is-speaking { border-color: rgba(100,170,220,0.4) !important; box-shadow: 0 4px 20px rgba(100,170,220,0.15); }
+        @keyframes cursor-blink { 0%,100%{opacity:1}50%{opacity:0} }
+
+        /* Метка персонажа над пузырём */
+        .persona-tag {
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.58rem;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            padding: 2px 8px;
+            border-radius: 50px;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .persona-tag[data-persona="default"]    { background: rgba(200,150,70,0.15); color: #c9a063; }
+        .persona-tag[data-persona="tigran"]     { background: rgba(255,200,50,0.15); color: #ffcc44; }
+        .persona-tag[data-persona="khorenatsi"]{ background: rgba(100,200,100,0.15); color: #88cc88; }
+        .persona-tag[data-persona="guide"]      { background: rgba(100,170,220,0.15); color: #66aaee; }
+
+        .speak-btn {
+            position: absolute;
+            bottom: -12px; right: 14px;
+            width: 26px; height: 26px;
+            border-radius: 50%;
+            border: 1px solid rgba(200,150,70,0.3);
+            background: rgba(18,10,3,0.95);
+            color: #7a5e3a;
+            font-size: 0.65rem;
+            cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.2s;
+        }
+        .speak-btn:hover { border-color: #6ab0e0; color: #6ab0e0; }
+        .speak-btn.active { border-color: #6ab0e0; color: #6ab0e0; background: rgba(20,40,60,0.9); animation: speak-btn-pulse 1s ease-in-out infinite; }
+        @keyframes speak-btn-pulse { 0%,100%{box-shadow:0 0 6px rgba(100,170,220,0.4)}50%{box-shadow:0 0 14px rgba(100,170,220,0.8)} }
+
+        .speak-waves { display:none; gap:2px; align-items:center; margin-top:6px; justify-content:center; }
+        .speak-waves.active { display:flex; }
+        .speak-wave { width:2px; border-radius:2px; background:linear-gradient(to top,#4a8ab0,#6ab0e0); }
+        .speak-wave:nth-child(1){height:6px;animation:sw 0.8s ease-in-out infinite 0.0s}
+        .speak-wave:nth-child(2){height:10px;animation:sw 0.8s ease-in-out infinite 0.1s}
+        .speak-wave:nth-child(3){height:14px;animation:sw 0.8s ease-in-out infinite 0.2s}
+        .speak-wave:nth-child(4){height:10px;animation:sw 0.8s ease-in-out infinite 0.1s}
+        .speak-wave:nth-child(5){height:6px;animation:sw 0.8s ease-in-out infinite 0.0s}
+        @keyframes sw { 0%,100%{transform:scaleY(0.4);opacity:0.5}50%{transform:scaleY(1);opacity:1} }
+
+        .thinking-dots { display:flex; gap:5px; padding:6px 2px; }
+        .thinking-dots span { width:8px;height:8px;border-radius:50%;background:#b58b4a;animation:dot-bounce 1.2s ease-in-out infinite; }
+        .thinking-dots span:nth-child(2){animation-delay:0.2s}
+        .thinking-dots span:nth-child(3){animation-delay:0.4s}
+        @keyframes dot-bounce { 0%,100%{transform:translateY(0);opacity:0.4}50%{transform:translateY(-7px);opacity:1;background:#c9a063} }
+
+        /* ══════════════════════════════════
+           INPUT AREA
+        ══════════════════════════════════ */
+        .input-area {
+            width: 100%;
+            max-width: 720px;
+            padding: 16px 0 28px;
+            position: sticky;
+            bottom: 0;
+            background: linear-gradient(to top, #0a0502 70%, transparent);
+            z-index: 10;
+        }
+
+        /* Кнопка переключения режима — над полем ввода */
+        .persona-switcher-row {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 10px;
+        }
+        .persona-switcher-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(25,15,5,0.85);
+            border: 1px solid rgba(200,150,70,0.35);
+            border-radius: 50px;
+            padding: 7px 18px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            color: #8a6a30;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .persona-switcher-btn:hover {
+            border-color: #c9a063;
+            color: #f0c060;
+            box-shadow: 0 0 14px rgba(200,150,50,0.2);
+        }
+        .persona-switcher-btn.active-tigran     { border-color: #ffcc44; color: #ffcc44; background: rgba(60,30,5,0.9); }
+        .persona-switcher-btn.active-khorenatsi { border-color: #88cc88; color: #88cc88; background: rgba(10,30,10,0.9); }
+        .persona-switcher-btn.active-guide      { border-color: #66aaee; color: #66aaee; background: rgba(10,25,50,0.9); }
+        .persona-switcher-btn i { font-size: 0.8rem; }
+        .persona-switcher-dot {
+            width: 6px; height: 6px;
+            border-radius: 50%;
+            background: #c9a063;
+            transition: background 0.3s;
+        }
+        .persona-switcher-btn.active-tigran     .persona-switcher-dot { background: #ffcc44; }
+        .persona-switcher-btn.active-khorenatsi .persona-switcher-dot { background: #88cc88; }
+        .persona-switcher-btn.active-guide      .persona-switcher-dot { background: #66aaee; }
+
+        .input-box {
+            display: flex;
+            align-items: flex-end;
+            gap: 10px;
+            background: rgba(18,10,3,0.92);
+            border: 1px solid rgba(200,150,70,0.4);
+            border-radius: 26px;
+            padding: 12px 12px 12px 22px;
+            box-shadow: 0 0 0 1px rgba(200,160,80,0.05), 0 10px 40px rgba(0,0,0,0.65);
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        .input-box:focus-within { border-color: #c9a063; box-shadow: 0 0 0 3px rgba(201,160,99,0.1), 0 10px 40px rgba(0,0,0,0.65); }
+        .input-box.recording-active { border-color: #e05050 !important; box-shadow: 0 0 0 3px rgba(220,80,80,0.15), 0 10px 40px rgba(0,0,0,0.65) !important; }
+        /* Цвет рамки поля по персонажу */
+        .input-box.persona-tigran     { border-color: rgba(255,200,50,0.35); }
+        .input-box.persona-khorenatsi { border-color: rgba(100,200,100,0.3); }
+        .input-box.persona-guide      { border-color: rgba(100,170,220,0.3); }
+
+        .voice-visualizer { display:none; align-items:center; gap:3px; height:24px; padding:0 4px; }
+        .voice-visualizer.active { display:flex; }
+        .voice-bar { width:3px; border-radius:2px; background:linear-gradient(to top,#c9a063,#ffd966); animation:voice-wave 0.8s ease-in-out infinite; min-height:4px; }
+        .voice-bar:nth-child(1){animation-delay:0.0s;height:8px}
+        .voice-bar:nth-child(2){animation-delay:0.1s;height:14px}
+        .voice-bar:nth-child(3){animation-delay:0.2s;height:20px}
+        .voice-bar:nth-child(4){animation-delay:0.3s;height:16px}
+        .voice-bar:nth-child(5){animation-delay:0.15s;height:10px}
+        .voice-bar:nth-child(6){animation-delay:0.25s;height:18px}
+        .voice-bar:nth-child(7){animation-delay:0.05s;height:12px}
+        @keyframes voice-wave { 0%,100%{transform:scaleY(0.4);opacity:0.6}50%{transform:scaleY(1);opacity:1} }
+
+        .recording-hint { display:none; font-family:'Marcellus',serif; font-size:0.78rem; color:#e07070; letter-spacing:1px; padding:4px 0; animation:hint-fade 1.5s ease-in-out infinite alternate; }
+        .recording-hint.active { display:block; }
+        @keyframes hint-fade { 0%{opacity:0.5}100%{opacity:1} }
+
+        .chat-textarea {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            resize: none;
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            color: #f0ddbc;
+            line-height: 1.55;
+            max-height: 160px;
+            overflow-y: auto;
+            padding: 4px 0;
+        }
+        .chat-textarea::placeholder { color: #3a2510; opacity: 1; }
+
+        .input-actions { display:flex; align-items:center; gap:6px; flex-shrink:0; padding-bottom:2px; }
+
+        .mic-btn {
+            width:38px;height:38px;border-radius:50%;
+            border:1px solid rgba(200,150,70,0.4);
+            background:rgba(25,15,5,0.9);color:#7a5e3a;
+            font-size:0.95rem;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            transition:all 0.25s;position:relative;
+        }
+        .mic-btn:hover:not(:disabled) { border-color:#c9a063;color:#c9a063;background:rgba(47,34,19,0.9); }
+        .mic-btn.is-recording { border-color:#e05050;color:#fff;background:rgba(180,40,40,0.85);animation:mic-pulse 1.2s ease-out infinite; }
+        .mic-btn.is-recording::before,.mic-btn.is-recording::after { content:'';position:absolute;inset:-4px;border-radius:50%;border:2px solid rgba(220,80,80,0.5);animation:mic-ring 1.2s ease-out infinite; }
+        .mic-btn.is-recording::after { inset:-10px;border-color:rgba(220,80,80,0.25);animation-delay:0.4s; }
+        .mic-btn.is-processing { border-color:#c9a063;color:#c9a063;cursor:not-allowed;opacity:0.7; }
+        @keyframes mic-pulse { 0%{box-shadow:0 0 0 0 rgba(220,80,80,0.6)}70%{box-shadow:0 0 0 12px rgba(220,80,80,0)}100%{box-shadow:0 0 0 0 rgba(220,80,80,0)} }
+        @keyframes mic-ring { 0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.6);opacity:0} }
+
+        .send-btn {
+            width:38px;height:38px;border-radius:50%;
+            border:1px solid #c9a063;background:rgba(25,15,5,0.9);
+            color:#d4a259;font-size:0.9rem;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;
+            transition:all 0.25s;box-shadow:0 0 10px rgba(180,130,70,0.2);
+        }
+        .send-btn:hover:not(:disabled) { background:#2f2213;border-color:#ffd966;color:#fff6e0;box-shadow:0 0 20px rgba(218,165,32,0.4);transform:scale(1.08); }
+        .send-btn:disabled { opacity:0.4;cursor:not-allowed;transform:none; }
+
+        .footer-hint { text-align:center;font-size:0.62rem;color:#2e1e0a;letter-spacing:2px;text-transform:uppercase;margin-top:10px; }
+
+        .recording-overlay { display:none;position:fixed;inset:0;z-index:500;pointer-events:none;border:3px solid transparent; }
+        .recording-overlay.active { display:block;border-color:rgba(220,80,80,0.3);box-shadow:inset 0 0 60px rgba(220,80,80,0.08); }
+
+        /* =========================
+           МОБИЛЬНАЯ АДАПТАЦИЯ (только для телефонов, не меняет десктоп)
+        ========================= */
+        @media (max-width: 768px) {
+            /* Компактный топбар */
+            .topbar {
+                padding: 0 16px;
+                height: 54px;
+            }
+            .topbar-logo-text, .tts-toggle span, .nav-chip span {
+                display: none;
+            }
+            .topbar-logo i, .tts-toggle i, .nav-chip i {
+                font-size: 1.1rem;
+                margin: 0;
+            }
+            .tts-toggle {
+                padding: 6px 12px;
+            }
+            .nav-chip {
+                padding: 6px 12px;
+            }
+            .status-badge {
+                padding: 4px 10px;
+                font-size: 0.6rem;
+                gap: 5px;
+            }
+            .status-dot {
+                width: 6px; height: 6px;
+            }
+
+            /* Основной контент */
+            .page {
+                padding: 70px 12px 0;
+            }
+            .page.persona-active {
+                padding-top: 114px;
+            }
+            .persona-banner.visible {
+                height: 40px;
+            }
+            .persona-banner-inner {
+                height: 40px;
+                font-size: 0.65rem;
+                gap: 8px;
+                padding: 0 12px;
+            }
+            .persona-banner-inner i {
+                font-size: 0.8rem;
+            }
+            .persona-exit-btn {
+                font-size: 0.55rem;
+                padding: 2px 8px;
+            }
+
+            /* Центральный блок */
+            .hero-title {
+                font-size: 1.4rem;
+                letter-spacing: 3px;
+            }
+            .hero-sub {
+                font-size: 0.7rem;
+            }
+            .armenian-pattern {
+                gap: 12px;
+                font-size: 1.3rem;
+            }
+            .quick-chips {
+                gap: 6px;
+            }
+            .quick-chip {
+                padding: 6px 12px;
+                font-size: 0.7rem;
+            }
+
+            /* Чат */
+            .chat-history {
+                max-width: 100%;
+                padding: 16px 0 12px;
+                gap: 14px;
+            }
+            .msg-row.ai {
+                gap: 8px;
+            }
+            .ai-avatar {
+                width: 28px;
+                height: 28px;
+                font-size: 0.8rem;
+            }
+            .bubble {
+                max-width: 85%;
+                padding: 10px 14px;
+                font-size: 0.9rem;
+            }
+            .persona-tag {
+                font-size: 0.5rem;
+                padding: 1px 6px;
+            }
+            .speak-btn {
+                width: 22px;
+                height: 22px;
+                bottom: -10px;
+                right: 8px;
+                font-size: 0.55rem;
+            }
+
+            /* Поле ввода */
+            .input-area {
+                max-width: 100%;
+                padding: 12px 12px 20px;
+            }
+            .persona-switcher-btn {
+                padding: 6px 14px;
+                font-size: 0.6rem;
+                gap: 6px;
+            }
+            .persona-switcher-btn i {
+                font-size: 0.7rem;
+            }
+            .input-box {
+                padding: 8px 12px 8px 18px;
+                gap: 8px;
+            }
+            .chat-textarea {
+                font-size: 0.9rem;
+                max-height: 120px;
+            }
+            .mic-btn, .send-btn {
+                width: 34px;
+                height: 34px;
+                font-size: 0.85rem;
+            }
+            .voice-visualizer.active {
+                gap: 2px;
+            }
+            .voice-bar {
+                width: 2px;
+            }
+            .recording-hint {
+                font-size: 0.65rem;
+            }
+            .footer-hint {
+                font-size: 0.55rem;
+                margin-top: 6px;
+            }
+
+            /* Модалка выбора персонажа */
+            .persona-modal {
+                padding: 24px 20px;
+                width: calc(100% - 30px);
+            }
+            .persona-modal-title {
+                font-size: 1rem;
+            }
+            .persona-modal-sub {
+                font-size: 0.7rem;
+            }
+            .persona-cards {
+                grid-template-columns: 1fr;
+                gap: 10px;
+            }
+            .persona-card {
+                padding: 14px 12px;
+            }
+            .persona-card-icon {
+                font-size: 1.5rem;
+            }
+            .persona-card-name {
+                font-size: 0.85rem;
+            }
+            .persona-card-desc {
+                font-size: 0.68rem;
+            }
+            .persona-modal-close {
+                font-size: 0.6rem;
+                padding: 8px;
+            }
+        }
+
+        /* Очень маленькие экраны (≤480px) */
+        @media (max-width: 480px) {
+            .page {
+                padding-top: 65px;
+            }
+            .page.persona-active {
+                padding-top: 105px;
+            }
+            .hero-title {
+                font-size: 1.2rem;
+            }
+            .bubble {
+                max-width: 92%;
+                padding: 8px 12px;
+                font-size: 0.85rem;
+            }
+            .persona-switcher-btn {
+                padding: 5px 12px;
+                font-size: 0.55rem;
+            }
+            .input-box {
+                padding: 6px 10px 6px 14px;
+            }
+            .chat-textarea {
+                font-size: 0.85rem;
+            }
+            .mic-btn, .send-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 0.75rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="recording-overlay" id="recording-overlay"></div>
+
+<!-- ══ PERSONA BANNER ══ -->
+<div class="persona-banner" id="persona-banner" data-persona="">
+    <div class="persona-banner-inner">
+        <i id="persona-banner-icon" class="fas fa-shield-halved"></i>
+        <span id="persona-banner-text">ԴԵՐԱՅԻՆ ՌԵԺԻՄ</span>
+        <button class="persona-exit-btn" onclick="selectPersona('default')">✕ ԵԼՔ</button>
+    </div>
+</div>
+
+<!-- ══ PERSONA MODAL ══ -->
+<div class="persona-overlay" id="persona-overlay" onclick="closePersonaModal(event)">
+    <div class="persona-modal">
+        <div class="persona-modal-title">✦ ԴԵՐԱՅԻՆ ՌԵԺԻՄ ✦</div>
+        <div class="persona-modal-sub">Ընտրիր, ում հետ ցանկանում ես զրուցել</div>
+
+        <div class="persona-cards">
+            <div class="persona-card" data-persona="default" onclick="selectPersona('default')">
+                <div class="persona-card-icon">🛡</div>
+                <div class="persona-card-name">ՀԻՇՈՂՈՒԹՅԱՆ ՊԱՀԱՊԱՆ</div>
+                <div class="persona-card-desc">Իմաստուն հայոց պատմության պահապան: Վեհաշուք ոճ:</div>
+            </div>
+            <div class="persona-card" data-persona="tigran" onclick="selectPersona('tigran')">
+                <div class="persona-card-icon">👑</div>
+                <div class="persona-card-name">ՏԻԳՐԱՆ ՄԵԾ</div>
+                <div class="persona-card-desc">Արքայից արքա: Հպարտ ու իշխող: Քեզ «իմ հպատակ» է անվանում:</div>
+            </div>
+            <div class="persona-card" data-persona="khorenatsi" onclick="selectPersona('khorenatsi')">
+                <div class="persona-card-icon">📜</div>
+                <div class="persona-card-name">ՄՈՎՍԵՍ ԽՈՐԵՆԱՑԻ</div>
+                <div class="persona-card-desc">Հայ պատմության հայր: Իմաստուն տարեգրի ոճ, հղումներ ձեռագրերին:</div>
+            </div>
+            <div class="persona-card" data-persona="guide" onclick="selectPersona('guide')">
+                <div class="persona-card-icon">🗺</div>
+                <div class="persona-card-name"> X — ՈՒՂԵՑՈՒՅՑ</div>
+                <div class="persona-card-desc">Ժամանակակից պրոֆեսիոնալ ուղեցույց: Հստակ և տեղեկատվական ոճ:</div>
+            </div>
+        </div>
+
+        <button class="persona-modal-close" onclick="closePersonaModal()">ՓԱԿԵԼ</button>
+    </div>
+</div>
+
+<!-- ══ TOPBAR ══ -->
+<header class="topbar">
+    <a href="home.html" class="topbar-logo">
+        <i class="fas fa-shield-halved"></i>
+        <span class="topbar-logo-text">Հայ Զինվոր</span>
+    </a>
+    <div class="topbar-status">
+        <div class="status-badge">
+            <div class="status-dot" id="status-dot"></div>
+            <span id="status-text">ՊԱՏՐԱՍՏ Է</span>
+        </div>
+    </div>
+    <nav class="topbar-nav">
+        <button class="tts-toggle" id="tts-toggle" onclick="toggleTTS()">
+            <i class="fas fa-volume-xmark" id="tts-icon"></i>
+            <span id="tts-label">ՀՆՉՅՈՒՆԱՎՈՐՈՒՄ</span>
+        </button>
+        <a href="home.html" class="nav-chip"><i class="fas fa-home"></i><span>ԳԼԽԱՎՈՐ</span></a>
+        <a href="ai.html" class="nav-chip active"><i class="fas fa-robot"></i><span>ԱՐՀԵՍՏԱԿԱՆ ԲԱՆԱԿԱՆՈՒԹՅՈՒՆ</span></a>
+    </nav>
+</header>
+
+<!-- ══ MAIN ══ -->
+<main class="page" id="page">
+
+    <div class="center-block" id="center-block">
+        <div class="armenian-pattern">
+            <span>☦</span><span>⚔️</span><span>☦</span>
+        </div>
+        <h1 class="hero-title">Ի՞նչն է Ձեզ հետաքրքրում</h1>
+        <p class="hero-sub">Հարցրու Հայոց պատմության պահապանին</p>
+
+        <div class="quick-chips">
+            <div class="quick-chip" data-prompt="Պատմիր ինձ Ավարայրի ճակատամարտի մասին">⚔ Ավարայր</div>
+            <div class="quick-chip" data-prompt="Ով է Վարդան Մամիկոնյանը">♔ Վարդան Մամիկոնյան</div>
+            <div class="quick-chip" data-prompt="Պատմիր ինձ Հայոց այբուբենի մասին">✦ Հայոց այբուբեն</div>
+            <div class="quick-chip" data-prompt="Ով է Տիգրան Մեծը">♛ Տիգրան Մեծ</div>
+            <div class="quick-chip" data-prompt="Ինչ է Հայոց ցեղասպանությունը">✦ Հայոց ցեղասպանություն</div>
+        </div>
+    </div>
+
+    <div class="chat-history" id="chat-history"></div>
+
+    <div class="input-area">
+        <!-- Кнопка переключения персонажа -->
+        <div class="persona-switcher-row">
+            <button class="persona-switcher-btn" id="persona-switcher-btn" onclick="openPersonaModal()">
+                <div class="persona-switcher-dot"></div>
+                <i class="fas fa-masks-theater" id="persona-switcher-icon"></i>
+                <span id="persona-switcher-label">ԴԵՐԱՅԻՆ ՌԵԺԻՄ</span>
+                <i class="fas fa-chevron-up" style="font-size:0.55rem;opacity:0.5;"></i>
+            </button>
+        </div>
+
+        <div class="input-box" id="input-box">
+            <div class="voice-visualizer" id="voice-visualizer">
+                <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                <div class="voice-bar"></div><div class="voice-bar"></div><div class="voice-bar"></div>
+                <div class="voice-bar"></div>
+            </div>
+
+            <textarea
+                class="chat-textarea"
+                id="chat-input"
+                rows="1"
+                placeholder="Հարցրու Հայոց պատմության մասին..."
+                oninput="autoResize(this)"
+                onkeydown="handleKey(event)"
+            ></textarea>
+
+            <div class="input-actions">
+                <span class="recording-hint" id="recording-hint">● Ձայնագրում...</span>
+                <button class="mic-btn" id="mic-btn" onclick="toggleRecording()" title="Ձայնագրություն">
+                    <i class="fas fa-microphone" id="mic-icon"></i>
+                </button>
+                <button class="send-btn" id="send-btn" onclick="sendMessage()" title="Ուղարկել">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+        <p class="footer-hint">✦ &nbsp; Հայ Զինվոր · Արհեստական Բանականություն &nbsp; ✦</p>
+    </div>
+
+</main>
+
+<script>
+    // ══════════════════════════════════
+    //  STATE
+    // ══════════════════════════════════
+    let busy = false;
+    let mediaRecorder = null;
+    let audioChunks = [];
+    let isRecording = false;
+    let ttsEnabled = false;
+    let currentSpeaking = null;
+    let currentPersona = 'default';   // ← активный персонаж
+
+    // Данные персонажей для UI
+    const PERSONAS = {
+        default:    { label: 'ՀԻՇՈՂՈՒԹՅԱՆ ՊԱՀԱՊԱՆ',    icon: 'fa-shield-halved', bannerText: 'ՌԵԺԻՄ՝ ՀԱՅՈՑ ՀԻՇՈՂՈՒԹՅԱՆ ՊԱՀԱՊԱՆ',    btnClass: '' },
+        tigran:     { label: 'ՏԻԳՐԱՆ ՄԵԾ',  icon: 'fa-crown',         bannerText: '👑 ՌԵԺԻՄ՝ ՏԻԳՐԱՆ ՄԵԾ — ԱՐՔԱՅԻՑ ԱՐՔԱ', btnClass: 'active-tigran' },
+        khorenatsi: { label: 'ՄՈՎՍԵՍ ԽՈՐԵՆԱՑԻ', icon: 'fa-scroll',        bannerText: '📜 ՌԵԺԻՄ՝ ՄՈՎՍԵՍ ԽՈՐԵՆԱՑԻ — ՏԱՐԵԳԻՐ', btnClass: 'active-khorenatsi' },
+        guide:      { label: 'ՈՒՂԵՑՈՒՅՑ ԱՐԱՄ',        icon: 'fa-map',           bannerText: '🗺 ՌԵԺԻՄ՝ ԱՐԱՄ — ԺԱՄԱՆԱԿԱԿԻՑ ՈՒՂԵՑՈՒՅՑ',  btnClass: 'active-guide' }
+    };
+
+    // ══════════════════════════════════
+    //  DOM ELEMENTS
+    // ══════════════════════════════════
+    const inputEl          = document.getElementById('chat-input');
+    const historyEl        = document.getElementById('chat-history');
+    const centerEl         = document.getElementById('center-block');
+    const sendBtnEl        = document.getElementById('send-btn');
+    const statusDot        = document.getElementById('status-dot');
+    const statusTxt        = document.getElementById('status-text');
+    const micBtn           = document.getElementById('mic-btn');
+    const micIcon          = document.getElementById('mic-icon');
+    const voiceVis         = document.getElementById('voice-visualizer');
+    const recordingHint    = document.getElementById('recording-hint');
+    const inputBox         = document.getElementById('input-box');
+    const overlay          = document.getElementById('recording-overlay');
+    const ttsToggleBtn     = document.getElementById('tts-toggle');
+    const ttsIcon          = document.getElementById('tts-icon');
+    const pageEl           = document.getElementById('page');
+    const personaBanner    = document.getElementById('persona-banner');
+    const personaBannerTxt = document.getElementById('persona-banner-text');
+    const personaBannerIcon= document.getElementById('persona-banner-icon');
+    const personaOverlay   = document.getElementById('persona-overlay');
+    const switcherBtn      = document.getElementById('persona-switcher-btn');
+    const switcherLabel    = document.getElementById('persona-switcher-label');
+    const switcherIcon     = document.getElementById('persona-switcher-icon');
+
+    // ══════════════════════════════════
+    //  PERSONA LOGIC
+    // ══════════════════════════════════
+    window.openPersonaModal = function() {
+        // Подсвечиваем активную карточку
+        document.querySelectorAll('.persona-card').forEach(c => {
+            c.classList.toggle('selected', c.dataset.persona === currentPersona);
+        });
+        personaOverlay.classList.add('open');
+    };
+
+    window.closePersonaModal = function(e) {
+        if (!e || e.target === personaOverlay) {
+            personaOverlay.classList.remove('open');
+        }
+    };
+
+    window.selectPersona = function(persona) {
+        currentPersona = persona;
+        personaOverlay.classList.remove('open');
+
+        const p = PERSONAS[persona];
+
+        // Баннер
+        if (persona !== 'default') {
+            personaBanner.dataset.persona = persona;
+            personaBannerTxt.textContent = p.bannerText;
+            personaBannerIcon.className = 'fas ' + p.icon;
+            personaBanner.classList.add('visible');
+            pageEl.classList.add('persona-active');
+        } else {
+            personaBanner.classList.remove('visible');
+            pageEl.classList.remove('persona-active');
+        }
+
+        // Кнопка переключения
+        switcherBtn.className = 'persona-switcher-btn' + (p.btnClass ? ' ' + p.btnClass : '');
+        switcherLabel.textContent = p.label;
+        switcherIcon.className = 'fas ' + p.icon;
+
+        // Цвет рамки поля ввода
+        inputBox.className = 'input-box' + (persona !== 'default' ? ' persona-' + persona : '');
+
+        // Добавляем системное сообщение в чат о смене персонажа
+        if (document.querySelector('.chat-history.visible') || !centerEl.classList.contains('hidden')) {
+            showPersonaSwitchMessage(p);
+        }
+    };
+
+    function showPersonaSwitchMessage(p) {
+        showHistory();
+        const row = document.createElement('div');
+        row.className = 'msg-row ai';
+        row.style.justifyContent = 'center';
+        row.innerHTML = `
+            <div style="background:rgba(20,12,4,0.7);border:1px solid rgba(200,150,70,0.2);border-radius:50px;padding:7px 18px;font-family:'Marcellus',serif;font-size:0.78rem;color:#6a5030;letter-spacing:1px;display:flex;align-items:center;gap:8px;">
+                <i class="fas ${p.icon}" style="font-size:0.75rem;"></i>
+                Ռեժիմը փոխվել է՝ <strong style="color:#c9a063;">${p.label}</strong>
+            </div>`;
+        historyEl.appendChild(row);
+        scrollBottom();
+    }
+
+    // ══════════════════════════════════
+    //  TTS TOGGLE
+    // ══════════════════════════════════
+    window.toggleTTS = function() {
+        ttsEnabled = !ttsEnabled;
+        if (ttsEnabled) {
+            ttsToggleBtn.classList.add('active');
+            ttsIcon.className = 'fas fa-volume-high';
+        } else {
+            ttsToggleBtn.classList.remove('active');
+            ttsIcon.className = 'fas fa-volume-xmark';
+            stopSpeaking();
+        }
+    };
+
+    // ══════════════════════════════════
+    //  TTS SPEAK
+    // ══════════════════════════════════
+    async function speakText(text, bubble, avatar, speakBtn, wavesEl) {
+        stopSpeaking();
+        bubble.classList.add('is-speaking');
+        avatar.classList.add('speaking');
+        if (wavesEl) wavesEl.classList.add('active');
+        if (speakBtn) { speakBtn.classList.add('active'); speakBtn.innerHTML = '<i class="fas fa-stop"></i>'; speakBtn.title = 'Դադարեցնել'; }
+        setStatus('speaking');
+
+        try {
+            const response = await fetch('http://127.0.0.1:5000/api/tts', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ text: text.slice(0, 1000) })
+            });
+            if (!response.ok) throw new Error('TTS սխալ');
+
+            const audioBlob = await response.blob();
+            const audioUrl = URL.createObjectURL(audioBlob);
+            const audio = new Audio(audioUrl);
+            currentSpeaking = audio;
+
+            const cleanup = () => {
+                currentSpeaking = null;
+                bubble.classList.remove('is-speaking');
+                avatar.classList.remove('speaking');
+                if (wavesEl) wavesEl.classList.remove('active');
+                if (speakBtn) { speakBtn.classList.remove('active'); speakBtn.innerHTML = '<i class="fas fa-volume-high"></i>'; speakBtn.title = 'Հնչյունավորել'; }
+                setStatus('ready');
+                URL.revokeObjectURL(audioUrl);
+            };
+            audio.onended = cleanup;
+            audio.onerror = cleanup;
+            audio.play();
+
+        } catch (err) {
+            bubble.classList.remove('is-speaking');
+            avatar.classList.remove('speaking');
+            if (wavesEl) wavesEl.classList.remove('active');
+            if (speakBtn) { speakBtn.classList.remove('active'); speakBtn.innerHTML = '<i class="fas fa-volume-high"></i>'; speakBtn.title = 'Հնչյունավորել'; }
+            setStatus('error');
+        }
+    }
+
+    function stopSpeaking() {
+        if (currentSpeaking instanceof Audio) { currentSpeaking.pause(); currentSpeaking = null; }
+        document.querySelectorAll('.bubble.is-speaking').forEach(b => b.classList.remove('is-speaking'));
+        document.querySelectorAll('.ai-avatar.speaking').forEach(a => a.classList.remove('speaking'));
+        document.querySelectorAll('.speak-waves.active').forEach(w => w.classList.remove('active'));
+        document.querySelectorAll('.speak-btn.active').forEach(b => { b.classList.remove('active'); b.innerHTML = '<i class="fas fa-volume-high"></i>'; b.title = 'Հնչյունավորել'; });
+    }
+
+    // ══════════════════════════════════
+    //  STATUS
+    // ══════════════════════════════════
+    function setStatus(state) {
+        statusDot.style.background = '';
+        statusDot.className = 'status-dot';
+        const labels = { thinking:'ՄՇԱԿՈՒՄ...', recording:'ՁԱՅՆԱԳՐՈՒՄ...', speaking:'ԽՈՍՈՒՄ Է...', error:'ՍԽԱԼ', ready:'ՊԱՏՐԱՍՏ Է' };
+        if (state === 'thinking')  statusDot.classList.add('thinking');
+        else if (state === 'recording') statusDot.classList.add('recording');
+        else if (state === 'speaking')  statusDot.classList.add('speaking');
+        else if (state === 'error')     statusDot.style.background = '#c06040';
+        statusTxt.textContent = labels[state] || 'ՊԱՏՐԱՍՏ Է';
+    }
+
+    // ══════════════════════════════════
+    //  HELPERS
+    // ══════════════════════════════════
+    window.autoResize = function(el) {
+        el.style.height = 'auto';
+        el.style.height = Math.min(el.scrollHeight, 150) + 'px';
+    };
+    window.handleKey = function(e) {
+        if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+    };
+    function scrollBottom() { historyEl.scrollTop = historyEl.scrollHeight; }
+    function esc(s) {
+        return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\n/g,'<br>');
+    }
+    function showHistory() {
+        if (centerEl && !centerEl.classList.contains('hidden')) {
+            centerEl.classList.add('hidden');
+            historyEl.classList.add('visible');
+        }
+    }
+
+    document.querySelectorAll('.quick-chip').forEach(chip => {
+        chip.addEventListener('click', () => {
+            const prompt = chip.getAttribute('data-prompt');
+            if (prompt) { inputEl.value = prompt; autoResize(inputEl); sendMessage(); }
+        });
+    });
+
+    // ══════════════════════════════════
+    //  ADD USER BUBBLE
+    // ══════════════════════════════════
+    function addUserBubble(text) {
+        const row = document.createElement('div');
+        row.className = 'msg-row user';
+        row.innerHTML = `<div class="bubble user">${esc(text)}</div>`;
+        historyEl.appendChild(row);
+        scrollBottom();
+    }
+
+    // ══════════════════════════════════
+    //  ADD THINKING
+    // ══════════════════════════════════
+    function addThinking() {
+        const p = PERSONAS[currentPersona];
+        const row = document.createElement('div');
+        row.className = 'msg-row ai';
+        row.id = 'thinking-row';
+        row.innerHTML = `
+            <div class="ai-avatar" data-persona="${currentPersona}">
+                <i class="fas ${p.icon}"></i>
+            </div>
+            <div class="bubble ai">
+                <div class="thinking-dots"><span></span><span></span><span></span></div>
+            </div>`;
+        historyEl.appendChild(row);
+        scrollBottom();
+        return row;
+    }
+
+    // ══════════════════════════════════
+    //  ADD AI BUBBLE — с исправлением обрыва печатания
+    // ══════════════════════════════════
+    function addAiBubble(text, persona) {
+        const p = PERSONAS[persona] || PERSONAS.default;
+        const row = document.createElement('div');
+        row.className = 'msg-row ai';
+        const bubbleId = 'b' + Date.now();
+        const avatarId = 'a' + Date.now();
+        const wavesId  = 'w' + Date.now();
+        const speakId  = 's' + Date.now();
+        const tagId    = 't' + Date.now();
+
+        row.innerHTML = `
+            <div style="display:flex;flex-direction:column;align-items:center;gap:0;">
+                <div class="ai-avatar" id="${avatarId}" data-persona="${persona}">
+                    <i class="fas ${p.icon}"></i>
+                </div>
+                <div class="speak-waves" id="${wavesId}">
+                    <div class="speak-wave"></div><div class="speak-wave"></div><div class="speak-wave"></div>
+                    <div class="speak-wave"></div><div class="speak-wave"></div>
+                </div>
+            </div>
+            <div style="position:relative;display:flex;flex-direction:column;align-items:flex-start;">
+                <span class="persona-tag" data-persona="${persona}" id="${tagId}">${p.label}</span>
+                <div class="bubble ai typing" id="${bubbleId}" data-persona="${persona}"></div>
+                <button class="speak-btn" id="${speakId}" title="Հնչյունավորել">
+                    <i class="fas fa-volume-high"></i>
+                </button>
+            </div>`;
+
+        historyEl.appendChild(row);
+        scrollBottom();
+
+        const bubble   = document.getElementById(bubbleId);
+        const avatar   = document.getElementById(avatarId);
+        const wavesEl  = document.getElementById(wavesId);
+        const speakBtn = document.getElementById(speakId);
+
+        speakBtn.addEventListener('click', () => {
+            if (speakBtn.classList.contains('active')) stopSpeaking();
+            else speakText(text, bubble, avatar, speakBtn, wavesEl);
+        });
+
+        // ── ИСПРАВЛЕНИЕ ОБРЫВА ПЕЧАТАНИЯ ──
+        // Вместо setInterval с фиксированной скоростью используем requestAnimationFrame
+        // и выводим текст чанками — это не даёт тексту "зависнуть"
+        return new Promise(resolve => {
+            const CHUNK = 3;      // символов за кадр — можно увеличить для скорости
+            let i = 0;
+            let lastScroll = 0;
+
+            function typeStep() {
+                // Печатаем CHUNK символов за раз
+                i = Math.min(i + CHUNK, text.length);
+                bubble.textContent = text.slice(0, i);
+
+                // Прокручиваем не каждый кадр, а раз в 200мс — экономит ресурсы
+                const now = Date.now();
+                if (now - lastScroll > 200) {
+                    scrollBottom();
+                    lastScroll = now;
+                }
+
+                if (i < text.length) {
+                    // Небольшая задержка между кадрами для эффекта печатания
+                    setTimeout(typeStep, 18);
+                } else {
+                    // Готово — убираем курсор
+                    bubble.classList.remove('typing');
+                    scrollBottom();
+                    if (ttsEnabled) speakText(text, bubble, avatar, speakBtn, wavesEl);
+                    resolve();
+                }
+            }
+
+            typeStep();
+        });
+    }
+
+    // ══════════════════════════════════
+    //  CALL AI
+    // ══════════════════════════════════
+    async function callAI(userText) {
+        const response = await fetch("http://127.0.0.1:5000/api/ai", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            // ← ПЕРЕДАЁМ ПЕРСОНАЖА на сервер
+            body: JSON.stringify({ text: userText, persona: currentPersona })
+        });
+
+        if (response.status === 429) {
+            const data = await response.json().catch(() => ({}));
+            throw new Error(data.error || "Գերազանցվել է հարցումների սահմանաչափը");
+        }
+        if (response.status === 503) throw new Error("Սերվերը ծանրաբեռնված է: Փորձեք ավելի ուշ:");
+
+        const result = await response.json();
+        if (!response.ok) throw new Error(result.error || "Սերվերի սխալ");
+        if (!result.reply) throw new Error("Դատարկ պատասխան մոդելից");
+
+        return { reply: result.reply, persona: result.persona || currentPersona };
+    }
+
+    // ══════════════════════════════════
+    //  VOICE RECORDING
+    // ══════════════════════════════════
+    window.toggleRecording = async function() {
+        if (busy) return;
+
+        if (!isRecording) {
+            try {
+                const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+                audioChunks = [];
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+                mediaRecorder.ondataavailable = e => { if (e.data.size > 0) audioChunks.push(e.data); };
+                mediaRecorder.onstop = async () => { stream.getTracks().forEach(t => t.stop()); await processVoice(); };
+                mediaRecorder.start();
+                isRecording = true;
+
+                micBtn.classList.add('is-recording');
+                micIcon.className = 'fas fa-stop';
+                voiceVis.classList.add('active');
+                recordingHint.classList.add('active');
+                inputBox.classList.add('recording-active');
+                overlay.classList.add('active');
+                inputEl.style.display = 'none';
+                setStatus('recording');
+
+            } catch (err) {
+                showError('Խոսափողը հասանելի չէ: Թույլատրեք մուտքը բրաուզերում:');
+            }
+        } else {
+            isRecording = false;
+            mediaRecorder.stop();
+            micBtn.classList.remove('is-recording');
+            micBtn.classList.add('is-processing');
+            micIcon.className = 'fas fa-spinner fa-spin';
+            voiceVis.classList.remove('active');
+            recordingHint.classList.remove('active');
+            inputBox.classList.remove('recording-active');
+            overlay.classList.remove('active');
+            inputEl.style.display = '';
+            setStatus('thinking');
+        }
+    };
+
+    async function processVoice() {
+        try {
+            const audioBlob = new Blob(audioChunks, { type: 'audio/webm' });
+            const formData = new FormData();
+            formData.append('audio', audioBlob, 'voice.webm');
+
+            const res = await fetch('http://127.0.0.1:5000/api/voice', { method: 'POST', body: formData });
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || 'Ձայնի ճանաչման սխալ');
+
+            const recognizedText = data.text?.trim();
+            if (!recognizedText) throw new Error('Խոսքը չճանաչվեց');
+
+            inputEl.value = recognizedText;
+            autoResize(inputEl);
+            micBtn.classList.remove('is-processing');
+            micIcon.className = 'fas fa-microphone';
+            await sendMessage();
+
+        } catch (err) {
+            micBtn.classList.remove('is-processing');
+            micIcon.className = 'fas fa-microphone';
+            setStatus('error');
+            showError('⚠ ' + err.message);
+        }
+    }
+
+    function showError(msg) {
+        showHistory();
+        const errRow = document.createElement('div');
+        errRow.className = 'msg-row ai';
+        errRow.innerHTML = `
+            <div class="ai-avatar" style="border-color:#c06040;">
+                <i class="fas fa-exclamation-triangle" style="color:#c06040;"></i>
+            </div>
+            <div class="bubble ai" style="border-color:rgba(200,80,60,0.3);color:#c08060;">
+                ${esc(msg)}
+            </div>`;
+        historyEl.appendChild(errRow);
+        scrollBottom();
+    }
+
+    // ══════════════════════════════════
+    //  SEND MESSAGE
+    // ══════════════════════════════════
+    window.sendMessage = async function() {
+        if (busy) return;
+        const text = inputEl.value.trim();
+        if (!text) {
+            inputEl.style.borderColor = '#c06040';
+            setTimeout(() => inputEl.style.borderColor = '', 1400);
+            return;
+        }
+
+        busy = true;
+        sendBtnEl.disabled = true;
+        micBtn.disabled = true;
+        setStatus('thinking');
+        showHistory();
+
+        inputEl.value = '';
+        inputEl.style.height = 'auto';
+        addUserBubble(text);
+
+        await new Promise(r => setTimeout(r, 350));
+        const thinkingRow = addThinking();
+
+        try {
+            const { reply, persona } = await callAI(text);
+            thinkingRow.remove();
+            await addAiBubble(reply, persona);
+            setStatus('ready');
+        } catch (err) {
+            thinkingRow.remove();
+            showError('⚠ ' + err.message);
+            setStatus('error');
+        }
+
+        busy = false;
+        sendBtnEl.disabled = false;
+        micBtn.disabled = false;
+        inputEl.focus();
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ՎԱՐԴԱՆ ՄԱՄԻԿՈՆՅԱՆ | Հայկական Թվային Թանգարան</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700;800&family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none; /* enhances museum feel, text still selectable */
+        }
+
+        body {
+            background-color: #0a0806;
+            font-family: 'Inter', sans-serif;
+            color: #e9e2d0;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+        }
+
+        /* BASALT BACKGROUND WITH GRID & RADIAL GRADIENTS */
+        .bg-texture {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: #0a0806;
+        }
+
+        .bg-texture::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                repeating-linear-gradient(transparent 0px, transparent 39px, rgba(201, 160, 61, 0.03) 39px, rgba(201, 160, 61, 0.03) 41px),
+                repeating-linear-gradient(90deg, transparent 0px, transparent 39px, rgba(201, 160, 61, 0.03) 39px, rgba(201, 160, 61, 0.03) 41px);
+            pointer-events: none;
+        }
+
+        .bg-texture::after {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 20%, rgba(30, 20, 10, 0.6) 0%, #0a0806 90%);
+            pointer-events: none;
+        }
+
+        /* DYNAMIC AMBER LIGHT (CURSOR-FOLLOWING TORCH) */
+        .cursor-light {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255, 190, 70, 0.2) 0%, rgba(255, 140, 20, 0.08) 25%, transparent 70%);
+            transition: background 0.05s linear;
+            will-change: background;
+        }
+
+        /* GLOBAL CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* TILE / "SPLIT STONE" EFFECT */
+        .tile {
+            background: rgba(18, 14, 12, 0.75);
+            backdrop-filter: blur(1px);
+            border: 1px solid rgba(201, 160, 61, 0.25);
+            border-radius: 24px;
+            padding: 2rem;
+            transition: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 25px -12px rgba(0,0,0,0.5);
+            transform: translateZ(0);
+        }
+
+        /* GOLDEN VEINS (crack effect) */
+        .tile::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(45deg, transparent, transparent 35px, rgba(201, 160, 61, 0.08) 35px, rgba(201, 160, 61, 0.12) 38px);
+            pointer-events: none;
+            opacity: 0.4;
+            transition: opacity 0.4s;
+        }
+
+        .tile::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 30% 40%, rgba(255, 180, 40, 0.0) 0%, rgba(255, 160, 30, 0.0) 70%);
+            transition: all 0.5s;
+            pointer-events: none;
+        }
+
+        /* HOVER: SHIFT + GOLDEN LIGHT BREAKS THROUGH */
+        .tile:hover {
+            transform: translate(-4px, -6px) scale(1.01);
+            box-shadow: 0 20px 35px -10px rgba(0,0,0,0.7), 0 0 0 1px rgba(201, 160, 61, 0.5);
+            border-color: rgba(201, 160, 61, 0.7);
+        }
+
+        .tile:hover::after {
+            background: radial-gradient(circle at 30% 40%, rgba(255, 180, 60, 0.3) 0%, rgba(255, 140, 30, 0.2) 40%, transparent 80%);
+        }
+
+        .tile:hover::before {
+            opacity: 0.9;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            justify-content: center;
+            text-align: center;
+            z-index: 2;
+            background: url('https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Vardan_Mamikonian_by_H._Zardaryan.jpg/1200px-Vardan_Mamikonian_by_H._Zardaryan.jpg') no-repeat center center/cover;
+            background-attachment: scroll;
+            background-size: cover;
+            margin-bottom: 4rem;
+            box-shadow: inset 0 -80px 80px -40px #0a0806;
+        }
+
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(ellipse at center, rgba(0,0,0,0.3) 0%, #0a0806 90%);
+            z-index: 0;
+        }
+
+        .hero-content {
+            position: relative;
+            z-index: 3;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-shadow: 0 5px 20px rgba(0,0,0,0.6);
+        }
+
+        .hero h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: clamp(3rem, 8vw, 5.8rem);
+            font-weight: 800;
+            letter-spacing: 0.06em;
+            color: #f5e7c8;
+            text-transform: uppercase;
+            line-height: 1.2;
+        }
+
+        .hero h1 span {
+            color: #dbb55c;
+            border-bottom: 2px solid #dbb55c;
+            display: inline-block;
+            padding-bottom: 0.1em;
+        }
+
+        .hero .sub {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            font-weight: 300;
+            letter-spacing: 1px;
+            word-spacing: 2px;
+        }
+
+        /* SECTION STYLES */
+        section {
+            margin: 6rem 0;
+        }
+
+        .section-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #e7cf96;
+            margin-bottom: 2.5rem;
+            letter-spacing: 0.03em;
+            border-left: 5px solid #dbb55c;
+            padding-left: 1.3rem;
+        }
+
+        /* TIMELINE (biography chain) */
+        .timeline {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: space-between;
+        }
+
+        .timeline-item {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(0,0,0,0.4);
+            border-radius: 28px;
+            padding: 1.8rem;
+            transition: 0.3s;
+        }
+
+        .year {
+            font-size: 2rem;
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 700;
+            color: #e6bf6e;
+            margin-bottom: 1rem;
+        }
+
+        /* BENTO GRID (AVARAIR) */
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.8rem;
+            grid-auto-rows: auto;
+        }
+
+        .bento-item {
+            background: rgba(15, 12, 9, 0.8);
+            border-radius: 32px;
+            overflow: hidden;
+            transition: 0.3s;
+            border: 1px solid rgba(201, 160, 61, 0.3);
+            backdrop-filter: blur(2px);
+        }
+
+        .bento-item.large {
+            grid-column: span 2;
+            grid-row: span 1;
+        }
+
+        .bento-item.wide {
+            grid-column: span 2;
+        }
+
+        .bento-item.tall {
+            grid-row: span 2;
+        }
+
+        .bento-content {
+            padding: 1.5rem;
+        }
+
+        .bento-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: all 0.5s ease;
+        }
+
+        .bento-img:hover {
+            filter: grayscale(0%);
+            transform: scale(1.02);
+        }
+
+        /* GALLERY */
+        .gallery-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+
+        .gallery-card {
+            flex: 1 1 260px;
+            overflow: hidden;
+            border-radius: 28px;
+            background: #100d0a;
+            transition: all 0.4s;
+            border: 1px solid rgba(201, 160, 61, 0.3);
+        }
+
+        .gallery-card img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            filter: grayscale(100%);
+            transition: all 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .gallery-card:hover img {
+            filter: grayscale(0%);
+            transform: scale(1.05);
+        }
+
+        .gallery-card:hover {
+            box-shadow: 0 15px 30px -8px rgba(201, 160, 61, 0.3);
+            border-color: #dbb55c;
+        }
+
+        /* CITATION BLOCK */
+        .quote-block {
+            background: linear-gradient(135deg, rgba(30, 22, 16, 0.9), rgba(15, 10, 7, 0.9));
+            border-left: 6px solid #e6bf6e;
+            padding: 2rem;
+            font-style: italic;
+            font-size: 1.25rem;
+            margin: 2rem 0;
+            border-radius: 28px;
+        }
+
+        /* Intersection Observer animation (stagger) */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.9s cubic-bezier(0.2, 0.8, 0.3, 1), transform 0.9s ease;
+        }
+
+        .fade-up.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stagger-child {
+            transition-delay: calc(var(--order, 0) * 0.08s);
+        }
+
+        /* responsive */
+        @media (max-width: 1000px) {
+            .container {
+                padding: 0 1.5rem;
+            }
+            .bento-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .timeline {
+                flex-direction: column;
+            }
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .bento-grid {
+                grid-template-columns: 1fr;
+            }
+            .bento-item.large, .bento-item.wide {
+                grid-column: span 1;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(201, 160, 61, 0.2);
+            margin-top: 5rem;
+            font-size: 0.9rem;
+            color: #b8aa84;
+        }
+
+        /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+    </style>
+</head>
+<body>
+<div class="bg-texture"></div>
+<div class="cursor-light" id="cursorLight"></div>
+
+<main>
+    <!-- HERO SECTION with Parallax -->
+    <div class="hero" id="heroParallax">
+        <div class="hero-content">
+            <h1>ՎԱՐԴԱՆ ՄԱՄԻԿՈՆՅԱՆ<br><span>ՀԱՎԱՏՔԻ ԶԻՆՎՈՐ</span></h1>
+            <div class="sub">«Անմահություն է հավատը, որն անցնում է սրի ու խաչի միջով»</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- BIOGRAPHY (timeline chain) -->
+        <section class="fade-up">
+            <h2 class="section-title">ԲԻՈԳՐԱՖԻԱ</h2>
+            <div class="timeline">
+                <div class="tile timeline-item" style="--order:0">
+                    <div class="year">388-406</div>
+                    <h3>Մանկություն և դաստիարակություն</h3>
+                    <p>Վարդան Մամիկոնյանը ծնվել է հայոց նախարարական տոհմում։ Մեծացել է քրիստոնեական խոր հավատով ու ռազմական ավանդույթներով։</p>
+                </div>
+                <div class="tile timeline-item" style="--order:1">
+                    <div class="year">422-428</div>
+                    <h3>Ծառայություն Սասանյան արքունիքում</h3>
+                    <p>Պատանի հասակում ստիպված էր ապրել Տիզբոնում, որտեղ ճանաչեց պարսկական դավանանքն ու քաղաքականությունը, սակայն երբեք չուրանալով քրիստոնությունը:</p>
+                </div>
+                <div class="tile timeline-item" style="--order:2">
+                    <div class="year">449</div>
+                    <h3>Վերադարձ դեպի հավատք ու ապստամբություն</h3>
+                    <p>Սասանյան Շապուհ II-ի հրամանով պարտադրվում էր զրադաշտականություն: Վարդանը գլխավորեց ազատագրական պայքարը՝ դառնալով հավատքի անսասան զինվոր:</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- AVARAIR BATTLE - BENTO GRID (asymmetric) -->
+        <section class="fade-up">
+            <h2 class="section-title">ԱՎԱՐԱՅՐԻ ՃԱԿԱՏԱՄԱՐՏ</h2>
+            <div class="bento-grid">
+                <div class="bento-item tile large">
+                    <img class="bento-img" src="https://d31qtdfy11mjj9.cloudfront.net/gallery/1564404448467443154.jpg" alt="Ավարայրի դաշտ">
+                    <div class="bento-content">
+                        <h3>Մայիսի 26, 451 թ.</h3>
+                        <p>Ավարայրի դաշտում հանդիպեցին հայոց 66,000 զորքը պարսկական հսկայական բանակի դեմ: Թվային անհավասարություն, բայց ոգու վեհություն:</p>
+                    </div>
+                </div>
+                <div class="bento-item tile">
+                    <div class="bento-content">
+                        <h3>✧ Ուժերի դասավորություն</h3>
+                        <p>Պարսկական զորքը՝ 200 000-ից ավելի մարտիկներ և մարտական փղեր: Հայոց փոքրաթիվ զորքը կազմված էր նախարարական ջոկատներից:</p>
+                    </div>
+                </div>
+                <div class="bento-item tile wide">
+                    <div class="bento-content">
+                        <h3>🎙️ Վարդանի ճառը</h3>
+                        <p>«Մահն անխուսափելի է, բայց հավատքի դավաճանությունը՝ հավիտենական մահ: Մի՛ զրկվեք Քրիստոսից, զինվորներ իմ: Այսօր մենք մեռնենք, որպեսզի Հայաստանը հավիտյան ապրի»:</p>
+                    </div>
+                </div>
+                <div class="bento-item tile">
+                    <img class="bento-img" src="https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2c/10/0b/51/caption.jpg?w=1200&h=1200&s=1" alt="Վարդան Մամիկոնյան">
+                    <div class="bento-content">
+                        <p>Սուրբ Վարդանը նահատակվեց մարտի դաշտում, սակայն նրա զոհաբերությունը դարձավ հոգևոր հաղթանակ:</p>
+                    </div>
+                </div>
+                <div class="bento-item tile tall">
+                    <div class="bento-content">
+                        <h3>📜 Եղիշեի վկայությունը</h3>
+                        <p>Պատմահայր Եղիշեն իր «Վասն Վարդանայ և Հայոց պատերազմին» մատյանում գրում է. «Նրանք նահատակվեցին հանուն խաչի, և նրանց արյունը դարձավ սերմն հավատի»: Հայոց հոգևոր դիմադրությունը ապացուցեց, որ հավատքն անպարտ է:</p>
+                        <br>
+                        <p>Ճակատամարտից հետո Նվարսակի պայմանագիրը երաշխավորեց կրոնական ազատությունը՝ ամրապնդելով քրիստոնեությունը հայկական ինքնության հիմքում:</p>
+                    </div>
+                </div>
+                <div class="bento-item tile">
+                    <div class="bento-content">
+                        <h3>⚔️ Հերոսական վախճան</h3>
+                        <p>Վարդան Մամիկոնյանը զոհվեց սեպուհական քաջությամբ, նրա մարմինը գտնվեց մարտադաշտում՝ խաչը ձեռքին: Ըստ ավանդության, լույսի սյուն իջավ նրա վայր ընկած տեղում:</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- SAINT SECTION (mystical) -->
+        <section class="fade-up">
+            <h2 class="section-title">ՍՈՒՐԲԸ ✦ ԿԱՆՈՆԱՑՈՒՄ</h2>
+            <div class="tile" style="text-align: center; background: radial-gradient(ellipse at top, rgba(30,22,15,0.9), #0f0c09)">
+                <div style="font-size: 4rem; color: #e6bf6e;">☦️</div>
+                <h3 style="font-size: 2rem; margin: 1rem 0;">Սուրբ Վարդան Զորավար</h3>
+                <p style="max-width: 800px; margin: 0 auto;">Հայաստանեայց Առաքելական Սուրբ Եկեղեցին Վարդան Մամիկոնյանին և նրա 1036 նահատակներին դասեց սրբերի շարքը: Նրանք խորհրդանշում են քրիստոնեական հավատքի անզիջում պաշտպանությունը: Ամեն տարի Ղևոնդյանց տոնի օրը հավատացյալները հարգանքի տուրք են մատուցում անմահ զորավարին:</p>
+                <div class="quote-block" style="background: rgba(0,0,0,0.4); margin-top: 2rem;">
+                    «Սուրբ Վարդանը երկնային բանակի հրամանատարն է, ով հավիտյան պահպանում է հայության հոգևոր սահմանները»:
+                </div>
+                <div style="margin-top: 1.5rem;"><span style="color:#e6bf6e;">✨ Ոսկե խաչի լույսը պահպանում է ուխտը ✨</span></div>
+            </div>
+        </section>
+
+        <!-- LEGACY: QUOTES & CULTURAL INFLUENCE -->
+        <section class="fade-up">
+            <h2 class="section-title">ԺԱՌԱՆԳՈՒԹՅՈՒՆ</h2>
+            <div class="timeline" style="gap: 2rem;">
+                <div class="tile" style="flex: 1;">
+                    <h3>📖 Անմահ խոսքեր</h3>
+                    <p>«Անծանոթ մի՛ եղեք ձեր հավատքին, քանզի հավատքն է զենքն անպարտելի»: <br> — Վարդան Մամիկոնյան</p>
+                    <p style="margin-top: 1rem;">«Մահը սուրբ է, երբ զոհվում ես հանուն ճշմարտության»: <br> — Եղիշե պատմիչ</p>
+                </div>
+                <div class="tile" style="flex: 1;">
+                    <h3>🎨 Մշակույթում և արվեստում</h3>
+                    <p>Վարդան Մամիկոնյանի կերպարը ոգեշնչել է դարերի գրականությունը, գեղանկարչությունը և կինոն: «Վարդանանք» վեպը, Մարտիրոս Սարյանի նկարները, օպերաներ, հուշարձաններ: Նա մնում է ազատության և անկոտրում կամքի խորհուրդը:</p>
+                </div>
+                <div class="tile" style="flex: 1;">
+                    <h3>🏛️ Հուշարձաններ և եկեղեցիներ</h3>
+                    <p>Երևանի կենտրոնում խոյանում է Վարդան Մամիկոնյանի հեծյալ արձանը, Ավարայրի դաշտում կանգուն է մատուռ-հուշահամալիրը: Հայաստանի սրտում նրա անունը հավերժ կրում է հավատքի ու հայրենասիրության զորությունը:</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- GALLERY (black-white to color on hover) -->
+        <section class="fade-up">
+            <h2 class="section-title">ՊԱՏԿԵՐԱՍՐԱՀ</h2>
+            <div class="gallery-grid">
+                <div class="gallery-card">
+                    <img src="https://avatars.dzeninfra.ru/get-zen_doc/9811263/pub_6448ec397de04f64478ffe0b_6448f61a02e5ac7d22f2f588/scale_1200" alt="Վարդան Մամիկոնյանի արձան">
+                </div>
+                <div class="gallery-card">
+                    <img src="https://d31qtdfy11mjj9.cloudfront.net/gallery/1564404448467443154.jpg" alt="Ավարայրի հուշահամալիր">
+                </div>
+                <div class="gallery-card">
+                    <img src="https://sun9-80.userapi.com/impg/DRFMctsJT_A4uA-iHMH8D1iTrUg0afLj4vVT8Q/Jh44rA52f60.jpg?size=582x604&quality=95&sign=9f16f9e5db07feea2bcc112d9049b9b2&type=album" alt="Խաչքար՝ հայկական խորհրդանիշ">
+                </div>
+                <div class="gallery-card">
+                    <img src="https://tse4.mm.bing.net/th/id/OIP.MEtFIxctJPX-0guejmdmSAHaJ4?rs=1&pid=ImgDetMain&o=7&rm=3" alt="Եղիշեի ձեռագիր">
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>ՀԱՅԿԱԿԱՆ ԹՎԱՅԻՆ ԹԱՆԳԱՐԱՆ — Հավերժ հիշատակ Սուրբ Վարդան Զորավարի և Ավարայրի հերոսների</p>
+            <p style="margin-top: 0.5rem;">✧ Հավատք, Հայրենիք, Հերոսություն ✧</p>
+        </div>
+    </footer>
+</main>
+
+<script>
+    // DYNAMIC AMBER LIGHT (CURSOR TORCH)
+    const cursorLight = document.getElementById('cursorLight');
+    function updateLight(e) {
+        const x = e.clientX;
+        const y = e.clientY;
+        cursorLight.style.setProperty('--x', x + 'px');
+        cursorLight.style.setProperty('--y', y + 'px');
+        cursorLight.style.background = `radial-gradient(circle at ${x}px ${y}px, rgba(255, 180, 70, 0.3) 0%, rgba(255, 130, 30, 0.12) 30%, transparent 80%)`;
+    }
+    window.addEventListener('mousemove', updateLight);
+    window.addEventListener('touchmove', (e) => {
+        if(e.touches[0]) {
+            const touch = e.touches[0];
+            cursorLight.style.setProperty('--x', touch.clientX + 'px');
+            cursorLight.style.setProperty('--y', touch.clientY + 'px');
+            cursorLight.style.background = `radial-gradient(circle at ${touch.clientX}px ${touch.clientY}px, rgba(255, 180, 70, 0.3) 0%, rgba(255, 130, 30, 0.12) 30%, transparent 80%)`;
+        }
+    });
+
+    // PARALLAX FOR HERO
+    const hero = document.getElementById('heroParallax');
+    window.addEventListener('scroll', () => {
+        const scrolled = window.pageYOffset;
+        if (hero) {
+            hero.style.backgroundPositionY = `${scrolled * 0.4}px`;
+        }
+    });
+
+    // INTERSECTION OBSERVER with STAGGER effect
+    const fadeElements = document.querySelectorAll('.fade-up');
+    const tilesForStagger = document.querySelectorAll('.timeline-item, .bento-item, .gallery-card, .tile:not(.timeline-item)');
+    // Add custom order attributes to child items inside each section to get staggered effect on visibility
+    function applyStaggerToChildren(parentSection) {
+        const children = parentSection.querySelectorAll('.timeline-item, .bento-item, .gallery-card, .tile');
+        children.forEach((child, idx) => {
+            child.style.setProperty('--order', idx);
+            child.classList.add('stagger-child');
+        });
+    }
+    document.querySelectorAll('section').forEach(section => {
+        applyStaggerToChildren(section);
+    });
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+                // optional: also add staggered children if they are inside visible container
+                const items = entry.target.querySelectorAll('.stagger-child, .timeline-item, .bento-item, .gallery-card');
+                if (items.length && !entry.target.classList.contains('animated-children')) {
+                    items.forEach((el, idx) => {
+                        setTimeout(() => {
+                            el.style.opacity = '1';
+                            el.style.transform = 'translateY(0)';
+                        }, idx * 60);
+                    });
+                    entry.target.classList.add('animated-children');
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.15, rootMargin: "0px 0px -60px 0px" });
+
+    fadeElements.forEach(el => observer.observe(el));
+
+    // pre-style for stagger children initial hidden state (but only if not visible)
+    const style = document.createElement('style');
+    style.textContent = `
+        .stagger-child {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.6s cubic-bezier(0.2, 0.9, 0.4, 1.1), transform 0.6s ease;
+        }
+        .visible .stagger-child, .stagger-child.visible-once {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-item, .bento-item, .gallery-card {
+            transition: all 0.4s ease;
+        }
+        .tile {
+            transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.4, 1.1), box-shadow 0.4s, border-color 0.2s;
+        }
+        .hero {
+            transition: background-position-y 0.1s linear;
+        }
+    `;
+    document.head.appendChild(style);
+
+    // manual initial set: if any visible on load
+    setTimeout(() => {
+        fadeElements.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 100) {
+                el.classList.add('visible');
+                const kids = el.querySelectorAll('.stagger-child');
+                kids.forEach((kid, idx) => {
+                    setTimeout(() => {
+                        kid.style.opacity = '1';
+                        kid.style.transform = 'translateY(0)';
+                    }, idx * 50);
+                });
+                el.classList.add('animated-children');
+            }
+        });
+    }, 200);
+</script>
+</body>
+</html>

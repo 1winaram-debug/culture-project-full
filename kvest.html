@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Հայ Զինվոր | Վիկտորինա</title>
+    <link href="https://fonts.googleapis.com/css2?family=Marcellus&family=Unbounded:wght@300;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Unbounded', sans-serif;
+            background-color: #0a0502;
+            color: #e5d5b3;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            background-image:
+                radial-gradient(circle at 15% 25%, rgba(180,120,50,0.16) 0%, transparent 42%),
+                radial-gradient(circle at 85% 70%, rgba(140,90,40,0.13) 0%, transparent 48%),
+                repeating-linear-gradient(45deg,
+                    rgba(120,75,30,0.025) 0px, rgba(120,75,30,0.025) 2px,
+                    transparent 2px, transparent 9px);
+            z-index: 0;
+        }
+
+        body::after {
+            content: "☦";
+            position: fixed;
+            bottom: -40px;
+            right: -20px;
+            font-size: 26rem;
+            color: rgba(150,100,50,0.055);
+            transform: rotate(12deg);
+            z-index: 0;
+            font-family: serif;
+            pointer-events: none;
+        }
+
+        /* TOPBAR */
+        .topbar {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 28px;
+            background: rgba(8,5,2,0.9);
+            backdrop-filter: blur(18px);
+            border-bottom: 1px solid rgba(200,150,70,0.18);
+            z-index: 1000;
+            box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+        }
+        .topbar-logo {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            text-decoration: none;
+        }
+        .topbar-logo i {
+            font-size: 1.3rem;
+            color: #c9a063;
+            filter: drop-shadow(0 0 8px rgba(200,150,50,0.5));
+        }
+        .topbar-logo-text {
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            color: #f5e7c8;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .topbar-nav {
+            display: flex;
+            gap: 8px;
+        }
+        .nav-chip {
+            background: rgba(25,15,5,0.75);
+            border: 1px solid rgba(201,160,99,0.35);
+            color: #e1c699;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.65rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 50px;
+            cursor: pointer;
+            letter-spacing: 1px;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .nav-chip i { color: #b58b4a; font-size: 0.75rem; }
+        .nav-chip:hover, .nav-chip.active {
+            background: #2f2213;
+            border-color: #ffd966;
+            color: #fff6e0;
+            box-shadow: 0 0 14px rgba(218,165,32,0.3);
+        }
+
+        /* MAIN */
+        .page {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 80px 20px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* SCORE BAR */
+        .score-bar {
+            width: 100%;
+            max-width: 680px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 28px;
+            padding: 0 4px;
+        }
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(25,15,5,0.8);
+            border: 1px solid rgba(200,150,70,0.3);
+            border-radius: 50px;
+            padding: 8px 20px;
+        }
+        .score-display i { color: #ffd966; font-size: 1rem; }
+        .score-num {
+            font-family: 'Marcellus', serif;
+            font-size: 1.2rem;
+            color: #ffd966;
+            font-weight: 700;
+        }
+        .score-label {
+            font-size: 0.6rem;
+            color: #7a6040;
+            letter-spacing: 2px;
+        }
+        .progress-wrap {
+            flex: 1;
+            margin: 0 20px;
+            height: 6px;
+            background: rgba(200,150,70,0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #c9a063, #ffd966);
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+        .q-counter {
+            font-size: 0.7rem;
+            color: #7a6040;
+            letter-spacing: 1px;
+            white-space: nowrap;
+        }
+
+        /* START SCREEN */
+        .start-screen {
+            width: 100%;
+            max-width: 680px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 20px;
+            animation: fadeIn 0.6s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+        .start-icon {
+            font-size: 4rem;
+            animation: pulse-icon 3s ease-in-out infinite;
+            filter: drop-shadow(0 0 20px rgba(200,150,50,0.5));
+        }
+        @keyframes pulse-icon {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        .start-title {
+            font-family: 'Marcellus', serif;
+            font-size: clamp(1.6rem, 4vw, 2.4rem);
+            color: #f5e7c8;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 0 #4a311a, 0 0 30px rgba(200,150,50,0.5);
+        }
+        .start-sub {
+            font-family: 'Marcellus', serif;
+            font-size: 0.9rem;
+            color: #7a6040;
+            letter-spacing: 2px;
+            line-height: 1.7;
+            max-width: 460px;
+        }
+        .start-stats {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .stat-chip {
+            background: rgba(25,15,5,0.8);
+            border: 1px solid rgba(200,150,70,0.25);
+            border-radius: 12px;
+            padding: 14px 22px;
+            text-align: center;
+        }
+        .stat-chip .num {
+            font-family: 'Marcellus', serif;
+            font-size: 1.6rem;
+            color: #c9a063;
+            display: block;
+        }
+        .stat-chip .lbl {
+            font-size: 0.6rem;
+            color: #7a6040;
+            letter-spacing: 2px;
+        }
+        .start-btn {
+            background: linear-gradient(135deg, #2f2213, #1a0f05);
+            border: 1px solid #c9a063;
+            border-radius: 50px;
+            padding: 16px 48px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #ffd966;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            box-shadow: 0 0 20px rgba(200,150,50,0.2);
+        }
+        .start-btn:hover {
+            border-color: #ffd966;
+            box-shadow: 0 0 30px rgba(218,165,32,0.4);
+            transform: translateY(-2px);
+        }
+
+        /* QUIZ CARD */
+        .quiz-card {
+            width: 100%;
+            max-width: 680px;
+            display: none;
+            flex-direction: column;
+            gap: 24px;
+        }
+        .quiz-card.active { display: flex; }
+
+        .question-box {
+            background: rgba(10,6,2,0.7);
+            border: 1px solid rgba(200,150,70,0.25);
+            border-radius: 20px;
+            padding: 32px 36px;
+            position: relative;
+            overflow: hidden;
+            animation: slideIn 0.4s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to   { opacity: 1; transform: translateX(0); }
+        }
+        .question-box::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, #c9a063, transparent);
+        }
+        .q-category {
+            font-size: 0.6rem;
+            letter-spacing: 3px;
+            color: #c9a063;
+            text-transform: uppercase;
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .q-category::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 1px;
+            background: #c9a063;
+        }
+        .question-text {
+            font-family: 'Marcellus', serif;
+            font-size: 1.2rem;
+            color: #f5e7c8;
+            line-height: 1.65;
+        }
+
+        /* ANSWERS */
+        .answers-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        .answer-btn {
+            background: rgba(18,10,3,0.85);
+            border: 1px solid rgba(200,150,70,0.2);
+            border-radius: 14px;
+            padding: 18px 20px;
+            font-family: 'Marcellus', serif;
+            font-size: 0.92rem;
+            color: #c9a063;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.25s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            line-height: 1.4;
+        }
+        .answer-btn .letter {
+            width: 28px; height: 28px;
+            border-radius: 50%;
+            border: 1px solid rgba(200,150,70,0.35);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.75rem;
+            font-family: 'Unbounded', sans-serif;
+            flex-shrink: 0;
+            color: #7a6040;
+            transition: all 0.25s;
+        }
+        .answer-btn:hover:not(:disabled) {
+            border-color: #c9a063;
+            background: rgba(47,34,19,0.9);
+            color: #fff6e0;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        .answer-btn:hover:not(:disabled) .letter {
+            border-color: #c9a063;
+            color: #c9a063;
+            background: rgba(200,150,70,0.1);
+        }
+        .answer-btn.correct {
+            border-color: #7ab87a;
+            background: rgba(20,60,20,0.6);
+            color: #a0e0a0;
+        }
+        .answer-btn.correct .letter {
+            border-color: #7ab87a;
+            background: rgba(120,200,120,0.2);
+            color: #7ab87a;
+        }
+        .answer-btn.wrong {
+            border-color: #c06040;
+            background: rgba(60,20,10,0.6);
+            color: #e08060;
+        }
+        .answer-btn.wrong .letter {
+            border-color: #c06040;
+            background: rgba(200,80,60,0.2);
+            color: #c06040;
+        }
+        .answer-btn.reveal {
+            border-color: rgba(200,150,70,0.15);
+            opacity: 0.5;
+        }
+        .answer-btn:disabled { cursor: not-allowed; }
+
+        /* FEEDBACK */
+        .feedback-box {
+            background: rgba(10,6,2,0.7);
+            border: 1px solid rgba(200,150,70,0.2);
+            border-radius: 14px;
+            padding: 18px 22px;
+            font-family: 'Marcellus', serif;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: #c9a063;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+        .feedback-box.visible { display: block; }
+        .feedback-box.correct-fb { border-color: rgba(120,200,120,0.3); color: #a0e0a0; }
+        .feedback-box.wrong-fb   { border-color: rgba(200,80,60,0.3);  color: #e09070; }
+
+        /* NEXT BTN */
+        .next-btn {
+            align-self: flex-end;
+            background: rgba(47,34,19,0.9);
+            border: 1px solid #c9a063;
+            border-radius: 50px;
+            padding: 12px 32px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #ffd966;
+            cursor: pointer;
+            letter-spacing: 1.5px;
+            transition: all 0.25s;
+            display: none;
+        }
+        .next-btn.visible { display: block; }
+        .next-btn:hover {
+            border-color: #ffd966;
+            box-shadow: 0 0 20px rgba(218,165,32,0.3);
+            transform: translateY(-1px);
+        }
+
+        /* RESULTS SCREEN */
+        .result-screen {
+            width: 100%;
+            max-width: 680px;
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            gap: 24px;
+            text-align: center;
+            animation: fadeIn 0.6s ease;
+        }
+        .result-screen.active { display: flex; }
+
+        .result-trophy {
+            font-size: 5rem;
+            animation: trophy-bounce 1s ease infinite alternate;
+        }
+        @keyframes trophy-bounce {
+            from { transform: translateY(0) scale(1); }
+            to   { transform: translateY(-10px) scale(1.05); }
+        }
+        .result-title {
+            font-family: 'Marcellus', serif;
+            font-size: 2rem;
+            color: #f5e7c8;
+            letter-spacing: 4px;
+            text-shadow: 0 0 30px rgba(200,150,50,0.5);
+        }
+        .result-score-big {
+            font-family: 'Marcellus', serif;
+            font-size: 4rem;
+            color: #ffd966;
+            text-shadow: 0 0 40px rgba(255,217,102,0.5);
+        }
+        .result-score-big span {
+            font-size: 1.5rem;
+            color: #7a6040;
+        }
+        .result-grade {
+            font-family: 'Marcellus', serif;
+            font-size: 1rem;
+            color: #c9a063;
+            letter-spacing: 2px;
+            padding: 10px 30px;
+            border: 1px solid rgba(200,150,70,0.3);
+            border-radius: 50px;
+            background: rgba(25,15,5,0.8);
+        }
+        .result-breakdown {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .breakdown-item {
+            background: rgba(25,15,5,0.8);
+            border: 1px solid rgba(200,150,70,0.2);
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 100px;
+        }
+        .breakdown-item .bd-num {
+            font-family: 'Marcellus', serif;
+            font-size: 1.8rem;
+            display: block;
+        }
+        .breakdown-item .bd-lbl {
+            font-size: 0.6rem;
+            color: #7a6040;
+            letter-spacing: 1.5px;
+        }
+        .bd-correct .bd-num { color: #7ab87a; }
+        .bd-wrong   .bd-num { color: #c06040; }
+        .bd-score   .bd-num { color: #ffd966; }
+
+        .restart-btn {
+            background: linear-gradient(135deg, #2f2213, #1a0f05);
+            border: 1px solid #c9a063;
+            border-radius: 50px;
+            padding: 14px 40px;
+            font-family: 'Unbounded', sans-serif;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: #ffd966;
+            cursor: pointer;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+        .restart-btn:hover {
+            border-color: #ffd966;
+            box-shadow: 0 0 24px rgba(218,165,32,0.4);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 600px) {
+            .answers-grid { grid-template-columns: 1fr; }
+            .topbar { padding: 0 16px; }
+            .topbar-logo-text { display: none; }
+            .nav-chip span { display: none; }
+            .question-box { padding: 22px 20px; }
+        }
+
+        /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+    </style>
+</head>
+<body>
+
+<header class="topbar">
+    <a href="home.html" class="topbar-logo">
+        <i class="fas fa-shield-halved"></i>
+        <span class="topbar-logo-text">Հայ Զինվոր</span>
+    </a>
+    <nav class="topbar-nav">
+        <a href="home.html" class="nav-chip">
+            <i class="fas fa-home"></i><span>ԳԼԽԱՎՈՐ</span>
+        </a>
+        <a href="ai.html" class="nav-chip">
+            <i class="fas fa-robot"></i><span>ԱՐՎԵՍՏԱԿԱՆ ԲԱՆԱԿԱՆ</span>
+        </a>
+        <a href="kvest.html" class="nav-chip active">
+            <i class="fas fa-trophy"></i><span>ՎԻԿՏՈՐԻՆԱ</span>
+        </a>
+        <a href="vardan.html" class="nav-chip">
+            <i class="fas fa-chess-king"></i><span>ՀԵՐՈՍՆԵՐ</span>
+        </a>
+    </nav>
+</header>
+
+<main class="page">
+
+    <!-- START -->
+    <div class="start-screen" id="start-screen">
+        <div class="start-icon">⚔️</div>
+        <h1 class="start-title">Հայոց պատմության<br>վիկտորինա</h1>
+        <p class="start-sub">Ստուգիր քո գիտելիքները մեծ հայ ժողովրդի մասին՝ նրա հերոսների, մարտերի, մշակույթի և հավատքի վերաբերյալ</p>
+        <div class="start-stats">
+            <div class="stat-chip">
+                <span class="num">15</span>
+                <span class="lbl">ՀԱՐՑ</span>
+            </div>
+            <div class="stat-chip">
+                <span class="num">10</span>
+                <span class="lbl">ՄԻԱՎՈՐ ՄԵԿ ՊԱՏԱՍԽԱՆԻ ՀԱՄԱՐ</span>
+            </div>
+            <div class="stat-chip">
+                <span class="num">∞</span>
+                <span class="lbl">ՓՈՐՁԵՐ</span>
+            </div>
+        </div>
+        <button class="start-btn" onclick="startQuiz()">
+            <i class="fas fa-sword"></i> ՍԿՍԵԼ ՎԻԿՏՈՐԻՆԱՆ
+        </button>
+    </div>
+
+    <!-- SCORE BAR -->
+    <div class="score-bar" id="score-bar" style="display:none;">
+        <div class="score-display">
+            <i class="fas fa-star"></i>
+            <div>
+                <div class="score-num" id="score-num">0</div>
+                <div class="score-label">ՄԻԱՎՈՐ</div>
+            </div>
+        </div>
+        <div class="progress-wrap">
+            <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+        </div>
+        <div class="q-counter" id="q-counter">1 / 15</div>
+    </div>
+
+    <!-- QUESTION -->
+    <div class="quiz-card" id="quiz-card">
+        <div class="question-box">
+            <div class="q-category" id="q-category">ՊԱՏՄՈՒԹՅՈՒՆ</div>
+            <div class="question-text" id="question-text">Բեռնվում է...</div>
+        </div>
+        <div class="answers-grid" id="answers-grid"></div>
+        <div class="feedback-box" id="feedback-box"></div>
+        <button class="next-btn" id="next-btn" onclick="nextQuestion()">
+            ՀԱՋՈՐԴ ՀԱՐՑ <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+
+    <!-- RESULT -->
+    <div class="result-screen" id="result-screen">
+        <div class="result-trophy" id="result-trophy">🏆</div>
+        <h2 class="result-title" id="result-title">ԳԵՐԱԶԱՆՑ</h2>
+        <div class="result-score-big" id="result-score-big">0 <span>միավոր</span></div>
+        <div class="result-grade" id="result-grade">Հայոց պատմության վարպետ</div>
+        <div class="result-breakdown">
+            <div class="breakdown-item bd-correct">
+                <span class="bd-num" id="bd-correct">0</span>
+                <span class="bd-lbl">ՃԻՇՏ</span>
+            </div>
+            <div class="breakdown-item bd-wrong">
+                <span class="bd-num" id="bd-wrong">0</span>
+                <span class="bd-lbl">ՍԽԱԼ</span>
+            </div>
+            <div class="breakdown-item bd-score">
+                <span class="bd-num" id="bd-score">0</span>
+                <span class="bd-lbl">ՄԻԱՎՈՐ</span>
+            </div>
+        </div>
+        <button class="restart-btn" onclick="restartQuiz()">
+            <i class="fas fa-rotate-left"></i> ԿՐԿՆԱԽԱՂԱԼ
+        </button>
+    </div>
+
+</main>
+
+<script>
+const QUESTIONS = [
+    {
+        category: "ՀԻՆ ՊԱՏՄՈՒԹՅՈՒՆ",
+        question: "Ո՞ր թվականն է համարվում Ուրարտու հայկական պետության հիմնադրման տարեթիվը:",
+        answers: ["Մ.թ.ա. IX դ.", "Մ.թ.ա. XII դ.", "Մ.թ.ա. V դ.", "Մ.թ.ա. III դ."],
+        correct: 0,
+        explanation: "Ուրարտու (Բիայնիլի) պետությունը ձևավորվել է Հայկական լեռնաշխարհում մ.թ.ա. IX դարում՝ Տուշպա (Վան) մայրաքաղաքով:"
+    },
+    {
+        category: "ՏԻԳՐԱՆ ՄԵԾ",
+        question: "Ի՞նչ տիտղոս ընդունեց Տիգրան Բ Մեծը՝ ընդարձակ տարածքներ նվաճելուց հետո:",
+        answers: ["Հայոց արքա", "Արքայից արքա", "Մեծ տիրակալ", "Ասիայի արքա"],
+        correct: 1,
+        explanation: "Տիգրան Բ-ն ընդունեց «Արքայից արքա» տիտղոսը, երբ նրա տերությունը դարձավ Ասիայի ամենահզոր պետությունը՝ ձգվելով Կասպից ծովից մինչև Միջերկրական:"
+    },
+    {
+        category: "ՏԻԳՐԱՆ ՄԵԾ",
+        question: "Ո՞ր քաղաքը հիմնադրեց Տիգրան Մեծը մ.թ.ա. 83 թ.-ին որպես իր նոր մայրաքաղաք:",
+        answers: ["Արտաշատ", "Տիգրանակերտ", "Վաղարշապատ", "Անի"],
+        correct: 1,
+        explanation: "Տիգրանակերտը հիմնադրվեց Տիգրան Բ-ի կողմից և հանդիսացավ անտիկ աշխարհի խոշորագույն քաղաքներից մեկը:"
+    },
+    {
+        category: "ՔՐԻՍՏՈՆԵԱՅՈՒԹՅՈՒՆ",
+        question: "Ո՞ր թվականին Հայաստանն ընդունեց քրիստոնեությունը որպես պետական կրոն:",
+        answers: ["313 թ.", "380 թ.", "301 թ.", "325 թ."],
+        correct: 2,
+        explanation: "301 թվականին Հայաստանը դարձավ աշխարհում առաջին պետությունը, որն ընդունեց քրիստոնեությունը պաշտոնապես: Գրիգոր Լուսավորիչը մկրտեց Տրդատ Գ թագավորին:"
+    },
+    {
+        category: "ՔՐԻՍՏՈՆԵԱՅՈՒԹՅՈՒՆ",
+        question: "Քանի՞ տարի Գրիգոր Լուսավորիչը անցկացրեց Խոր Վիրապի բանտում:",
+        answers: ["7 տարի", "10 տարի", "13 տարի", "15 տարի"],
+        correct: 2,
+        explanation: "Գրիգոր Լուսավորիչը Տրդատ Գ թագավորի կողմից նետվեց Խոր Վիրապ՝ որտեղ մնաց 13 տարի: Թագավորի բժշկումից հետո Տրդատն ընդունեց քրիստոնեություն:"
+    },
+    {
+        category: "ԱՅԲՈՒԲԵՆ",
+        question: "Ո՞վ ստեղծեց հայոց այբուբենը:",
+        answers: ["Մովսես Խորենացի", "Մեսրոպ Մաշտոց", "Սահակ Պարթև", "Եղիշե"],
+        correct: 1,
+        explanation: "Մեսրոպ Մաշտոցը հայոց այբուբենը ստեղծեց 405 թվականին՝ Աստվածաշունչը հայերեն թարգմանելու համար: Այբուբենը կազմված է 38 տառից:"
+    },
+    {
+        category: "ԱՅԲՈՒԲԵՆ",
+        question: "Քանի՞ տառից է բաղկացած հայոց այբուբենը:",
+        answers: ["33 տառ", "36 տառ", "38 տառ", "42 տառ"],
+        correct: 2,
+        explanation: "Սկզբում Մաշտոցը ստեղծեց 36 տառ: Հետագայում ավելացվեց ևս 2-ը, այսպիսով ժամանակակից հայոց այբուբենն ունի 38 տառ:"
+    },
+    {
+        category: "ԱՎԱՐԱՅՐԻ ՃԱԿԱՏԱՄԱՐՏ",
+        question: "Ե՞րբ տեղի ունեցավ Ավարայրի ճակատամարտը:",
+        answers: ["451 թ. մայիսի 26", "387 թ. հունիսի 15", "428 թ. ապրիլի 1", "484 թ. օգոստոսի 12"],
+        correct: 0,
+        explanation: "Ավարայրի ճակատամարտը տեղի ունեցավ 451 թվականի մայիսի 26-ին՝ Վարդան Մամիկոնյանի գլխավորած հայկական զորքի և Սասանյան Պարսկաստանի բանակի միջև:"
+    },
+    {
+        category: "ՎԱՐԴԱՆ ՄԱՄԻԿՈՆՅԱՆ",
+        question: "Ինչո՞ւ Ավարայրի ճակատամարտը համարվում է հոգևոր հաղթանակ՝ չնայած ռազմական պարտությանը:",
+        answers: [
+            "Հայերը սպանեցին պարսից արքային",
+            "Պարսկաստանը թույլատրեց հայերին դավանել քրիստոնեություն",
+            "Հայաստանը ստացավ անկախություն",
+            "Պարսիկները վճարեցին տուրք"
+        ],
+        correct: 1,
+        explanation: "Չնայած հայերը ռազմական պարտություն կրեցին և Վարդանը զոհվեց, Պարսկաստանը ստիպված նահանջեց և հայերին թույլատրեց պահպանել քրիստոնեական հավատքը՝ պայքարի գլխավոր նպատակը:"
+    },
+    {
+        category: "ՊԱՏՄՈՒԹՅՈՒՆ",
+        question: "Ո՞վ է գրել «Հայոց պատմությունը» և համարվում «հայ պատմության հայր»:",
+        answers: ["Եղիշե", "Թովմա Արծրունի", "Մովսես Խորենացի", "Ղազար Փարպեցի"],
+        correct: 2,
+        explanation: "Մովսես Խորենացին (V դ.) «Հայոց պատմության» հեղինակն է, մեծագույն հայ պատմիչ, որը կոչվում է «հայ պատմության հայր»:"
+    },
+    {
+        category: "ՃԱՐՏԱՐԱՊԵՏՈՒԹՅՈՒՆ",
+        question: "Հայկական ո՞ր վանքն է փորագրված ժայռի մեջ և հանդիսանում ՅՈՒՆԵՍԿՕ-ի համաշխարհային ժառանգություն:",
+        answers: ["Խոր Վիրապ", "Նորավանք", "Գեղարդ", "Էջմիածին"],
+        correct: 2,
+        explanation: "Գեղարդի վանքը (XIII դ.) մասամբ փորագրված է ժայռի մեջ և ընդգրկված ՅՈՒՆԵՍԿՕ-ի Համաշխարհային ժառանգության ցանկում: Անվանումը նշանակում է «նիզակ»:"
+    },
+    {
+        category: "ԽՈՐՀՐԴԱՆՇԱՆՆԵՐ",
+        question: "Ի՞նչ է խորհրդանշում նարնջագույնը Հայաստանի դրոշի վրա:",
+        answers: ["Հերոսների արյուն", "Երկինք և ազատություն", "Աշխատասիրություն և պտղաբերություն", "Կրակ և քաջություն"],
+        correct: 2,
+        explanation: "Հայաստանի եռագույն՝ կարմիր՝ հերոսների արյուն, կապույտ՝ երկինք և ազատության կամք, նարնջագույն՝ հայ ժողովրդի աշխատասիրությունն ու պտղաբերությունը:"
+    },
+    {
+        category: "ՑԵՂԱՍՊԱՆՈՒԹՅՈՒՆ",
+        question: "Ո՞ր օրն է նշվում Հայոց ցեղասպանության զոհերի հիշատակի օրը:",
+        answers: ["մարտի 1", "ապրիլի 24", "մայիսի 15", "նոյեմբերի 9"],
+        correct: 1,
+        explanation: "1915 թվականի ապրիլի 24-ը սկիզբն էր հայ մտավորականության զանգվածային ձերբակալությունների Կոստանդնուպոլսում: Այս օրը նշվում է որպես Հայոց ցեղասպանության զոհերի հիշատակի օր:"
+    },
+    {
+        category: "ԿԻԼԻԿԻԱ",
+        question: "Ո՞վ հիմնադրեց Կիլիկիայի հայկական թագավորությունը 1080 թվականին:",
+        answers: ["Լևոն Ա", "Ռուբեն Ա", "Հեթում Ա", "Սմբատ Ա"],
+        correct: 1,
+        explanation: "Ռուբեն Ա-ն հիմնադրեց Կիլիկիայի հայկական թագավորությունը 1080 թվականին՝ Բագրատունյաց թագավորության անկումից հետո: Դինաստիան կոչվեց Ռուբենյաններ:"
+    },
+    {
+        category: "ՀԻՆ ՊԱՏՄՈՒԹՅՈՒՆ",
+        question: "Ո՞րն է հայերեն տառերով գրված առաջին նախադասությունը:",
+        answers: [
+            "Փառք Հայաստանին հավիտյան",
+            "Ճանաչել զիմաստութիւն եւ զխրատ",
+            "Հաւատամք ի մի Աստուած",
+            "Հայերն անմահ ժողովուրդ են"
+        ],
+        correct: 1,
+        explanation: "Հայոց այբուբենով գրված առաջին նախադասությունն է՝ «Ճանաչել զիմաստութիւն եւ զխրատ» (Առակաց գրքից):"
+    }
+];
+
+// ── STATE ──
+let currentQ = 0;
+let score = 0;
+let correctCount = 0;
+let wrongCount = 0;
+let answered = false;
+
+// ── START ──
+function startQuiz() {
+    currentQ = 0;
+    score = 0;
+    correctCount = 0;
+    wrongCount = 0;
+
+    document.getElementById('start-screen').style.display = 'none';
+    document.getElementById('score-bar').style.display = 'flex';
+    document.getElementById('quiz-card').classList.add('active');
+
+    showQuestion();
+}
+
+// ── SHOW QUESTION ──
+function showQuestion() {
+    answered = false;
+    const q = QUESTIONS[currentQ];
+
+    document.getElementById('q-category').textContent = q.category;
+    document.getElementById('question-text').textContent = q.question;
+    document.getElementById('feedback-box').className = 'feedback-box';
+    document.getElementById('feedback-box').textContent = '';
+    document.getElementById('next-btn').className = 'next-btn';
+
+    // progress
+    const pct = (currentQ / QUESTIONS.length) * 100;
+    document.getElementById('progress-bar').style.width = pct + '%';
+    document.getElementById('q-counter').textContent = `${currentQ + 1} / ${QUESTIONS.length}`;
+    document.getElementById('score-num').textContent = score;
+
+    // answers
+    const grid = document.getElementById('answers-grid');
+    grid.innerHTML = '';
+    const letters = ['Ա', 'Բ', 'Գ', 'Դ'];
+
+    q.answers.forEach((ans, i) => {
+        const btn = document.createElement('button');
+        btn.className = 'answer-btn';
+        btn.innerHTML = `<span class="letter">${letters[i]}</span>${ans}`;
+        btn.onclick = () => selectAnswer(i, btn);
+        grid.appendChild(btn);
+    });
+
+    // card animation reset
+    const card = document.getElementById('quiz-card');
+    card.style.animation = 'none';
+    void card.offsetWidth;
+    card.style.animation = '';
+}
+
+// ── ANSWER ──
+function selectAnswer(index, btn) {
+    if (answered) return;
+    answered = true;
+
+    const q = QUESTIONS[currentQ];
+    const allBtns = document.querySelectorAll('.answer-btn');
+    const feedback = document.getElementById('feedback-box');
+
+    allBtns.forEach(b => b.disabled = true);
+
+    if (index === q.correct) {
+        btn.classList.add('correct');
+        score += 10;
+        correctCount++;
+        feedback.className = 'feedback-box correct-fb visible';
+        feedback.innerHTML = `✅ Ճիշտ է! ${q.explanation}`;
+    } else {
+        btn.classList.add('wrong');
+        wrongCount++;
+        allBtns[q.correct].classList.add('correct');
+        allBtns.forEach((b, i) => {
+            if (i !== index && i !== q.correct) b.classList.add('reveal');
+        });
+        feedback.className = 'feedback-box wrong-fb visible';
+        feedback.innerHTML = `❌ Սխալ է. ${q.explanation}`;
+    }
+
+    document.getElementById('score-num').textContent = score;
+    document.getElementById('next-btn').className = 'next-btn visible';
+}
+
+// ── NEXT ──
+function nextQuestion() {
+    currentQ++;
+    if (currentQ >= QUESTIONS.length) {
+        showResult();
+    } else {
+        showQuestion();
+    }
+}
+
+// ── RESULT ──
+function showResult() {
+    document.getElementById('quiz-card').classList.remove('active');
+    document.getElementById('score-bar').style.display = 'none';
+
+    const pct = (correctCount / QUESTIONS.length) * 100;
+    let trophy = '🏆';
+    let title = 'ԳԵՐԱԶԱՆՑ';
+    let grade = 'Հայոց պատմության վարպետ';
+
+    if (pct >= 90) {
+        trophy = '🏆'; title = 'ՓԱՌԱՎՈՐ'; grade = 'Հայոց հիշողության պահապան';
+    } else if (pct >= 70) {
+        trophy = '⚔️'; title = 'ԳԵՐԱԶԱՆՑ'; grade = 'Հայաստանի հավատարիմ զավակ';
+    } else if (pct >= 50) {
+        trophy = '🛡️'; title = 'ԼԱՎ'; grade = 'Հայոց պատմության աշակերտ';
+    } else {
+        trophy = '📜'; title = 'ՇԱՐՈՒՆԱԿԻՐ'; grade = 'Սկսնակ պատմաբան';
+    }
+
+    document.getElementById('result-trophy').textContent = trophy;
+    document.getElementById('result-title').textContent = title;
+    document.getElementById('result-score-big').innerHTML = `${score} <span>միավոր</span>`;
+    document.getElementById('result-grade').textContent = grade;
+    document.getElementById('bd-correct').textContent = correctCount;
+    document.getElementById('bd-wrong').textContent = wrongCount;
+    document.getElementById('bd-score').textContent = score;
+
+    document.getElementById('result-screen').classList.add('active');
+}
+
+// ── RESTART ──
+function restartQuiz() {
+    document.getElementById('result-screen').classList.remove('active');
+    QUESTIONS.sort(() => Math.random() - 0.5);
+    startQuiz();
+}
+</script>
+</body>
+</html>

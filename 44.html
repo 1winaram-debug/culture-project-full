@@ -1,0 +1,708 @@
+<!DOCTYPE html>
+<html lang="hy">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>44-օրյա պատերազմ · Իմերսիվ քրոնիկոն</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Roboto+Mono:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      cursor: none;
+    }
+
+    :root {
+      --bg-deep: #050505;
+      --bg-dark: #0a0a0c;
+      --gray-muted: #1e1e24;
+      --arm-red: #9e2a2b;
+      --arm-red-glow: #b53b3c;
+      --text-primary: #eaeef2;
+      --text-dim: #a3a9b0;
+      --border-glow: rgba(158, 42, 43, 0.3);
+      --transition-smooth: all 0.4s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+    }
+
+    body {
+      background-color: var(--bg-deep);
+      font-family: 'Roboto Mono', monospace;
+      color: var(--text-primary);
+      overflow-x: hidden;
+      line-height: 1.5;
+      position: relative;
+    }
+
+    /* CUSTOM CURSOR (прицел/стильная точка) */
+    .custom-cursor {
+      width: 28px;
+      height: 28px;
+      border: 2px solid var(--arm-red);
+      border-radius: 50%;
+      position: fixed;
+      pointer-events: none;
+      z-index: 9999;
+      transform: translate(-50%, -50%);
+      transition: 0.1s ease-out;
+      background: rgba(158, 42, 43, 0.15);
+      backdrop-filter: blur(1px);
+      box-shadow: 0 0 8px rgba(158, 42, 43, 0.6);
+    }
+    .custom-cursor::after {
+      content: "●";
+      font-size: 10px;
+      color: var(--arm-red);
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      opacity: 0.8;
+    }
+    a, button, .timeline-date, .city-dot, .mute-btn, .interactive {
+      cursor: none;
+    }
+    .interactive:hover ~ .custom-cursor,
+    a:hover ~ .custom-cursor,
+    button:hover ~ .custom-cursor {
+      transform: translate(-50%, -50%) scale(1.3);
+      border-color: #fff;
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    /* PARALLAX BACKGROUND LAYERS */
+    .parallax-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      pointer-events: none;
+    }
+    .layer {
+      position: absolute;
+      width: 120%;
+      height: 120%;
+      top: -10%;
+      left: -10%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0.2;
+      transition: transform 0.1s ease-out;
+      will-change: transform;
+    }
+    .layer1 { background-image: radial-gradient(circle at 20% 40%, rgba(30,30,40,0.8) 2%, transparent 2.5%), repeating-linear-gradient(45deg, #111 0px, #111 2px, #1a1a1a 2px, #1a1a1a 8px); }
+    .layer2 { background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><path fill="none" stroke="%239e2a2b" stroke-width="0.5" opacity="0.15" d="M0 400 L1200 200 M200 0 L400 800 M800 0 L600 800"/><circle cx="300" cy="500" r="40" fill="none" stroke="%239e2a2b" stroke-width="0.4"/></svg>'); background-repeat: repeat; background-size: 180px; opacity: 0.12;}
+    .layer3 { background: repeating-linear-gradient(0deg, rgba(0,0,0,0.2) 0px, rgba(0,0,0,0.2) 2px, transparent 2px, transparent 8px); opacity: 0.3;}
+
+    /* CRT шум */
+    .noise-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: repeating-radial-gradient(circle at 20% 30%, rgba(0,0,0,0.1), #000 1px);
+      pointer-events: none;
+      z-index: 999;
+      opacity: 0.12;
+      mix-blend-mode: overlay;
+    }
+
+    /* основной контейнер */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 1.5rem 2rem 4rem;
+      position: relative;
+      z-index: 10;
+    }
+
+    /* военный стиль заголовки */
+    h1, h2, h3 {
+      font-family: 'Bebas Neue', cursive;
+      letter-spacing: 2px;
+      font-weight: 400;
+    }
+    h1 {
+      font-size: 4.2rem;
+      text-transform: uppercase;
+      border-left: 5px solid var(--arm-red);
+      padding-left: 25px;
+      margin-bottom: 1rem;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    }
+    .sub {
+      font-size: 0.9rem;
+      color: var(--text-dim);
+      margin-bottom: 2.5rem;
+      letter-spacing: 1px;
+    }
+
+    /* TIMELINE (интерактивная шкала) */
+    .timeline-wrapper {
+      background: rgba(10,10,12,0.7);
+      backdrop-filter: blur(12px);
+      border-radius: 60px;
+      padding: 0.8rem 1rem;
+      margin: 2rem 0 2.5rem;
+      border: 1px solid rgba(158,42,43,0.4);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+      overflow-x: auto;
+      scroll-behavior: smooth;
+    }
+    .timeline {
+      display: flex;
+      gap: 0.2rem;
+      justify-content: space-between;
+      min-width: 700px;
+    }
+    .timeline-date {
+      background: transparent;
+      border: none;
+      font-family: 'Roboto Mono', monospace;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.7rem 1.1rem;
+      border-radius: 40px;
+      color: var(--text-dim);
+      transition: var(--transition-smooth);
+      white-space: nowrap;
+      letter-spacing: 1px;
+      position: relative;
+    }
+    .timeline-date:hover {
+      background: var(--arm-red);
+      color: #fff;
+      text-shadow: 0 0 3px black;
+      transform: scale(1.02);
+      box-shadow: 0 0 8px var(--arm-red-glow);
+    }
+    .timeline-date.active {
+      background: var(--arm-red);
+      color: white;
+      box-shadow: 0 0 14px rgba(158,42,43,0.8);
+      border: 1px solid #ff8a8a;
+    }
+
+    /* основной контент - грид */
+    .documentary-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.1fr;
+      gap: 2rem;
+      margin: 2rem 0 3rem;
+    }
+    @media (max-width: 880px) {
+      .documentary-grid { grid-template-columns: 1fr; gap: 2rem; }
+      .container { padding: 1rem; }
+      h1 { font-size: 2.6rem; }
+    }
+
+    /* динамическая карточка события (fade эффект) */
+    .event-card {
+      background: rgba(5,5,5,0.65);
+      backdrop-filter: blur(14px);
+      border-radius: 32px;
+      padding: 1.8rem;
+      border: 1px solid rgba(158,42,43,0.3);
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+    .fade-transition {
+      transition: opacity 0.45s ease-in-out;
+    }
+    .event-title {
+      font-size: 2rem;
+      color: var(--arm-red);
+      margin-bottom: 1rem;
+      font-family: 'Bebas Neue', cursive;
+    }
+    .event-description {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      margin: 1rem 0;
+      color: #cfd5dc;
+    }
+    .photo-glitch {
+      width: 100%;
+      border-radius: 24px;
+      margin-top: 1.2rem;
+      overflow: hidden;
+      position: relative;
+      transition: 0.2s;
+    }
+    .photo-glitch img {
+      width: 100%;
+      display: block;
+      border-radius: 20px;
+      transition: 0.25s;
+      filter: grayscale(0.2) contrast(1.1);
+    }
+    /* глитч при ховере */
+    .photo-glitch:hover img {
+      animation: glitchEffect 0.3s infinite;
+    }
+    @keyframes glitchEffect {
+      0% { transform: translate(0); filter: grayscale(0.2); }
+      20% { transform: translate(-2px, 1px); filter: grayscale(0.6) contrast(1.5); }
+      40% { transform: translate(2px, -1px); filter: grayscale(0.3); }
+      60% { transform: translate(-1px, 2px); filter: hue-rotate(2deg); }
+      80% { transform: translate(1px, -2px); }
+      100% { transform: translate(0); }
+    }
+
+    /* SVG КАРТА ИНТЕРАКТИВНАЯ */
+    .map-container {
+      background: #0a0a0c;
+      border-radius: 32px;
+      padding: 1rem;
+      border: 1px solid #2a2a2f;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+    }
+    .map-title {
+      font-family: 'Bebas Neue';
+      font-size: 1.5rem;
+      margin-bottom: 0.8rem;
+      text-align: center;
+    }
+    svg {
+      width: 100%;
+      background: #0f0f12;
+      border-radius: 24px;
+      transition: all 0.2s;
+    }
+    .city-dot {
+      cursor: pointer;
+      transition: r 0.2s, filter 0.2s;
+    }
+    .city-dot:hover circle, .city-dot:hover text {
+      filter: drop-shadow(0 0 6px var(--arm-red));
+    }
+    .city-info {
+      margin-top: 1rem;
+      background: #111114;
+      padding: 0.8rem;
+      border-radius: 20px;
+      border-left: 4px solid var(--arm-red);
+      font-size: 0.8rem;
+    }
+
+    /* ЦИФРЫ И ФАКТЫ */
+    .facts-block {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      justify-content: space-between;
+      background: rgba(0,0,0,0.5);
+      border-radius: 40px;
+      padding: 1.8rem 2rem;
+      margin: 2rem 0;
+      border: 1px solid #232329;
+    }
+    .fact-card {
+      flex: 1;
+      text-align: center;
+      background: #0b0b0e;
+      padding: 1.2rem 0.5rem;
+      border-radius: 28px;
+      transition: 0.2s;
+    }
+    .fact-number {
+      font-size: 2.8rem;
+      font-weight: 800;
+      color: var(--arm-red);
+      font-family: 'Bebas Neue';
+      letter-spacing: 2px;
+    }
+    .fact-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      font-weight: 500;
+      color: #b0b6c0;
+    }
+
+    /* звуковая кнопка */
+    .sound-btn {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      background: #0f0f12;
+      border: 1.5px solid var(--arm-red);
+      border-radius: 50%;
+      width: 52px;
+      height: 52px;
+      backdrop-filter: blur(8px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.8rem;
+      z-index: 1000;
+      transition: 0.2s;
+      color: #eee;
+      cursor: pointer;
+    }
+    .sound-btn:hover {
+      background: var(--arm-red);
+      transform: scale(1.05);
+      box-shadow: 0 0 12px red;
+    }
+
+    footer {
+      text-align: center;
+      font-size: 0.7rem;
+      padding: 2rem 0 0;
+      opacity: 0.6;
+    }
+
+    /* скроллбар */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: var(--arm-red); border-radius: 6px; }
+
+    /* УНИВЕРСАЛЬНЫЙ АДАПТИВ ДЛЯ ВСЕХ УՍՏРОЙСТВ */
+@media (max-width: 768px) {
+  /* Убираем гигантские отступы */
+  .container {
+    padding: 10px !important;
+    width: 100% !important;
+  }
+
+  /* Уменьшаем огромные заголовки, чтобы они не вылезали за экран */
+  h1 {
+    font-size: 1.8rem !important;
+    line-height: 1.2 !important;
+  }
+
+  h2 {
+    font-size: 1.5rem !important;
+  }
+
+  /* Превращаем сложные сетки (Grid) в одну колонку */
+  .documentary-grid, .gallery, .facts-block {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 15px !important;
+  }
+
+  /* Делаем картинки и карточки на весь экран */
+  .event-card, .photo-glitch, .fact-card {
+    width: 100% !important;
+    margin: 5px 0 !important;
+    padding: 15px !important;
+  }
+
+  /* Прячем лишние элементы, которые мешают на мобилке */
+  .parallax-bg {
+    display: none; /* Параллакс на телефонах часто тормозит */
+  }
+
+  /* Исправляем навигацию (если она горизонтальная) */
+  .timeline {
+    min-width: auto !important;
+    flex-wrap: nowrap !important;
+    overflow-x: scroll !important;
+    -webkit-overflow-scrolling: touch;
+  }
+}
+
+  </style>
+</head>
+<body>
+
+<div class="custom-cursor"></div>
+<div class="noise-overlay"></div>
+<div class="parallax-bg">
+  <div class="layer layer1"></div>
+  <div class="layer layer2"></div>
+  <div class="layer layer3"></div>
+</div>
+
+<div class="container">
+  <h1>44-ՕՐՅԱ ՊԱՏԵՐԱԶՄ<br><span style="font-size:1.8rem;">Արցախ · 2020</span></h1>
+  <div class="sub">Իմերսիվ քրոնիկոն — մարտի դաշտի հիշողություն, դիմադրություն, անկոտրում ոգի</div>
+
+  <!-- ИНТЕРАКТИВНАЯ ШКАЛА ВРЕМЕНИ (клик + скролл) -->
+  <div class="timeline-wrapper" id="timelineWrapper">
+    <div class="timeline" id="timelineDates">
+      <!-- даты заполняются JS -->
+    </div>
+  </div>
+
+  <div class="documentary-grid">
+    <!-- левая часть: событие с fade и фото -->
+    <div class="event-card" id="eventPanel">
+      <div class="event-title" id="eventTitle">27 Սեպտեմբեր</div>
+      <div class="event-description" id="eventDesc">
+        Ադրբեջանի զինված ուժերը լայնամասշտաբ հարձակում սկսեցին Արցախի ողջ սահմանագծով: Ստեփանակերտը և այլ քաղաքներ հրթիռակոծվեցին:
+      </div>
+      <div class="photo-glitch" id="photoContainer">
+        <img id="eventImage" src="https://picsum.photos/id/104/600/350?grayscale" alt="battle scene">
+      </div>
+    </div>
+
+    <!-- правый блок: SVG карта Арцаха -->
+    <div class="map-container">
+      <div class="map-title">⚔️ ՌԱԶՄԱԿԱՆ ՔԱՐՏԵԶ ⚔️</div>
+      <svg viewBox="0 0 500 400" id="artsakhMap">
+        <rect width="500" height="400" fill="#0c0c10" rx="18" />
+        <polygon points="210,70 320,90 380,140 360,220 280,280 180,260 120,210 100,150 150,95" fill="none" stroke="#4a4a55" stroke-width="2" stroke-dasharray="4 3"/>
+        <polygon points="220,100 300,115 340,155 320,210 260,240 190,225 145,185 135,145 175,110" fill="#121217" stroke="#9e2a2b" stroke-width="1.5"/>
+        <!-- города -->
+        <g class="city-dot" data-city="Շուշի" data-info="Շուշիի ճակատամարտը տևեց նոյեմբերի 4-7-ը: Չնայած հերոսական դիմադրության, քաղաքն ընկավ նոյեմբերի 8-ին:">
+          <circle cx="260" cy="170" r="6" fill="#9e2a2b" stroke="white" stroke-width="1.5"/>
+          <text x="270" y="175" fill="#eaeef2" font-size="7">Շուշի</text>
+        </g>
+        <g class="city-dot" data-city="Հադրութ" data-info="Հոկտեմբերի սկզբին Հադրութի շրջանում ծանր մարտեր. հոկտեմբերի 9-ին թշնամուն հաջողվեց մտնել քաղաք:">
+          <circle cx="230" cy="215" r="5" fill="#9e2a2b" stroke="white" stroke-width="1.5"/>
+          <text x="238" y="220" fill="#eaeef2" font-size="7">Հադրութ</text>
+        </g>
+        <g class="city-dot" data-city="Մարտունի" data-info="Մարտունիի պաշտպանություն — հոկտեմբերի 17-ից նոյեմբեր, կատաղի հարձակումներ, հայկական ուժերը կասեցրին առաջխաղացումը:">
+          <circle cx="310" cy="205" r="5" fill="#9e2a2b" stroke="white" stroke-width="1.5"/>
+          <text x="320" y="210" fill="#eaeef2" font-size="7">Մարտունի</text>
+        </g>
+        <g class="city-dot" data-city="Ստեփանակերտ" data-info="Մայրաքաղաքը ենթարկվել է ինտենսիվ հրթիռակոծության ամբողջ պատերազմի ընթացքում:">
+          <circle cx="285" cy="145" r="5" fill="#8b8b9e" stroke="white" stroke-width="1.5"/>
+          <text x="292" y="140" fill="#eaeef2" font-size="7">Ստեփանակերտ</text>
+        </g>
+        <g class="city-dot" data-city="Ջաբրայիլ" data-info="Սեպտեմբերի 29-ին Ջաբրայիլն անցավ հակառակորդի վերահսկողությանը:">
+          <circle cx="190" cy="250" r="4.5" fill="#9e2a2b" stroke="white" stroke-width="1.2"/>
+          <text x="198" y="255" fill="#eaeef2" font-size="7">Ջաբրայիլ</text>
+        </g>
+        <text x="30" y="340" fill="#80808f" font-size="8" font-style="italic">*Սեղմեք քաղաքի վրա</text>
+      </svg>
+      <div id="cityInfoPanel" class="city-info">
+        📍 Ընտրեք քաղաքը քարտեզից՝ մարտական տեղեկություն ստանալու համար
+      </div>
+    </div>
+  </div>
+
+  <!-- ЦИФРЫ И ФАКТЫ -->
+  <div class="facts-block">
+    <div class="fact-card"><div class="fact-number">44</div><div class="fact-label">ՕՐ ՏԵՎԱՑ ՊԱՏԵՐԱԶՄ</div></div>
+    <div class="fact-card"><div class="fact-number">~500+</div><div class="fact-label">ՏԱՆԿ ԵՎ ԶՐԱՀԱՏԵԽՆԻԿԱ</div></div>
+    <div class="fact-card"><div class="fact-number">200+</div><div class="fact-label">ԱՆՕԴԱՆՈԹՆԵՐ (ԱԹԱ)</div></div>
+    <div class="fact-card"><div class="fact-number">38.000+</div><div class="fact-label">ԶԻՆՎՈՐԱԿԱՆ ԸՆԴՀԱՆՈՒՐ ԿԱԶՄ</div></div>
+    <div class="fact-card"><div class="fact-number">9 ՆՈՅԵՄԲԵՐ</div><div class="fact-label">ԶԻՆԱԴԱԴԱՐԻ ՍՏՈՐԱԳՐՈՒՄ</div></div>
+  </div>
+  <footer>#Արցախ #44օր #հիշողություն — տվյալները հիմնված են բաց աղբյուրների վրա</footer>
+</div>
+
+<div class="sound-btn" id="audioToggleBtn">🔇</div>
+
+<script>
+  // ---------- ДАННЫЕ ХРОНОЛОГИИ (ключевые события на армянском) ----------
+  const eventsData = [
+    { date: "27 Սեպտեմբեր", title: "Պատերազմի սկիզբ · Հարձակում", desc: "Ադրբեջանի զինված ուժերը սկսեցին լայնամասշտաբ հարձակում Արցախի դեմ: Ստեփանակերտը, Մարտակերտը և այլ քաղաքներ ռմբակոծվեցին: Հակառակորդը կիրառեց անօդաչուներ, հեռահար հրանոթային կայանքներ:", img: "https://tse4.mm.bing.net/th/id/OIP.Isa3XlbBeZ3G70jW3SjfoQHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" },
+    { date: "29 Սեպտեմբեր", title: "Ջաբրայիլի անկում", desc: "Ծանր մարտերից հետո Ջաբրայիլի շրջանն անցավ հակառակորդի վերահսկողությանը: Հայկական զորքերը կազմակերպված նահանջ կատարեցին:", img: "https://st1.oragir.news/material-main-images/2022/09/27/20231cab17d8b554f82dedd15864bbc8_1664297701.jpg" },
+    { date: "4 Հոկտեմբեր", title: "Հադրութի ուղղություն", desc: "Հակառակորդը մեծ ուժեր է կենտրոնացրել Հադրութի շրջանում: Սկսվեցին կատաղի մարտեր՝ հրետանու և ԱԹԱ-ների լայն կիրառմամբ:", img: "https://tse1.mm.bing.net/th/id/OIP.r0wYb7u3aACjcY39G6BDbgHaE8?rs=1&pid=ImgDetMain&o=7&rm=3" },
+    { date: "9 Հոկտեմբեր", title: "Հադրութի պաշտպանություն", desc: "Մարդկային մեծ կորուստներով, սակայն հայկական ստորաբաժանումները շարունակում են դիմադրել: Հոկտեմբերի 9-ի դրությամբ քաղաքի մի մասը հայկական վերահսկողության տակ էր:", img: "https://i.ytimg.com/vi/m444LHzneFs/maxresdefault.jpg" },
+    { date: "17 Հոկտեմբեր", title: "Մարտունիի դիմադրություն", desc: "Մարտունիում հակառակորդի հարձակումները ջախջախվեցին: Հայկական զորքերը կասեցրին առաջխաղացումը և հակահարվածներ հասցրին:", img: "https://forrights.am/wp-content/uploads/2023/03/332559947_1215313152523307_1262390634554326099_n.jpg" },
+    { date: "20 Հոկտեմբեր", title: "Լեռնային ճակատ", desc: "Լեռնային շրջաններում ծանր մարտեր: Հակառակորդը տանկային խմբեր է մտցնում, հայկական հետախուզական ջոկատները արդյունավետ գործում են:", img: "https://tse4.mm.bing.net/th/id/OIP.lNKoMkW4ls3n-3dtCzJlSAHaEY?rs=1&pid=ImgDetMain&o=7&rm=3" },
+    { date: "5 Նոյեմբեր", title: "Շուշիի ճակատամարտի նախօրե", desc: "Ուժեղ մարտեր Շուշիի մատույցներում: Հայկական կամավորական ջոկատները և կանոնավոր բանակը կատաղի դիմադրում են:", img: "https://i.ytimg.com/vi/mBD8TNuXKUU/maxresdefault.jpg" },
+    { date: "8 Նոյեմբեր", title: "Շուշիի անկում", desc: "Նոյեմբերի 8-ին Շուշին անցնում է հակառակորդի վերահսկողությանը: Հերոսական պաշտպանություն, սակայն ուժերի անհավասարություն:", img: "https://tse3.mm.bing.net/th/id/OIP.RG8pMt-Qh34c9cbzyjijJAHaEo?rs=1&pid=ImgDetMain&o=7&rm=3" },
+    { date: "9 Նոյեմբեր", title: "Զինադադար", desc: "Ռուսաստանի միջնորդությամբ ստորագրվում է եռակողմ հայտարարություն: Արցախը կորցնում է տարածքների մեծ մասը, բայց փրկվում է ամբողջական ոչնչացումից:", img: "https://gdb.rferl.org/01000000-0aff-0242-2ef3-08dc4f5a0ec9_w1200_r1.jpg" }
+  ];
+
+  let activeIndex = 0;
+  const eventTitleEl = document.getElementById('eventTitle');
+  const eventDescEl = document.getElementById('eventDesc');
+  const eventImage = document.getElementById('eventImage');
+  const timelineContainer = document.getElementById('timelineDates');
+
+  // рендер timeline кнопок
+  function renderTimeline() {
+    timelineContainer.innerHTML = '';
+    eventsData.forEach((ev, idx) => {
+      const btn = document.createElement('button');
+      btn.className = `timeline-date ${idx === activeIndex ? 'active' : ''}`;
+      btn.textContent = ev.date;
+      btn.dataset.index = idx;
+      btn.addEventListener('click', () => setActiveEvent(idx, true));
+      timelineContainer.appendChild(btn);
+    });
+  }
+
+  // плавное обновление контента (fade + parallax смена фото)
+  function setActiveEvent(index, withScroll = true) {
+    if (index === activeIndex) return;
+    activeIndex = index;
+    const event = eventsData[activeIndex];
+    
+    // fade анимация
+    const panel = document.getElementById('eventPanel');
+    panel.style.opacity = '0';
+    setTimeout(() => {
+      eventTitleEl.textContent = event.title;
+      eventDescEl.textContent = event.desc;
+      eventImage.src = event.img;
+      // обновляем active классы на кнопках
+      document.querySelectorAll('.timeline-date').forEach((btn, i) => {
+        if (i === activeIndex) btn.classList.add('active');
+        else btn.classList.remove('active');
+      });
+      panel.style.opacity = '1';
+    }, 150);
+    
+    // опционально скролл таймлайна к активной кнопке
+    if (withScroll) {
+      const activeBtn = document.querySelector('.timeline-date.active');
+      if (activeBtn) {
+        activeBtn.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+      }
+    }
+  }
+
+  // скролл на таймлайне (горизонтальный скролл меняет даты)
+  const timelineWrapper = document.getElementById('timelineWrapper');
+  let scrollTimeout = null;
+  timelineWrapper.addEventListener('wheel', (e) => {
+    e.preventDefault();
+    const delta = e.deltaY > 0 ? 1 : -1;
+    let newIndex = activeIndex + delta;
+    if (newIndex >= 0 && newIndex < eventsData.length) {
+      setActiveEvent(newIndex, true);
+    }
+    // небольшая имитация физики
+    timelineWrapper.scrollLeft += delta * 60;
+  }, { passive: false });
+  
+  // ---------- ПАРАЛЛАКС МЫШИ ----------
+  document.addEventListener('mousemove', (e) => {
+    const x = e.clientX / window.innerWidth;
+    const y = e.clientY / window.innerHeight;
+    const layers = document.querySelectorAll('.layer');
+    layers.forEach((layer, idx) => {
+      const speed = (idx + 1) * 8;
+      const moveX = (x - 0.5) * speed;
+      const moveY = (y - 0.5) * speed;
+      layer.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    });
+  });
+  
+  // ---------- КАСТОМНЫЙ КУРСОР ----------
+  const cursor = document.querySelector('.custom-cursor');
+  document.addEventListener('mousemove', (e) => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .timeline-date, .city-dot, .sound-btn, .interactive').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.style.transform = 'translate(-50%, -50%) scale(1.4)');
+    el.addEventListener('mouseleave', () => cursor.style.transform = 'translate(-50%, -50%) scale(1)');
+  });
+  
+  // ---------- АУДИО (эмбиент фон) через Web Audio, тихий дрон ----------
+  let audioCtx = null;
+  let oscillator = null;
+  let gainNode = null;
+  let isPlaying = false;
+  const audioBtn = document.getElementById('audioToggleBtn');
+  
+  function initAmbientSound() {
+    if (audioCtx) return;
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    gainNode = audioCtx.createGain();
+    gainNode.gain.value = 0.12; // очень тихий фон
+    gainNode.connect(audioCtx.destination);
+    oscillator = audioCtx.createOscillator();
+    oscillator.type = 'sine';
+    oscillator.frequency.value = 88; // низкая частота
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.value = 400;
+    oscillator.connect(filter);
+    filter.connect(gainNode);
+    oscillator.start();
+    // добавим легкий шумоподобный второй генератор для атмосферы
+    const noiseGain = audioCtx.createGain();
+    noiseGain.gain.value = 0.03;
+    const bufferSize = 4096;
+    const noiseNode = audioCtx.createScriptProcessor(bufferSize, 1, 1);
+    noiseNode.onaudioprocess = function(e) {
+      const output = e.outputBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) {
+        output[i] = (Math.random() * 2 - 1) * 0.08;
+      }
+    };
+    noiseNode.connect(noiseGain);
+    noiseGain.connect(audioCtx.destination);
+    // сохраняем для остановки при mute
+    window.noiseNode = noiseNode;
+  }
+  
+  function startAmbient() {
+    if (!audioCtx) {
+      initAmbientSound();
+    }
+    if (audioCtx && !isPlaying) {
+      audioCtx.resume();
+      if (oscillator) oscillator.connect(gainNode);
+      if (window.noiseNode) window.noiseNode.connect(audioCtx.destination);
+      isPlaying = true;
+      audioBtn.innerHTML = "🎧";
+    }
+  }
+  
+  function stopAmbient() {
+    if (audioCtx && isPlaying) {
+      if (oscillator) oscillator.disconnect();
+      if (window.noiseNode) window.noiseNode.disconnect();
+      audioCtx.suspend();
+      isPlaying = false;
+      audioBtn.innerHTML = "🔇";
+    }
+  }
+  
+  audioBtn.addEventListener('click', () => {
+    if (!audioCtx) {
+      initAmbientSound();
+      startAmbient();
+    } else if (isPlaying) {
+      stopAmbient();
+    } else {
+      startAmbient();
+    }
+  });
+  
+  // ---------- SVG MAP ИНТЕРАКТИВ ----------
+  const cityElements = document.querySelectorAll('.city-dot');
+  const cityInfoPanel = document.getElementById('cityInfoPanel');
+  cityElements.forEach(city => {
+    city.style.cursor = 'pointer';
+    city.addEventListener('click', (e) => {
+      const cityName = city.getAttribute('data-city');
+      const battleInfo = city.getAttribute('data-info');
+      cityInfoPanel.innerHTML = `<strong>📍 ${cityName}</strong><br>${battleInfo}`;
+      // также можно связать с таймлайном? подсветка события приблизительно
+      if (cityName === 'Շուշի') setActiveEvent(7, false);
+      else if (cityName === 'Հադրութ') setActiveEvent(3, false);
+      else if (cityName === 'Մարտունի') setActiveEvent(4, false);
+      else if (cityName === 'Ջաբրայիլ') setActiveEvent(1, false);
+      else setActiveEvent(activeIndex, false);
+    });
+  });
+  
+  // эффект глитч на фото глобально - уже есть в CSS, но дополнительно дёргаем
+  // инициализация
+  renderTimeline();
+  setActiveEvent(0, false);
+  
+  // дополнительный параллакс эффект для фона изображения (динамика)
+  document.querySelector('.photo-glitch').addEventListener('mousemove', (e) => {
+    const img = e.currentTarget.querySelector('img');
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width - 0.5;
+    const y = (e.clientY - rect.top) / rect.height - 0.5;
+    img.style.transform = `translate(${x * 5}px, ${y * 5}px) scale(1.02)`;
+  });
+  document.querySelector('.photo-glitch').addEventListener('mouseleave', () => {
+    const img = document.querySelector('.photo-glitch img');
+    if (img) img.style.transform = 'translate(0,0) scale(1)';
+  });
+  
+  // легкая корректировка при resize для курсора
+  window.addEventListener('resize', () => {});
+  console.log('44-day war immersive documentary ready');
+</script>
+</body>
+</html>
