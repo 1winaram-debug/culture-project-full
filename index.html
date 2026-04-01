@@ -339,7 +339,7 @@
         createUserWithEmailAndPassword(auth, email, password)
           .then((userCredential) => {
             // После успешной регистрации переходим на главную страницу
-            window.location.href = "index.html";
+            window.location.href = "home.html";
           })
           .catch((error) => {
             alert("Ошибка: " + error.message);
@@ -351,7 +351,7 @@
         signInWithPopup(auth, provider)
           .then((result) => {
             // После успешного входа через Google переходим на главную страницу
-            window.location.href = "index.html";
+            window.location.href = "home.html";
           })
           .catch((error) => {
             alert("Ошибка Google: " + error.message);
@@ -361,7 +361,7 @@
       // Авто-вход при перезагрузке: если пользователь уже залогинен, сразу перенаправляем
       onAuthStateChanged(auth, (user) => {
         if (user) {
-          window.location.href = "index.html";
+          window.location.href = "home.html";
         }
       });
     </script>
