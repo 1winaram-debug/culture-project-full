@@ -18,6 +18,15 @@ GROQ_KEY   = os.getenv("GROQ_KEY")
 ELEVEN_KEY = os.getenv("ELEVEN_KEY")
 VOICE_ID   = os.getenv("VOICE_ID")
 
+# ✅ ПРОВЕРКА КЛЮЧЕЙ ПРИ ЗАПУСКЕ
+if not all([GROQ_KEY, ELEVEN_KEY, VOICE_ID]):
+    print("❌ ОШИБКА: Не установлены переменные окружения!")
+    print(f"GROQ_KEY: {'✅' if GROQ_KEY else '❌ НЕ УСТАНОВЛЕН'}")
+    print(f"ELEVEN_KEY: {'✅' if ELEVEN_KEY else '❌ НЕ УСТАНОВЛЕН'}")
+    print(f"VOICE_ID: {'✅' if VOICE_ID else '❌ НЕ УСТАНОВЛЕН'}")
+    print("\nДобавь эти переменные в .env файл или в Render Environment!")
+    exit(1)
+
 # ════════════════════════════════════════════════════════════
 #  SSL-УСТОЙЧИВАЯ СЕССИЯ
 # ════════════════════════════════════════════════════════════
@@ -48,7 +57,18 @@ logging.basicConfig(
 log = logging.getLogger(__name__)
 
 app = Flask(__name__, static_folder=".", template_folder=".")
-CORS(app)
+
+# ════════════════════════════════════════════════════════════
+#  CORS - УЛУЧШЕННАЯ КОНФИГУРАЦИЯ
+# ════════════════════════════════════════════════════════════
+CORS(app, resources={
+    r"/api/*": {
+        "origins": ["*"],
+        "methods": ["GET", "POST", "OPTIONS"],
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": False
+    }
+})
 
 # ════════════════════════════════════════════════════════════
 #  RATE LIMITING
@@ -300,8 +320,11 @@ MAX_HISTORY = 20
 def index():
     return send_from_directory(".", "index.html")
 
-@app.route("/api/ai", methods=["POST"])
+@app.route("/api/ai", methods=["POST", "OPTIONS"])
 def api_ai():
+    if request.method == "OPTIONS":
+        return "", 204
+
     ip = get_client_ip()
     allowed, msg = check_rate_limit(ip)
     if not allowed:
@@ -395,8 +418,11 @@ def api_ai():
         return jsonify({"error": "Ошибка сервера: " + str(err)}), 500
 
 
-@app.route("/api/voice", methods=["POST"])
+@app.route("/api/voice", methods=["POST", "OPTIONS"])
 def api_voice():
+    if request.method == "OPTIONS":
+        return "", 204
+
     ip = get_client_ip()
     allowed, msg = check_rate_limit(ip)
     if not allowed:
@@ -439,8 +465,11 @@ def api_voice():
         return jsonify({"error": "Ошибка сервера: " + str(err)}), 500
 
 
-@app.route("/api/tts", methods=["POST"])
+@app.route("/api/tts", methods=["POST", "OPTIONS"])
 def api_tts():
+    if request.method == "OPTIONS":
+        return "", 204
+
     ip = get_client_ip()
     allowed, msg = check_rate_limit(ip)
     if not allowed:
@@ -509,6 +538,11 @@ def api_status():
         "blocked_ips": len(ip_blocked)
     })
 
+@app.route('/api/health', methods=['GET'])
+def health_check():
+    """Простая проверка здоровья сервера"""
+    return jsonify({"status": "healthy", "timestamp": time.time()})
+
 # ════════════════════════════════════════════════════════════
 #  ОБРАБОТКА СТАТИЧЕСКИХ HTML-СТРАНИЦ (ЧТОБЫ НЕ БЫЛО 404)
 # ════════════════════════════════════════════════════════════
@@ -520,19 +554,18 @@ def serve_pages(filename):
         filename += '.html'
     
     # Пытаемся отдать файл из корневой директории
-    return send_from_directory(".", filename)
+    try:
+        return send_from_directory(".", filename)
+    except Exception as e:
+        log.warning(f"404 - Файл не найден: {filename}")
+        return jsonify({"error": f"404 - Файл не найден: {filename}"}), 404
 
 # ════════════════════════════════════════════════════════════
-#  ЗАПУСК
+#  ЗАПУСК (ТОЛЬКО ОДНА КОПИЯ!)
 # ════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     log.info(f"🚀 Сервер запущен на порту {port}")
-    app.run(host="0.0.0.0", port=port, debug=False)
-
-
-if __name__ == "__main__":
-    # Render передает порт через переменную окружения, либо используем 10000
-    port = int(os.environ.get("PORT", 10000))
-    log.info(f"🚀 Сервер запущен на порту {port}")
-    app.run(host="0.0.0.0", port=port, debug=False)
+    log.info(f"🌐 Доступ: http://0.0.0.0:{port}")
+    log.info(f"✅ CORS включена для всех источников")
+    app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
