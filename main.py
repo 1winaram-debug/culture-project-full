@@ -47,7 +47,7 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-app = Flask(__name__, static_folder="public")
+app = Flask(__name__, static_folder=".", template_folder=".")
 CORS(app)
 
 # ════════════════════════════════════════════════════════════
