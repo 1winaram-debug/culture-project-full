@@ -298,7 +298,7 @@ MAX_HISTORY = 20
 
 @app.route("/")
 def index():
-    return send_from_directory("public", "ai.html")
+    return send_from_directory(".", "index.html")
 
 @app.route("/api/ai", methods=["POST"])
 def api_ai():
