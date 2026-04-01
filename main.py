@@ -511,5 +511,7 @@ def api_status():
 
 
 if __name__ == "__main__":
-    log.info("🚀 Сервер: http://127.0.0.1:5000")
-    app.run(host="127.0.0.1", port=5000, debug=False)
+    # Render передает порт через переменную окружения, либо используем 10000
+    port = int(os.environ.get("PORT", 10000))
+    log.info(f"🚀 Сервер запущен на порту {port}")
+    app.run(host="0.0.0.0", port=port, debug=False)
