@@ -565,7 +565,5 @@ def serve_pages(filename):
 # ════════════════════════════════════════════════════════════
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
-    log.info(f"🚀 Сервер запущен на порту {port}")
-    log.info(f"🌐 Доступ: http://0.0.0.0:{port}")
-    log.info(f"✅ CORS включена для всех источников")
-    app.run(host="0.0.0.0", port=port, debug=False, threaded=True)
+    # Убрали лишние логи, оставили только запуск
+    app.run(host="0.0.0.0", port=port, debug=False)
